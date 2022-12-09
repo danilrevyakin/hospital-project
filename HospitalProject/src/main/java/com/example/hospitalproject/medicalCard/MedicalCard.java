@@ -22,6 +22,10 @@ public class MedicalCard {
     private List<MedicalRecord> records;
     private LocalDate created;
 
+    public enum keys{
+        id, sqlKey, allergies, badHabits, records, created
+    }
+
     public MedicalCard(Long sqlKey,
                        List<Allergy> allergies,
                        List<String> badHabits,
