@@ -22,8 +22,11 @@ public class MedicalCardController {
         return service.getMedicalCardByKey(key);
     }
 
-//    @PutMapping("/add-allergy/{medicalCardKey}/{title}/{reaction}")
-//    public String addAllergy(@PathVariable("title") String title, @PathVariable("reaction") String reaction){
-//        return "success";
-//    }
+    @GetMapping("/add-allergy/{medicalCardKey}/{title}/{reaction}")
+    public String addAllergy(@PathVariable("medicalCardKey") Long key,
+                             @PathVariable("title") String title,
+                             @PathVariable("reaction") String reaction){
+        service.addAllergy(key, title, reaction);
+        return key + title + reaction;
+    }
 }
