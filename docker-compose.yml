@@ -1,0 +1,55 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5332:5432"
+    networks:
+      - db
+    restart: unless-stopped
+  dbm:
+    container_name: mongodb
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    volumes:
+      - data:/data
+    ports:
+      - 27017:27017
+  dbmex:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    ports:
+      - 8081:8081
+  neo4j:
+    image: neo4j
+    networks:
+      - neo4j-network
+    ports:
+      - '7474:7474'
+      - '7473:7473'
+      - '7687:7687'
+
+networks:
+  db:
+    driver: bridge
+  default:
+    name: mongodb_network
+  neo4j-network:
+    driver: bridge
+
+volumes:
+  db:
+  data: {}
