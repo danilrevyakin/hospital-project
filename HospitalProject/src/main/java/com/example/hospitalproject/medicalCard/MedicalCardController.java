@@ -1,5 +1,6 @@
 package com.example.hospitalproject.medicalCard;
 
+import com.example.hospitalproject.medicalCard.document.MedicalCard;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +29,12 @@ public class MedicalCardController {
                              @PathVariable("reaction") String reaction){
         service.addAllergy(key, title, reaction);
         return key + title + reaction;
+    }
+
+    @GetMapping("/add-bad-habit/{medicalCardKey}/{badHabit}")
+    public String addAllergy(@PathVariable("medicalCardKey") Long key,
+                             @PathVariable("badHabit") String badHabit){
+        service.addBadHabit(key, badHabit);
+        return key + badHabit;
     }
 }
