@@ -1,12 +1,8 @@
 package com.example.hospitalproject.medicalCard;
 
 import com.example.hospitalproject.medicalCard.model.Allergy;
-import com.mongodb.client.result.UpdateResult;
+import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +13,6 @@ import java.util.List;
 public class MedicalCardService {
 
     private final MedicalCardRepository repository;
-    private final MongoTemplate template;
 
     public List<MedicalCard> getAllCards() {
         return repository.findAll();
@@ -31,15 +26,9 @@ public class MedicalCardService {
         });
     }
 
-    public void addAllergy(Long key, Allergy allergies){
-        repository.findMedicalCardBySqlKey(key).ifPresent((card)->{
-            Query query = new Query().addCriteria(Criteria.where(MedicalCard.field.id.name()).is(card.getId()));
-            Update update = new Update().addToSet(MedicalCard.field.allergies.name(), allergies);
-            UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
-            System.out.println(query);
-            System.out.println(update);
-            System.out.println(updateResult);
-        });
+    public void addAllergy(Long key, Allergy allergy){
+        repository.findMedicalCardBySqlKey(key)
+                .ifPresent((card)-> repository.addAllergy(card.getId(), allergy));
     }
 
     public void addAllergy(Long key, String title, String reaction){
