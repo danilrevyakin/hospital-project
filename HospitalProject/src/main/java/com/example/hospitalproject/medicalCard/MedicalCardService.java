@@ -1,6 +1,7 @@
 package com.example.hospitalproject.medicalCard;
 
 import com.example.hospitalproject.medicalCard.model.Allergy;
+import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,11 +31,14 @@ public class MedicalCardService {
         });
     }
 
-    public void addAllergy(Long key, Allergy... allergies){
+    public void addAllergy(Long key, Allergy allergies){
         repository.findMedicalCardBySqlKey(key).ifPresent((card)->{
-            Query query = new Query().addCriteria(Criteria.where(MedicalCard.keys.id.name()).is(card.getId()));
-            Update update = new Update().push(MedicalCard.keys.allergies.name(), allergies);
-            template.updateFirst(query, update, Allergy.class);
+            Query query = new Query().addCriteria(Criteria.where(MedicalCard.field.id.name()).is(card.getId()));
+            Update update = new Update().addToSet(MedicalCard.field.allergies.name(), allergies);
+            UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
+            System.out.println(query);
+            System.out.println(update);
+            System.out.println(updateResult);
         });
     }
 

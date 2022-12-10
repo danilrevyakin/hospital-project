@@ -22,7 +22,7 @@ public class MedicalCard {
     private List<MedicalRecord> records;
     private LocalDate created;
 
-    public enum keys{
+    public enum field {
         id, sqlKey, allergies, badHabits, records, created
     }
 
