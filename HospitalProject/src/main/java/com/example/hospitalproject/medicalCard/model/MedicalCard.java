@@ -1,10 +1,7 @@
-package com.example.hospitalproject.medicalCard;
+package com.example.hospitalproject.medicalCard.model;
 
-import com.example.hospitalproject.medicalCard.model.Allergy;
-import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -15,8 +12,6 @@ import java.util.List;
 public class MedicalCard {
     @Id
     private String id;
-    @Indexed(unique = true)
-    private Long sqlKey;
     private List<Allergy> allergies;
     private List<String> badHabits;
     private List<MedicalRecord> records;
@@ -26,12 +21,12 @@ public class MedicalCard {
         id, sqlKey, allergies, badHabits, records, created
     }
 
-    public MedicalCard(Long sqlKey,
+    public MedicalCard(String sqlKey,
                        List<Allergy> allergies,
                        List<String> badHabits,
                        List<MedicalRecord> records,
                        LocalDate created) {
-        this.sqlKey = sqlKey;
+        this.id = sqlKey;
         this.allergies = allergies;
         this.badHabits = badHabits;
         this.records = records;

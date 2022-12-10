@@ -1,6 +1,6 @@
 package com.example.hospitalproject.medicalCard;
 
-import com.example.hospitalproject.medicalCard.document.MedicalCard;
+import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,27 +14,38 @@ public class MedicalCardController {
     private final MedicalCardService service;
 
     @GetMapping("/all")
-    public List<MedicalCard> fetchAllMedicalCards(){
+    public List<MedicalCard> fetchAllMedicalCards() {
         return service.getAllCards();
     }
 
-    @GetMapping("/get/{medicalCardKey}")//medicalCardKey is the same as SQL id of Patient
-    public MedicalCard getMedicalCard(@PathVariable("medicalCardKey") Long key){
+    @GetMapping("/get/{id}")//id is the same as SQL id of Patient
+    public MedicalCard getMedicalCard(@PathVariable("id") String key) {
         return service.getMedicalCardByKey(key);
     }
 
-    @GetMapping("/add-allergy/{medicalCardKey}/{title}/{reaction}")
-    public String addAllergy(@PathVariable("medicalCardKey") Long key,
+    @PutMapping("/add-allergy/{id}/{title}/{reaction}")
+    public String addAllergy(@PathVariable("id") String key,
                              @PathVariable("title") String title,
-                             @PathVariable("reaction") String reaction){
+                             @PathVariable("reaction") String reaction) {
         service.addAllergy(key, title, reaction);
         return key + title + reaction;
     }
 
-    @GetMapping("/add-bad-habit/{medicalCardKey}/{badHabit}")
-    public String addAllergy(@PathVariable("medicalCardKey") Long key,
-                             @PathVariable("badHabit") String badHabit){
+    @PutMapping("/add-bad-habit/{id}/{badHabit}")
+    public String addBadHabit(@PathVariable("id") String key,
+                              @PathVariable("badHabit") String badHabit) {
         service.addBadHabit(key, badHabit);
         return key + badHabit;
+    }
+
+    @PutMapping("/add-medical-record/{id}/{info}/{symptoms}/{treatment}/{doctor}")
+//    http://localhost:8080/medical-card/add-medical-record/1/info/symptoms/treatment/doctor
+    public String addMedicalRecord(@PathVariable("id") String key,
+                                   @PathVariable("info") String info,
+                                   @PathVariable("symptoms") String symptoms,
+                                   @PathVariable("treatment") String treatment,
+                                   @PathVariable("doctor") String doctor) {
+        service.addMedicalRecord(key, info, symptoms, treatment, doctor);
+        return String.join(" ", key, info, symptoms, treatment, doctor);
     }
 }
