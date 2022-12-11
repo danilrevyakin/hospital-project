@@ -47,18 +47,22 @@ public class MedicalCardService {
         throw new MedicalCardNotFoundException();
     }
 
-    public List<Allergy> addAllergy(String key, Allergy allergy) {
-        Optional<MedicalCard> cardOptional = repository.findById(key);
+    public List<Allergy> addAllergy(String id, Allergy allergy) {
+        Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
-            MedicalCard card = cardOptional.get();
-            repository.addAllergy(card.getId(), allergy);
-            return repository.findById(key).get().getAllergies();
+            repository.addAllergy(id, allergy);
+            return repository.findById(id).get().getAllergies();
         }
         throw new MedicalCardNotFoundException();
     }
 
-    public List<Allergy> addAllergy(String key, String title, String reaction) {
-        return addAllergy(key, new Allergy(title, reaction));
+    public List<Allergy> updateAllergy(String id, String title, Allergy allergy) {
+        Optional<MedicalCard> cardOptional = repository.findById(id);
+        if (cardOptional.isPresent()) {
+            repository.updateAllergy(id, title, allergy);
+            return repository.findById(id).get().getAllergies();
+        }
+        throw new MedicalCardNotFoundException();
     }
 
     public List<MedicalRecord> addMedicalRecord(String key, MedicalRecord record) {
