@@ -5,7 +5,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface MedicalCardRepository extends MongoRepository<MedicalCard, String>, CustomMedicalCardRepository {
+public interface MedicalCardRepository extends MongoRepository<MedicalCard, String>,
+        CustomMedicalCardRepository, AllergyRepository {
+
     @Override
     Optional<MedicalCard> findById(String s);
 
