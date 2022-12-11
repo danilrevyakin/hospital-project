@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Document
@@ -14,8 +15,8 @@ import java.util.List;
 public class MedicalCard {
     @Id
     private String id;
-    private List<Allergy> allergies;
-    private List<String> badHabits;
+    private Set<Allergy> allergies;
+    private Set<String> badHabits;
     private List<MedicalRecord> records;
     private LocalDate created;
 

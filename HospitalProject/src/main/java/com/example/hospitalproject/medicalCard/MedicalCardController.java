@@ -2,12 +2,14 @@ package com.example.hospitalproject.medicalCard;
 
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
+import com.example.hospitalproject.medicalCard.service.MedicalCardService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("medical-card")
@@ -37,9 +39,9 @@ public class MedicalCardController {
 
 
     @PostMapping("/add-bad-habit/{id}/{badHabit}")
-    public ResponseEntity<List<String>> addBadHabit(@PathVariable("id") String id,
-                                                    @PathVariable("badHabit") String badHabit) {
-        List<String> strings = service.addBadHabit(id, badHabit);
+    public ResponseEntity<Set<String>> addBadHabit(@PathVariable("id") String id,
+                                                   @PathVariable("badHabit") String badHabit) {
+        var strings = service.addBadHabit(id, badHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 

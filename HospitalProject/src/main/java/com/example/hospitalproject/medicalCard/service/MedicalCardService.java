@@ -1,7 +1,6 @@
-package com.example.hospitalproject.medicalCard;
+package com.example.hospitalproject.medicalCard.service;
 
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
-import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
@@ -12,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -37,30 +37,12 @@ public class MedicalCardService {
         return card;
     }
 
-    public List<String> addBadHabit(String key, String badHabit) {
+    public Set<String> addBadHabit(String key, String badHabit) {
         Optional<MedicalCard> cardOptional = repository.findById(key);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
             repository.addBadHabit(card.getId(), badHabit);
             return repository.findById(key).get().getBadHabits();
-        }
-        throw new MedicalCardNotFoundException();
-    }
-
-    public List<Allergy> addAllergy(String id, Allergy allergy) {
-        Optional<MedicalCard> cardOptional = repository.findById(id);
-        if (cardOptional.isPresent()) {
-            repository.addAllergy(id, allergy);
-            return repository.findById(id).get().getAllergies();
-        }
-        throw new MedicalCardNotFoundException();
-    }
-
-    public List<Allergy> updateAllergy(String id, String title, Allergy allergy) {
-        Optional<MedicalCard> cardOptional = repository.findById(id);
-        if (cardOptional.isPresent()) {
-            repository.updateAllergy(id, title, allergy);
-            return repository.findById(id).get().getAllergies();
         }
         throw new MedicalCardNotFoundException();
     }
