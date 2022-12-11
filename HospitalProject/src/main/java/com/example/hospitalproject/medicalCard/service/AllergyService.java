@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Service
 public class AllergyService {
+
     private final MedicalCardRepository repository;
 
     public Set<Allergy> addAllergy(String id, Allergy allergy) {

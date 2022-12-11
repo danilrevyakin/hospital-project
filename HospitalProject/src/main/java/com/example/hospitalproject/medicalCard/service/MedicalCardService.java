@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -37,15 +36,7 @@ public class MedicalCardService {
         return card;
     }
 
-    public Set<String> addBadHabit(String key, String badHabit) {
-        Optional<MedicalCard> cardOptional = repository.findById(key);
-        if (cardOptional.isPresent()) {
-            MedicalCard card = cardOptional.get();
-            repository.addBadHabit(card.getId(), badHabit);
-            return repository.findById(key).get().getBadHabits();
-        }
-        throw new MedicalCardNotFoundException();
-    }
+
 
     public List<MedicalRecord> addMedicalRecord(String key, MedicalRecord record) {
         Optional<MedicalCard> cardOptional = repository.findById(key);

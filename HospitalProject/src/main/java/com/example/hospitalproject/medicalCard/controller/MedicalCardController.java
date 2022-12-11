@@ -1,4 +1,4 @@
-package com.example.hospitalproject.medicalCard;
+package com.example.hospitalproject.medicalCard.controller;
 
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("medical-card")
@@ -34,15 +33,6 @@ public class MedicalCardController {
     public ResponseEntity<MedicalCard> createById(@PathVariable("id") String id) {
         MedicalCard card = service.createEmptyMedicalCard(id);
         return new ResponseEntity<>(card, HttpStatus.OK);
-    }
-
-
-
-    @PostMapping("/add-bad-habit/{id}/{badHabit}")
-    public ResponseEntity<Set<String>> addBadHabit(@PathVariable("id") String id,
-                                                   @PathVariable("badHabit") String badHabit) {
-        var strings = service.addBadHabit(id, badHabit);
-        return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 
     @PostMapping("/add-medical-record/{id}/{info}/{symptoms}/{treatment}/{doctor}")
