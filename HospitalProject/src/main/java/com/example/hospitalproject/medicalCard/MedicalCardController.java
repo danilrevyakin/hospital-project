@@ -35,7 +35,7 @@ public class MedicalCardController {
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
-    @PutMapping("/add-allergy/{id}/{title}/{reaction}")
+    @PostMapping("/add-allergy/{id}/{title}/{reaction}")
     public ResponseEntity<List<Allergy>> addAllergy(@PathVariable("id") String id,
                                                     @PathVariable("title") String title,
                                                     @PathVariable("reaction") String reaction) {
@@ -43,7 +43,7 @@ public class MedicalCardController {
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 
-    @PutMapping("/add-allergy-obj/{id}")
+    @PostMapping("/add-allergy-obj/{id}")
     public ResponseEntity<List<Allergy>> addAllergy(@PathVariable("id") String id,
                                                     @RequestBody Allergy allergy ) {
         System.out.println("mapped correctly");
@@ -51,14 +51,14 @@ public class MedicalCardController {
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 
-    @PutMapping("/add-bad-habit/{id}/{badHabit}")
+    @PostMapping("/add-bad-habit/{id}/{badHabit}")
     public ResponseEntity<List<String>> addBadHabit(@PathVariable("id") String id,
                                                     @PathVariable("badHabit") String badHabit) {
         List<String> strings = service.addBadHabit(id, badHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 
-    @PutMapping("/add-medical-record/{id}/{info}/{symptoms}/{treatment}/{doctor}")
+    @PostMapping("/add-medical-record/{id}/{info}/{symptoms}/{treatment}/{doctor}")
 //    http://localhost:8080/medical-card/add-medical-record/1/info/symptoms/treatment/doctor
     public ResponseEntity<List<MedicalRecord>>  addMedicalRecord(@PathVariable("id") String id,
                                    @PathVariable("info") String info,
@@ -69,7 +69,7 @@ public class MedicalCardController {
         return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
     }
 
-    @PutMapping("/add-medical-record/{id}")
+    @PostMapping("/add-medical-record/{id}")
 //    http://localhost:8080/medical-card/add-medical-record/1/...
     public ResponseEntity<List<MedicalRecord>>  addMedicalRecord(@PathVariable("id") String id,
                                                                  @RequestBody MedicalRecord record) {

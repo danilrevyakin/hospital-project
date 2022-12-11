@@ -8,4 +8,10 @@ import java.util.Optional;
 public interface MedicalCardRepository extends MongoRepository<MedicalCard, String>, CustomMedicalCardRepository {
     @Override
     Optional<MedicalCard> findById(String s);
+
+    @Override
+    void deleteById(String s);
+
+    @Override
+    boolean existsById(String s);
 }
