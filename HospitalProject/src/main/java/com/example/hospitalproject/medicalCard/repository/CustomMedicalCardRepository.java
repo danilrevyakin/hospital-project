@@ -3,8 +3,6 @@ package com.example.hospitalproject.medicalCard.repository;
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 
-import java.util.List;
-
 public interface CustomMedicalCardRepository {
     void addAllergy(String id, Allergy allergy);
 
@@ -12,14 +10,13 @@ public interface CustomMedicalCardRepository {
 
     void deleteAllergy(String id, String title, Allergy allergy);
 
-    void addMedicalRecord(String id, MedicalRecord record);
-
     void addBadHabit(String id, String badHabit);
 
     void deleteBadHabit(String id, String badHabit);
 
-    void updateBadHabit(String id, String oldBadHabit, String newBadHabit);
+    void addMedicalRecord(String id, MedicalRecord record);
 
-    void updateAllBadHabits(String id, List<String> newBadHabits);
+    void updateMedicalRecord(String id, MedicalRecord oldRecord, MedicalRecord newRecord);
 
+    void deleteMedicalRecord(String id, MedicalRecord record);
 }

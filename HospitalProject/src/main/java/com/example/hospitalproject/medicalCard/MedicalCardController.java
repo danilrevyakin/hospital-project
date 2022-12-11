@@ -1,6 +1,5 @@
 package com.example.hospitalproject.medicalCard;
 
-import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import lombok.AllArgsConstructor;
@@ -35,21 +34,7 @@ public class MedicalCardController {
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
-    @PostMapping("/add-allergy/{id}/{title}/{reaction}")
-    public ResponseEntity<List<Allergy>> addAllergy(@PathVariable("id") String id,
-                                                    @PathVariable("title") String title,
-                                                    @PathVariable("reaction") String reaction) {
-        List<Allergy> allergies = service.addAllergy(id, title, reaction);
-        return new ResponseEntity<>(allergies, HttpStatus.OK);
-    }
 
-    @PostMapping("/add-allergy-obj/{id}")
-    public ResponseEntity<List<Allergy>> addAllergy(@PathVariable("id") String id,
-                                                    @RequestBody Allergy allergy ) {
-        System.out.println("mapped correctly");
-        List<Allergy> allergies = service.addAllergy(id, allergy);
-        return new ResponseEntity<>(allergies, HttpStatus.OK);
-    }
 
     @PostMapping("/add-bad-habit/{id}/{badHabit}")
     public ResponseEntity<List<String>> addBadHabit(@PathVariable("id") String id,
