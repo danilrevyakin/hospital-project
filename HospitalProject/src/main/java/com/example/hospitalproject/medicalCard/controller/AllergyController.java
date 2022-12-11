@@ -1,4 +1,4 @@
-package com.example.hospitalproject.medicalCard;
+package com.example.hospitalproject.medicalCard.controller;
 
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.service.AllergyService;

@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import java.util.logging.Logger;
+
 import static com.example.hospitalproject.medicalCard.repository.CustomMedicalCardRepositoryImpl.getQueryById;
 
 @Repository
@@ -16,6 +19,8 @@ import static com.example.hospitalproject.medicalCard.repository.CustomMedicalCa
 public class AllergyRepositoryImpl implements AllergyRepository {
 
     private final MongoTemplate template;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+
 
     private static final String allergies = "allergies";
 
@@ -52,8 +57,8 @@ public class AllergyRepositoryImpl implements AllergyRepository {
         Query query = getQueryById(id);
         Update update = new Update().pull(MedicalCard.field.allergies.name(),
                 Query.query(Criteria.where(AllergyFields.title.name()).is(title)));
-        System.out.println(update);
+        logger.info(update.toString());
         UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
-        System.out.println(updateResult);
+        logger.info(updateResult.toString());
     }
 }

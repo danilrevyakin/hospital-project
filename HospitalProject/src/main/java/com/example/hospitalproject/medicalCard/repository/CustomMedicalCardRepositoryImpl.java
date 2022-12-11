@@ -17,18 +17,6 @@ public class CustomMedicalCardRepositoryImpl implements CustomMedicalCardReposit
     private final MongoTemplate template;
 
     @Override
-    public void addBadHabit(String id, String badHabit) {
-        Query query = getQueryById(id);
-        Update update = new Update().addToSet(MedicalCard.field.badHabits.name(), badHabit);
-        template.updateFirst(query, update, MedicalCard.class);
-    }
-
-    @Override
-    public void deleteBadHabit(String id, String badHabit) {
-
-    }
-
-    @Override
     public void addMedicalRecord(String id, MedicalRecord record) {
         Query query = getQueryById(id);
         Update update = new Update().push(MedicalCard.field.records.name(), record);
