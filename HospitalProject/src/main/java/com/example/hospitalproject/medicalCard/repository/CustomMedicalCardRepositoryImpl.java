@@ -10,9 +10,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 @AllArgsConstructor
-public class CustomMedicalCardRepositoryImpl implements CustomMedicalCardRepository{
+public class CustomMedicalCardRepositoryImpl implements CustomMedicalCardRepository {
 
     private final MongoTemplate template;
 
@@ -33,11 +34,11 @@ public class CustomMedicalCardRepositoryImpl implements CustomMedicalCardReposit
     @Override
     public void addMedicalRecord(String id, MedicalRecord record) {
         Query query = getQueryById(id);
-        Update update = new Update().addToSet(MedicalCard.field.records.name(), record);
+        Update update = new Update().push(MedicalCard.field.records.name(), record);
         template.updateFirst(query, update, MedicalCard.class);
     }
 
-    private Query getQueryById(String id){
+    private Query getQueryById(String id) {
         return new Query().addCriteria(Criteria.where(MedicalCard.field.id.name()).is(id));
     }
 }
