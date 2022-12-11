@@ -2,7 +2,7 @@ package com.example.hospitalproject.medicalCard.repository;
 
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 
-public interface CustomMedicalCardRepository {
+public interface MedicalRecordRepository {
 
     void addMedicalRecord(String id, MedicalRecord record);
 

@@ -21,7 +21,7 @@ public class BadHabitController {
         var strings = service.addBadHabit(id, badHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
-
+    
     @DeleteMapping("/delete/{id}/{badHabit}")
     public ResponseEntity<Set<String>> deleteBadHabit(@PathVariable("id") String id,
                                                       @PathVariable("badHabit") String badHabit) {

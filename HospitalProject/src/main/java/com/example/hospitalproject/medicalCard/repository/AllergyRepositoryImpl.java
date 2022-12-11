@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.logging.Logger;
 
-import static com.example.hospitalproject.medicalCard.repository.CustomMedicalCardRepositoryImpl.getQueryById;
+import static com.example.hospitalproject.medicalCard.repository.MedicalRecordRepositoryImpl.getQueryById;
 
 @Repository
 @AllArgsConstructor

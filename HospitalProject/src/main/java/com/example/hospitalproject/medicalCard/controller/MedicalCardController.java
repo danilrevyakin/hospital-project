@@ -35,22 +35,5 @@ public class MedicalCardController {
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
-    @PostMapping("/add-medical-record/{id}/{info}/{symptoms}/{treatment}/{doctor}")
-//    http://localhost:8080/medical-card/add-medical-record/1/info/symptoms/treatment/doctor
-    public ResponseEntity<List<MedicalRecord>>  addMedicalRecord(@PathVariable("id") String id,
-                                   @PathVariable("info") String info,
-                                   @PathVariable("symptoms") String symptoms,
-                                   @PathVariable("treatment") String treatment,
-                                   @PathVariable("doctor") String doctor) {
-        List<MedicalRecord> medicalRecords = service.addMedicalRecord(id, info, symptoms, treatment, doctor);
-        return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
-    }
 
-    @PostMapping("/add-medical-record/{id}")
-//    http://localhost:8080/medical-card/add-medical-record/1/...
-    public ResponseEntity<List<MedicalRecord>>  addMedicalRecord(@PathVariable("id") String id,
-                                                                 @RequestBody MedicalRecord record) {
-        List<MedicalRecord> medicalRecords = service.addMedicalRecord(id, record);
-        return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
-    }
 }

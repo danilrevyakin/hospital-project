@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-public class CustomMedicalCardRepositoryImpl implements CustomMedicalCardRepository {
+public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     private final MongoTemplate template;
 
