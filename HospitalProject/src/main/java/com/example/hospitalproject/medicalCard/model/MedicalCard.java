@@ -21,6 +21,11 @@ public class MedicalCard {
     private LocalDate created;
 
     public enum field {
-        id, allergies, badHabits, records, created
+        id, allergies, badHabits, records, created;
+        public final String nameDot$;
+
+        field() {
+            nameDot$ = name() + ".$";
+        }
     }
 }

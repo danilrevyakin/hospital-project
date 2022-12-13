@@ -16,4 +16,5 @@ public interface MedicalCardRepository extends MongoRepository<MedicalCard, Stri
 
     @Override
     boolean existsById(String s);
+
 }

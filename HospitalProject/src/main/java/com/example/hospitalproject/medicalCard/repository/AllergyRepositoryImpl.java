@@ -25,14 +25,14 @@ public class AllergyRepositoryImpl implements AllergyRepository {
     private static final String allergies = "allergies";
 
     public enum AllergyFields {
-        title(allergies + ".title", allergies + ".$title"),
-        reaction(allergies + ".reaction", allergies + ".$reaction");
+        title,
+        reaction;
 
         public final String path;
         public final String path$;
-        AllergyFields(String path, String path$) {
-            this.path = path;
-            this.path$ = path$;
+        AllergyFields() {
+            this.path = allergies + "." + this.name();
+            this.path$ = allergies + ".$" + this.name();
         }
     }
 
@@ -47,7 +47,7 @@ public class AllergyRepositoryImpl implements AllergyRepository {
     public void updateAllergy(String id, String title, Allergy allergy) {
         Query query = getQueryById(id).
                 addCriteria(Criteria.where(AllergyFields.title.path).is(title));
-        Update update = new Update().set(MedicalCard.field.allergies.name() + ".$", allergy);
+        Update update = new Update().set(MedicalCard.field.allergies.nameDot$, allergy);
         template.updateFirst(query, update, MedicalCard.class);
     }
 

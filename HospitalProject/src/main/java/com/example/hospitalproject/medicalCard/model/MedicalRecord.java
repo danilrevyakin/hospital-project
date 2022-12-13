@@ -14,4 +14,5 @@ public class MedicalRecord {
     private String doctor;
     private LocalDateTime date;
     private LocalDateTime edited;
+
 }
