@@ -26,6 +26,8 @@ public class MedicalCardController {
     @GetMapping("/get/{id}")//id is the same as SQL id of Patient
     public ResponseEntity<MedicalCard> getMedicalCard(@PathVariable("id") String id) {
         MedicalCard card = service.getMedicalCardById(id);
+        List<MedicalRecord> records = card.getRecords();
+        System.out.println("After DB" + records.get(records.size() - 1).getDate());
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 

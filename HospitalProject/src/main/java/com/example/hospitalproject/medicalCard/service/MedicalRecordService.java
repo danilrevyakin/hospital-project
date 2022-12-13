@@ -31,8 +31,27 @@ public class MedicalRecordService {
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
             record.setDate(LocalDateTime.now());
+            System.out.println(record.getDate());
             repository.addMedicalRecord(card.getId(), record);
-            return repository.findById(id).get().getRecords();
+            List<MedicalRecord> records = repository.findById(id).get().getRecords();
+            return records;
+        }
+        throw new MedicalCardNotFoundException();
+    }
+
+    public MedicalRecord getMedicalRecord(String id, LocalDateTime date){
+        Optional<MedicalCard> cardOptional = repository.findById(id);
+        if (cardOptional.isPresent()) {
+            List<MedicalRecord> records = repository.getMedicalRecordsByIdAndDate(id, date);
+            if(records.size() == 0){
+                String message = "There is no record at " + date + " in " + id + " card";
+                throw new MedicalRecordNotFoundException(message);
+            }
+            if(records.size() > 1){
+                String message = "Medical card can't contain more than one record in some point of time";
+                throw new IllegalStateException(message);
+            }
+            return records.get(0);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -40,11 +59,11 @@ public class MedicalRecordService {
     static final int HOURS_FOR_UPDATE = 24;
 
     public List<MedicalRecord> updateMedicalRecord(String id, MedicalRecord newRecord) {
-        LocalDateTime createdDate = newRecord.getDate();
-        if (createdDate == null) {
+        LocalDateTime dateOfCreating = newRecord.getDate();
+        if (dateOfCreating == null) {
             throw new IllegalArgumentException("Date of updating record is not specified");
         }
-        if (ChronoUnit.HOURS.between(createdDate, LocalDateTime.now()) >= HOURS_FOR_UPDATE) {
+        if (ChronoUnit.HOURS.between(dateOfCreating, LocalDateTime.now()) >= HOURS_FOR_UPDATE) {
             String message = "You can't update medical records after " + HOURS_FOR_UPDATE + " hours";
             throw new UnsupportedOperationException(message);
         }
@@ -52,18 +71,8 @@ public class MedicalRecordService {
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
-        Optional<MedicalCard> cardOptional = repository.findById(id);
-        if (cardOptional.isPresent()) {
-            repository.getMedicalRecord(id, createdDate)
-                    .orElseThrow(() -> {
-                        String message = "There is no record at " + createdDate + " in " + id + " card";
-                        throw new MedicalRecordNotFoundException(message);
-                    });
-            newRecord.setEdited(LocalDateTime.now());
-            repository.updateMedicalRecord(id, newRecord);
-            return repository.findById(id).get().getRecords();
-        }
-        throw new MedicalCardNotFoundException();
+        repository.updateMedicalRecord(id, dateOfCreating, newRecord);
+        return repository.findById(id).get().getRecords();
     }
 
 }

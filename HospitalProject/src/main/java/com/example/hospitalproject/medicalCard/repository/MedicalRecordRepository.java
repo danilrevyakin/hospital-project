@@ -3,15 +3,15 @@ package com.example.hospitalproject.medicalCard.repository;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 public interface MedicalRecordRepository {
 
-    Optional<MedicalRecord> getMedicalRecord(String id, LocalDateTime dateOfOldRecord);
+    List<MedicalRecord> getMedicalRecordsByIdAndDate(String id, LocalDateTime dateOfOldRecord);
 
     void addMedicalRecord(String id, MedicalRecord record);
 
-    void updateMedicalRecord(String id, MedicalRecord newRecord);
+    void updateMedicalRecord(String id,LocalDateTime date, MedicalRecord newRecord);
 
     void deleteMedicalRecord(String id, LocalDateTime dateOfOldRecord);
 }
