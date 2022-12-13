@@ -11,7 +11,7 @@ public interface MedicalRecordRepository {
 
     void addMedicalRecord(String id, MedicalRecord record);
 
-    void updateMedicalRecord(String id, LocalDateTime dateOfOldRecord, MedicalRecord newRecord);
+    void updateMedicalRecord(String id, MedicalRecord newRecord);
 
     void deleteMedicalRecord(String id, LocalDateTime dateOfOldRecord);
 }

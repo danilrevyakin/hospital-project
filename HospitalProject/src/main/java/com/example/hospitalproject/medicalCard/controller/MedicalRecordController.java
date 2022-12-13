@@ -23,11 +23,10 @@ public class MedicalRecordController {
         return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}/{data}")
-    public ResponseEntity<List<MedicalRecord>> addMedicalRecord(@PathVariable("id") String id,
-                                                                @PathVariable("data") String data,
+    @PutMapping("/update/{id}")
+    public ResponseEntity<List<MedicalRecord>> updateMedicalRecord(@PathVariable("id") String id,
                                                                 @RequestBody MedicalRecord record) {
-        List<MedicalRecord> medicalRecords = service.updateMedicalRecord(id, data, record);
+        List<MedicalRecord> medicalRecords = service.updateMedicalRecord(id, record);
         return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
     }
 }
