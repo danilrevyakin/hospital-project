@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class UserController {
+public class UserProfileController {
 
     @Autowired
     private UserInfoRepository userInfoRepository;

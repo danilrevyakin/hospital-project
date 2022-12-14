@@ -1,6 +1,7 @@
 package com.example.hospitalproject.userInfo.repository;
 
 import com.example.hospitalproject.userInfo.model.Doctor;
+import com.example.hospitalproject.userInfo.model.DoctorType;
 import com.example.hospitalproject.userInfo.model.UserInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,6 +21,14 @@ public class DoctorRepositoryImpl {
         String hql = "SELECT d FROM Doctor d WHERE d.userId = :id";
         TypedQuery<Doctor> query = entityManager.createQuery(hql, Doctor.class);
         query.setParameter("id", id);
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unused")
+    public List<Doctor> findByType(DoctorType type) {
+        String hql = "SELECT d FROM Doctor d WHERE d.type = :type";
+        TypedQuery<Doctor> query = entityManager.createQuery(hql, Doctor.class);
+        query.setParameter("type", type);
         return query.getResultList();
     }
 }
