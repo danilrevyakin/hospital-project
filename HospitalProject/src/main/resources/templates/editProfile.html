@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+  <form method="post">
+      <input name="firstName" placeholder="first name" th:value="${user.firstName}">
+      <input name="lastName" placeholder="last name" th:value="${user.lastName}">
+      <input name="mobilePhone" placeholder="mobile phone" th:value="${user.phone}">
+      <input type="submit" value="Edit">
+  </form>
+</body>
+</html>

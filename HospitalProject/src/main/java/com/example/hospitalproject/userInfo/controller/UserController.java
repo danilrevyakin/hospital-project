@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,40 @@ public class UserController {
 
         return "userProfile";
     }
+
+    @GetMapping("/hospital/{id}/edit")
+    public String editUserProfile(@PathVariable(value = "id") long id, Model model){
+        UserInfo user = null;
+        Optional<UserInfo> userInfo = userInfoRepository.findById(id);
+        if(userInfo.isPresent())
+            user = userInfo.get();
+
+        model.addAttribute("user", user);
+        model.addAttribute("role", getRole(user));
+
+        return "editProfile";
+    }
+
+    @PostMapping("/hospital/{id}/edit")
+    public String updateUserProfile(@PathVariable(value = "id") long id, @RequestParam String firstName,
+                                    @RequestParam String lastName,
+                                    @RequestParam String mobilePhone, Model model){
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow();
+        userInfo.setFirstName(firstName);
+        userInfo.setLastName(lastName);
+        userInfo.setPhone(mobilePhone);
+
+        userInfoRepository.save(userInfo);
+        return "redirect:/hospital/" + id;
+    }
+
+    @PostMapping("/hospital/{id}/remove")
+    public String deleteUserProfile(@PathVariable(value = "id") long id, Model model){
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow();
+        userInfoRepository.delete(userInfo);
+        return "redirect:/hospital";
+    }
+
 
     private String getRole(UserInfo id){
         return doctorRepository.findByUserId(id).isEmpty() ? "patient" : "doctor";

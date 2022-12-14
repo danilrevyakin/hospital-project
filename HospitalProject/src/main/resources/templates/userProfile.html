@@ -12,6 +12,9 @@
     <p th:text="'Birthday: ' + ${user.birthday}" />
     <p th:text="'Mobile phone: ' + ${user.phone}" />
     <p th:text="'Role: ' + ${role}" />
-
+    <a th:href="'/hospital/' + ${id} + '/edit'">Edit</a>
+    <form th:action="'/hospital/' + ${id} + '/remove'" method="post">
+        <input type="submit" value="Delete">
+    </form>
 </body>
 </html>

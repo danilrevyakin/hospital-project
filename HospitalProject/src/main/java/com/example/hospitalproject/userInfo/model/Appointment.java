@@ -2,6 +2,9 @@ package com.example.hospitalproject.userInfo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -17,7 +20,8 @@ public class Appointment {
     private Timestamp finish;
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne
     @JoinColumn(name = "doctor", referencedColumnName = "user_id")
     private Doctor doctor;
 }

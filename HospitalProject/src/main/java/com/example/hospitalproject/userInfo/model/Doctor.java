@@ -2,6 +2,8 @@ package com.example.hospitalproject.userInfo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
@@ -12,7 +14,8 @@ public class Doctor {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserInfo userId;
 
