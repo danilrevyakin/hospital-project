@@ -14,16 +14,16 @@ import java.util.Set;
 public class BadHabitService {
     private final MedicalCardRepository repository;
 
-    public Set<String> addBadHabit(String key, String badHabit) {
-        Optional<MedicalCard> cardOptional = repository.findById(key);
+    public Set<String> addBadHabit(String id, String badHabit) {
+        Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
             Set<String> badHabits = card.getBadHabits();
             if (badHabits != null && badHabits.contains(badHabit)) {
                 throw new IllegalStateException("There is already present " + badHabit + " habit");
             }
-            repository.addBadHabit(card.getId(), badHabit);
-            return repository.findById(key).get().getBadHabits();
+            repository.addBadHabit(id, badHabit);
+            return repository.findById(id).get().getBadHabits();
         }
         throw new MedicalCardNotFoundException();
     }

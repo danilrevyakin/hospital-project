@@ -11,8 +11,6 @@ public class Allergy {
     private String title;
     private String reaction;
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
