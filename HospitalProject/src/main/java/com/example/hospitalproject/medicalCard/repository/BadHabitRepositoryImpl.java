@@ -5,7 +5,6 @@ import com.mongodb.Function;
 import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -38,13 +37,13 @@ public class BadHabitRepositoryImpl implements BadHabitRepository {
 //            return Set.of();
 //        }
 //        return objects.get(0).getBadHabits();
-        return getCollectionFromCardById(id, MedicalCard.field.badHabits, Set.of(), MedicalCard::getBadHabits);
+        return getArrayFromCardById(id, MedicalCard.field.badHabits, Set.of(), MedicalCard::getBadHabits);
     }
 
-    public <E extends Collection<?>> E getCollectionFromCardById(String id,
-                                                       MedicalCard.field field,
-                                                       E empty,
-                                                       Function<MedicalCard, E> getter) {
+    public <E extends Collection<?>> E getArrayFromCardById(String id,
+                                                            MedicalCard.field field,
+                                                            E empty,
+                                                            Function<MedicalCard, E> getter) {
         Query query = getQueryById(id);
         query.fields().include(field.name())
                 .exclude(MedicalCard.field.id.n);
@@ -55,7 +54,7 @@ public class BadHabitRepositoryImpl implements BadHabitRepository {
             return empty;
         }
         E collection = getter.apply(objects.get(0));
-        if (collection == null || objects.get(0).getBadHabits().size() < 1) {
+        if (collection == null || collection.size() < 1) {
             return empty;
         }
         return collection;
