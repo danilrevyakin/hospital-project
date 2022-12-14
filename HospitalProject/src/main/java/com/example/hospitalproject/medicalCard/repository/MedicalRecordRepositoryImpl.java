@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     private final MongoTemplate template;
-    RecordMongoRepository repository;
 
 
     private static final String records = "records";
@@ -34,11 +33,9 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         date,
         edited;
         public final String path;
-        public final String path$;
 
         RecordFields() {
             this.path = records + "." + this.name();
-            this.path$ = records + ".$" + this.name();
         }
     }
 
@@ -52,10 +49,10 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         Field projection = query.fields();
         projection
                 .include(MedicalCard.field.records.name() + ".$")
-                        .exclude(MedicalCard.field.id.n());
+                .exclude(MedicalCard.field.id.n);
         logger.info(query.toString());
         List<MedicalCard> objects = template.find(query, MedicalCard.class);
-        if (objects.size() < 1){
+        if (objects.size() < 1) {
             return List.of();
         } else if (objects.get(0).getRecords().size() < 1) {
             return List.of();
@@ -63,6 +60,23 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         return objects.get(0).getRecords();
     }
 
+//db.medicalCard.find({_id:"3"},{records: 1, _id: 0})
+
+    @Override
+    public List<MedicalRecord> getMedicalRecordsById(String id) {
+        Query query = getQueryById(id);
+        query.fields().include(MedicalCard.field.records.name())
+                .exclude(MedicalCard.field.id.n);
+        logger.info(query.toString());
+        List<MedicalCard> objects = template.find(query, MedicalCard.class);
+        logger.info(objects.toString());
+        if (objects.size() < 1) {
+            return List.of();
+        } else if (objects.get(0).getRecords().size() < 1) {
+            return List.of();
+        }
+        return objects.get(0).getRecords();
+    }
 
     @Override
     public void addMedicalRecord(String id, MedicalRecord record) {
@@ -73,7 +87,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         logger.info(updateResult.toString());
     }
 
-//    db.medicalCard.findAndModify({query: { "_id" : "3", "records" : { "$elemMatch" : { "info" : "now...."}}},
+    //    db.medicalCard.findAndModify({query: { "_id" : "3", "records" : { "$elemMatch" : { "info" : "now...."}}},
 //        update: {$set: {"records.$": wednesday}}})
     //i use different command
     @Override

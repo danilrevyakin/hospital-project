@@ -24,6 +24,12 @@ public class MedicalRecordController {
         return new ResponseEntity<>(record, HttpStatus.OK);
     }
 
+    @GetMapping("/all/{id}")
+    public ResponseEntity<List<MedicalRecord>> addAllMedicalRecords(@PathVariable("id") String id) {
+        List<MedicalRecord> record = service.getAllMedicalRecordsById(id);
+        return new ResponseEntity<>(record, HttpStatus.OK);
+    }
+
     @PostMapping("/add/{id}")
     public ResponseEntity<List<MedicalRecord>> addMedicalRecord(@PathVariable("id") String id,
                                                                 @RequestBody MedicalRecord record) {

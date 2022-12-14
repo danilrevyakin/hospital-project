@@ -3,7 +3,6 @@ package com.example.hospitalproject.medicalCard.service;
 import com.example.hospitalproject.medicalCard.exception.IllegalDoctorException;
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
 import com.example.hospitalproject.medicalCard.exception.MedicalRecordNotFoundException;
-import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -27,18 +25,16 @@ public class MedicalRecordService {
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
-        Optional<MedicalCard> cardOptional = repository.findById(id);
-        if (cardOptional.isPresent()) {
+        if (repository.existsById(id)) {
             record.setDate(LocalDateTime.now());
             repository.addMedicalRecord(id, record);
-            return repository.findById(id).get().getRecords();
+            return repository.getMedicalRecordsById(id);
         }
         throw new MedicalCardNotFoundException();
     }
 
     public MedicalRecord getMedicalRecord(String id, LocalDateTime date) {
-        Optional<MedicalCard> cardOptional = repository.findById(id);
-        if (cardOptional.isPresent()) {
+        if (repository.existsById(id)) {
             List<MedicalRecord> records = repository.getMedicalRecordsByIdAndDate(id, date);
             if (records.size() == 0) {
                 String message = "There is no record at " + date + " in " + id + " card";
@@ -53,6 +49,13 @@ public class MedicalRecordService {
         throw new MedicalCardNotFoundException();
     }
 
+    public List<MedicalRecord> getAllMedicalRecordsById(String id) {
+        if (repository.existsById(id)) {
+            return repository.getMedicalRecordsById(id);
+        }
+        throw new MedicalCardNotFoundException();
+    }
+
     static final int HOURS_FOR_UPDATE = 24;
 
     public List<MedicalRecord> updateMedicalRecord(String id, MedicalRecord newRecord) {
@@ -60,13 +63,13 @@ public class MedicalRecordService {
         modifyingRecordValidation(id, dateOfCreating, newRecord.getDoctor());
         newRecord.setEdited(LocalDateTime.now());
         repository.updateMedicalRecord(id, dateOfCreating, newRecord);
-        return repository.findById(id).get().getRecords();
+        return repository.getMedicalRecordsById(id);
     }
 
-    public List<MedicalRecord> deleteMedicalRecord(String id, LocalDateTime dateOfCreating, String doctor){
+    public List<MedicalRecord> deleteMedicalRecord(String id, LocalDateTime dateOfCreating, String doctor) {
         modifyingRecordValidation(id, dateOfCreating, doctor);
         repository.deleteMedicalRecord(id, dateOfCreating);
-        return repository.findById(id).get().getRecords();
+        return repository.getMedicalRecordsById(id);
     }
 
     private void modifyingRecordValidation(String id, LocalDateTime dateOfCreating, String doctor) {

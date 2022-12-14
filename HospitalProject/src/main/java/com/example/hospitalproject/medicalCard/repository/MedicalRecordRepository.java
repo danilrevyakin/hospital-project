@@ -9,6 +9,8 @@ public interface MedicalRecordRepository {
 
     List<MedicalRecord> getMedicalRecordsByIdAndDate(String id, LocalDateTime dateOfOldRecord);
 
+    List<MedicalRecord> getMedicalRecordsById(String id);
+
     void addMedicalRecord(String id, MedicalRecord record);
 
     void updateMedicalRecord(String id,LocalDateTime date, MedicalRecord newRecord);
