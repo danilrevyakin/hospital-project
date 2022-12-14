@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -24,12 +25,19 @@ public class MedicalCardService {
     }
 
     public MedicalCard createEmptyMedicalCard(String id) {
-        String message = "Medical card with this id is already present";
         repository.findById(id).ifPresent((x) -> {
+            String message = "Medical card with this id is already present";
             throw new IllegalStateException(message);
         });
-        MedicalCard card = new MedicalCard(id, null, null, null, LocalDate.now());
+        MedicalCard card = new MedicalCard(id, Set.of(), Set.of(), List.of(), LocalDate.now());
         repository.save(card);
         return card;
+    }
+
+    public List<MedicalCard> deleteCard(String id) {
+        repository.findById(id)
+                .ifPresentOrElse(card -> repository.deleteById(id),
+                () -> {throw new MedicalCardNotFoundException();});
+        return repository.findAll();
     }
 }

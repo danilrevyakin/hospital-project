@@ -1,7 +1,9 @@
-package com.example.hospitalproject.medicalCard.repository;
+package com.example.hospitalproject.medicalCard.repository.implementation;
 
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
+import com.example.hospitalproject.medicalCard.repository.ArrayRepository;
+import com.example.hospitalproject.medicalCard.repository.MedicalRecordRepository;
 import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -65,18 +67,6 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     @Override
     public List<MedicalRecord> getMedicalRecordsById(String id) {
-//        Query query = getQueryById(id);
-//        query.fields().include(MedicalCard.field.records.name())
-//                .exclude(MedicalCard.field.id.n);
-//        logger.info(query.toString());
-//        List<MedicalCard> objects = template.find(query, MedicalCard.class);
-//        logger.info(objects.toString());
-//        if (objects.size() < 1) {
-//            return List.of();
-//        } else if (objects.get(0).getRecords().size() < 1) {
-//            return List.of();
-//        }
-//        return objects.get(0).getRecords();
         return arrayRepository.getArrayFromCardById(id, MedicalCard.field.records, List.of(), MedicalCard::getRecords);
     }
 
@@ -94,20 +84,16 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     //i use different command
     @Override
     public void updateMedicalRecord(String id, LocalDateTime date, MedicalRecord newRecord) {
-        Query query = getQueryById(id).
-                addCriteria(Criteria.where(RecordFields.date.path).is(date));
-        Update update = new Update().set(MedicalCard.field.records.nameDot$, newRecord);
-        template.updateFirst(query, update, MedicalCard.class);
+        arrayRepository.updateArrayElement(id,
+                RecordFields.date.path, date,
+                MedicalCard.field.records.nameDot$, newRecord);
     }
 
     @Override
     public void deleteMedicalRecord(String id, LocalDateTime dateOfOldRecord) {
-        Query query = getQueryById(id);
-        Update update = new Update().pull(MedicalCard.field.records.name(),
-                Query.query(Criteria.where(RecordFields.date.name()).is(dateOfOldRecord)));
-        logger.info(update.toString());
-        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
-        logger.info(updateResult.toString());
+        String array = MedicalCard.field.records.name();
+        String elementField = RecordFields.date.name();
+        arrayRepository.deleteArrayElementFromCard(id, array, elementField, dateOfOldRecord);
     }
 
     protected static Query getQueryById(String id) {

@@ -28,11 +28,15 @@ public class MedicalCardController {
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
-    @PostMapping("/create-by-id/{id}")//id is the same as SQL id of Patient
+    @PostMapping("/add/{id}")//id is the same as SQL id of Patient
     public ResponseEntity<MedicalCard> createById(@PathVariable("id") String id) {
         MedicalCard card = service.createEmptyMedicalCard(id);
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/delete/{id}")//id is the same as SQL id of Patient
+    public ResponseEntity<List<MedicalCard>> deleteById(@PathVariable("id") String id) {
+        var card = service.deleteCard(id);
+        return new ResponseEntity<>(card, HttpStatus.OK);
+    }
 }

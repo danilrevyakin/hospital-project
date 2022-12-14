@@ -40,10 +40,6 @@ public class MedicalRecordService {
                 String message = "There is no record at " + date + " in " + id + " card";
                 throw new MedicalRecordNotFoundException(message);
             }
-            if (records.size() > 1) {
-                String message = "Medical card can't contain more than one record in some point of time";
-                throw new IllegalStateException(message);
-            }
             return records.get(0);
         }
         throw new MedicalCardNotFoundException();
