@@ -4,7 +4,6 @@ import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Field;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 
@@ -65,19 +63,6 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         return objects.get(0).getRecords();
     }
 
-    @Data
-    private class ListContainer<T>{
-        public final List<T> list;
-    }
-
-    private static <T extends Enum<?> & MongoDBField>
-    void excludeByCondition(T[] fields, Predicate<T> filter, Field projection) {
-        for(var i: fields){
-            if(filter.test(i)){
-                projection.exclude(i.n());
-            }
-        }
-    }
 
     @Override
     public void addMedicalRecord(String id, MedicalRecord record) {
@@ -90,14 +75,23 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
 //    db.medicalCard.findAndModify({query: { "_id" : "3", "records" : { "$elemMatch" : { "info" : "now...."}}},
 //        update: {$set: {"records.$": wednesday}}})
+    //i use different command
     @Override
     public void updateMedicalRecord(String id, LocalDateTime date, MedicalRecord newRecord) {
-        repository.updateRecord(id, date, newRecord);
+        Query query = getQueryById(id).
+                addCriteria(Criteria.where(RecordFields.date.path).is(date));
+        Update update = new Update().set(MedicalCard.field.records.nameDot$, newRecord);
+        template.updateFirst(query, update, MedicalCard.class);
     }
 
     @Override
     public void deleteMedicalRecord(String id, LocalDateTime dateOfOldRecord) {
-
+        Query query = getQueryById(id);
+        Update update = new Update().pull(MedicalCard.field.records.name(),
+                Query.query(Criteria.where(RecordFields.date.name()).is(dateOfOldRecord)));
+        logger.info(update.toString());
+        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
+        logger.info(updateResult.toString());
     }
 
     protected static Query getQueryById(String id) {

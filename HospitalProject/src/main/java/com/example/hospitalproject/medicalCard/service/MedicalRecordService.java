@@ -36,15 +36,15 @@ public class MedicalRecordService {
         throw new MedicalCardNotFoundException();
     }
 
-    public MedicalRecord getMedicalRecord(String id, LocalDateTime date){
+    public MedicalRecord getMedicalRecord(String id, LocalDateTime date) {
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             List<MedicalRecord> records = repository.getMedicalRecordsByIdAndDate(id, date);
-            if(records.size() == 0){
+            if (records.size() == 0) {
                 String message = "There is no record at " + date + " in " + id + " card";
                 throw new MedicalRecordNotFoundException(message);
             }
-            if(records.size() > 1){
+            if (records.size() > 1) {
                 String message = "Medical card can't contain more than one record in some point of time";
                 throw new IllegalStateException(message);
             }
@@ -57,6 +57,19 @@ public class MedicalRecordService {
 
     public List<MedicalRecord> updateMedicalRecord(String id, MedicalRecord newRecord) {
         LocalDateTime dateOfCreating = newRecord.getDate();
+        modifyingRecordValidation(id, dateOfCreating, newRecord.getDoctor());
+        newRecord.setEdited(LocalDateTime.now());
+        repository.updateMedicalRecord(id, dateOfCreating, newRecord);
+        return repository.findById(id).get().getRecords();
+    }
+
+    public List<MedicalRecord> deleteMedicalRecord(String id, LocalDateTime dateOfCreating, String doctor){
+        modifyingRecordValidation(id, dateOfCreating, doctor);
+        repository.deleteMedicalRecord(id, dateOfCreating);
+        return repository.findById(id).get().getRecords();
+    }
+
+    private void modifyingRecordValidation(String id, LocalDateTime dateOfCreating, String doctor) {
         if (dateOfCreating == null) {
             throw new IllegalArgumentException("Date of updating record is not specified");
         }
@@ -64,19 +77,15 @@ public class MedicalRecordService {
             String message = "You can't update medical records after " + HOURS_FOR_UPDATE + " hours";
             throw new UnsupportedOperationException(message);
         }
-        String doctor = newRecord.getDoctor();
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
         MedicalRecord oldRecord = getMedicalRecord(id, dateOfCreating);
-        if(!oldRecord.getDoctor().equals(doctor)){
+        if (!oldRecord.getDoctor().equals(doctor)) {
             String message = "Value of Doctor = " + doctor + " is illegal." +
                     " Only creator can can modify his own record.";
             throw new IllegalDoctorException(message);
         }
-        newRecord.setEdited(LocalDateTime.now());
-        repository.updateMedicalRecord(id, dateOfCreating, newRecord);
-        return repository.findById(id).get().getRecords();
     }
 
 }
