@@ -16,6 +16,14 @@ public class AllergyService {
 
     private final MedicalCardRepository repository;
 
+    public Set<Allergy> getAllergies(String id) {
+        if(repository.existsById(id)){
+            return repository.getAllAllergiesById(id);
+        }
+        throw new MedicalCardNotFoundException();
+    }
+
+
     public Set<Allergy> addAllergy(String id, Allergy allergy) {
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
@@ -24,7 +32,7 @@ public class AllergyService {
                 throw new IllegalStateException("There is already present " + allergy);
             }
             repository.addAllergy(id, allergy);
-            return repository.findById(id).get().getAllergies();
+            return repository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -36,7 +44,7 @@ public class AllergyService {
                 throw new IllegalStateException("There is no " + title + " in " + id + " card");
             }
             repository.updateAllergy(id, title, allergy);
-            return repository.findById(id).get().getAllergies();
+            return repository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -48,7 +56,7 @@ public class AllergyService {
                 throw new IllegalStateException("There is no " + title + " in " + id + " card");
             }
             repository.deleteAllergy(id, title);
-            return repository.findById(id).get().getAllergies();
+            return repository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }

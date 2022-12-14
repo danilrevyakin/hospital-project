@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.example.hospitalproject.medicalCard.repository.MedicalRecordRepositoryImpl.getQueryById;
@@ -30,10 +32,27 @@ public class AllergyRepositoryImpl implements AllergyRepository {
 
         public final String path;
         public final String path$;
+
         AllergyFields() {
             this.path = allergies + "." + this.name();
             this.path$ = allergies + ".$" + this.name();
         }
+    }
+
+    @Override
+    public Set<Allergy> getAllAllergiesById(String id) {
+        Query query = getQueryById(id);
+        query.fields().include(MedicalCard.field.allergies.name())
+                .exclude(MedicalCard.field.id.n);
+        logger.info(query.toString());
+        List<MedicalCard> objects = template.find(query, MedicalCard.class);
+        logger.info(objects.toString());
+        if (objects.size() < 1) {
+            return Set.of();
+        } else if (objects.get(0).getAllergies() == null || objects.get(0).getAllergies().size() < 1) {
+            return Set.of();
+        }
+        return objects.get(0).getAllergies();
     }
 
     @Override
