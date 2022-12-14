@@ -88,6 +88,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         logger.info(updateResult.toString());
     }
 
+//    db.medicalCard.findAndModify({query: { "_id" : "3", "records" : { "$elemMatch" : { "info" : "now...."}}},
+//        update: {$set: {"records.$": wednesday}}})
     @Override
     public void updateMedicalRecord(String id, LocalDateTime date, MedicalRecord newRecord) {
         repository.updateRecord(id, date, newRecord);
