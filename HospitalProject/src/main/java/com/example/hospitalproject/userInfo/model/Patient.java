@@ -6,14 +6,15 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "patients")
-@IdClass(PatientId.class)
 public class Patient {
+
     @Id
+    private Long id;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserInfo userId;
 
-    @Id
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "appointment", referencedColumnName = "id")
     private Appointment appointment;

@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:each="el : ${info}">
-        <h3 th:text="${el.email}" />
+        <a th:href="'/hospital/' + ${el.getId()}" th:text="${el.getEmail()}" />
     </div>
 </body>
 </html>
