@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -22,6 +21,7 @@ public class AllergyRepositoryImpl implements AllergyRepository {
 
     private final MongoTemplate template;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final ArrayRepository arrayRepository;
 
 
     private static final String allergies = "allergies";
@@ -41,18 +41,19 @@ public class AllergyRepositoryImpl implements AllergyRepository {
 
     @Override
     public Set<Allergy> getAllAllergiesById(String id) {
-        Query query = getQueryById(id);
-        query.fields().include(MedicalCard.field.allergies.name())
-                .exclude(MedicalCard.field.id.n);
-        logger.info(query.toString());
-        List<MedicalCard> objects = template.find(query, MedicalCard.class);
-        logger.info(objects.toString());
-        if (objects.size() < 1) {
-            return Set.of();
-        } else if (objects.get(0).getAllergies() == null || objects.get(0).getAllergies().size() < 1) {
-            return Set.of();
-        }
-        return objects.get(0).getAllergies();
+//        Query query = getQueryById(id);
+//        query.fields().include(MedicalCard.field.allergies.name())
+//                .exclude(MedicalCard.field.id.n);
+//        logger.info(query.toString());
+//        List<MedicalCard> objects = template.find(query, MedicalCard.class);
+//        logger.info(objects.toString());
+//        if (objects.size() < 1) {
+//            return Set.of();
+//        } else if (objects.get(0).getAllergies() == null || objects.get(0).getAllergies().size() < 1) {
+//            return Set.of();
+//        }
+//        return objects.get(0).getAllergies();
+        return arrayRepository.getArrayFromCardById(id, MedicalCard.field.allergies, Set.of(), MedicalCard::getAllergies);
     }
 
     @Override

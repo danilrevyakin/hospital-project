@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     private final MongoTemplate template;
+    private final ArrayRepository arrayRepository;
 
 
     private static final String records = "records";
@@ -64,18 +65,19 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     @Override
     public List<MedicalRecord> getMedicalRecordsById(String id) {
-        Query query = getQueryById(id);
-        query.fields().include(MedicalCard.field.records.name())
-                .exclude(MedicalCard.field.id.n);
-        logger.info(query.toString());
-        List<MedicalCard> objects = template.find(query, MedicalCard.class);
-        logger.info(objects.toString());
-        if (objects.size() < 1) {
-            return List.of();
-        } else if (objects.get(0).getRecords().size() < 1) {
-            return List.of();
-        }
-        return objects.get(0).getRecords();
+//        Query query = getQueryById(id);
+//        query.fields().include(MedicalCard.field.records.name())
+//                .exclude(MedicalCard.field.id.n);
+//        logger.info(query.toString());
+//        List<MedicalCard> objects = template.find(query, MedicalCard.class);
+//        logger.info(objects.toString());
+//        if (objects.size() < 1) {
+//            return List.of();
+//        } else if (objects.get(0).getRecords().size() < 1) {
+//            return List.of();
+//        }
+//        return objects.get(0).getRecords();
+        return arrayRepository.getArrayFromCardById(id, MedicalCard.field.records, List.of(), MedicalCard::getRecords);
     }
 
     @Override
