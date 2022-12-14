@@ -18,7 +18,8 @@ public class BadHabitService {
         Optional<MedicalCard> cardOptional = repository.findById(key);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
-            if (card.getBadHabits().contains(badHabit)) {
+            Set<String> badHabits = card.getBadHabits();
+            if (badHabits != null && badHabits.contains(badHabit)) {
                 throw new IllegalStateException("There is already present " + badHabit + " habit");
             }
             repository.addBadHabit(card.getId(), badHabit);

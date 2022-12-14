@@ -29,12 +29,9 @@ public class MedicalRecordService {
         }
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
-            MedicalCard card = cardOptional.get();
             record.setDate(LocalDateTime.now());
-            System.out.println(record.getDate());
-            repository.addMedicalRecord(card.getId(), record);
-            List<MedicalRecord> records = repository.findById(id).get().getRecords();
-            return records;
+            repository.addMedicalRecord(id, record);
+            return repository.findById(id).get().getRecords();
         }
         throw new MedicalCardNotFoundException();
     }
@@ -71,6 +68,13 @@ public class MedicalRecordService {
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
+        MedicalRecord oldRecord = getMedicalRecord(id, dateOfCreating);
+        if(!oldRecord.getDoctor().equals(doctor)){
+            String message = "Value of Doctor = " + doctor + " is illegal." +
+                    " Only creator can can modify his own record.";
+            throw new IllegalDoctorException(message);
+        }
+        newRecord.setEdited(LocalDateTime.now());
         repository.updateMedicalRecord(id, dateOfCreating, newRecord);
         return repository.findById(id).get().getRecords();
     }

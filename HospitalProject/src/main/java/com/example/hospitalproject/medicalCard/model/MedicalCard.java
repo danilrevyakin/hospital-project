@@ -1,5 +1,6 @@
 package com.example.hospitalproject.medicalCard.model;
 
+import com.example.hospitalproject.medicalCard.repository.MongoDBField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -20,12 +21,25 @@ public class MedicalCard {
     private List<MedicalRecord> records;
     private LocalDate created;
 
-    public enum field {
-        id, allergies, badHabits, records, created;
-        public final String nameDot$;
+    public enum field implements MongoDBField {
+        id("_"), allergies, badHabits, records, created;
 
-        field() {
+        public final String nameDot$;
+        public final String n;
+
+        field(String before) {
             nameDot$ = name() + ".$";
+            n = before + name();
+        }
+
+        field(){
+            nameDot$ = name() + ".$";
+            n = name();
+        }
+
+        @Override
+        public String n() {
+            return n;
         }
     }
 }

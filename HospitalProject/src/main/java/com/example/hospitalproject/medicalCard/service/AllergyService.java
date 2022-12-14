@@ -19,7 +19,8 @@ public class AllergyService {
     public Set<Allergy> addAllergy(String id, Allergy allergy) {
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
-            if(cardOptional.get().getAllergies().contains(allergy)){
+            Set<Allergy> allergies = cardOptional.get().getAllergies();
+            if(allergies != null && allergies.contains(allergy)){
                 throw new IllegalStateException("There is already present " + allergy);
             }
             repository.addAllergy(id, allergy);
