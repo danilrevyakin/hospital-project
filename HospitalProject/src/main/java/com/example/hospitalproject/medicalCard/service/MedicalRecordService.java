@@ -73,7 +73,7 @@ public class MedicalRecordService {
             throw new IllegalArgumentException("Date of updating record is not specified");
         }
         if (ChronoUnit.HOURS.between(dateOfCreating, LocalDateTime.now()) >= HOURS_FOR_UPDATE) {
-            String message = "You can't update medical records after " + HOURS_FOR_UPDATE + " hours";
+            String message = "You can't modify medical records after " + HOURS_FOR_UPDATE + " hours";
             throw new UnsupportedOperationException(message);
         }
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {

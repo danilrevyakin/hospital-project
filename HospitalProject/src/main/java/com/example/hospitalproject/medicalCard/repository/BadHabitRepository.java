@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface BadHabitRepository {
 
-    Set<String> getBadHabitsById(String id);
+    Set<String> getBadHabits(String id);
 
     void addBadHabit(String id, String badHabit);
 

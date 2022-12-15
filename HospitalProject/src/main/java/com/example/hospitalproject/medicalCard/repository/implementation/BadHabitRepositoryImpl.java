@@ -24,7 +24,7 @@ public class BadHabitRepositoryImpl implements BadHabitRepository {
     private final ArrayRepository arrayRepository;
 
     @Override
-    public Set<String> getBadHabitsById(String id) {
+    public Set<String> getBadHabits(String id) {
         return arrayRepository.getArrayFromCardById(id, MedicalCard.field.badHabits,
                 Set.of(), MedicalCard::getBadHabits);
     }

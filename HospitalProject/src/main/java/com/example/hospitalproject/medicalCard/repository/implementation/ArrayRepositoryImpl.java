@@ -25,12 +25,22 @@ public class ArrayRepositoryImpl implements ArrayRepository {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
-    public <E extends Collection<?>> E getArrayFromCardById(String id,
-                                                            MedicalCard.field field,
-                                                            E empty,
-                                                            Function<MedicalCard, E> getter) {
+    public <E extends Collection<?>> E getArrayFromCardById(String id,MedicalCard.field field,
+                                                            E empty,Function<MedicalCard, E> getter) {
         Query query = getQueryById(id);
-        query.fields().include(field.name())
+        return getArrayFromCardByQuery(query, field, empty, getter);
+    }
+
+    @Override
+    public <E extends Collection<?>> E getArrayFromCardByQuery(Query query,MedicalCard.field field,
+                                                               E empty,Function<MedicalCard, E> getter) {
+        return getArrayFromCardByQuery(query, field.name(), empty, getter);
+    }
+
+    @Override
+    public <E extends Collection<?>> E getArrayFromCardByQuery(Query query, String field,
+                                                               E empty, Function<MedicalCard, E> getter) {
+        query.fields().include(field)
                 .exclude(MedicalCard.field.id.n);
         logger.info(query.toString());
         List<MedicalCard> objects = template.find(query, MedicalCard.class);
@@ -46,7 +56,7 @@ public class ArrayRepositoryImpl implements ArrayRepository {
     }
 
     @Override
-    public <T> void deleteArrayElementFromCard(String id, String array, String elementField, T fieldValue) {
+    public <T> void deleteArrayElement(String id, String array, String elementField, T fieldValue) {
         Query query = getQueryById(id);
         Update update = new Update().pull(array,
                 Query.query(Criteria.where(elementField).is(fieldValue)));

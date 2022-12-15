@@ -42,7 +42,8 @@ public class AllergyRepositoryImpl implements AllergyRepository {
 
     @Override
     public Set<Allergy> getAllAllergiesById(String id) {
-        return arrayRepository.getArrayFromCardById(id, MedicalCard.field.allergies, Set.of(), MedicalCard::getAllergies);
+        return arrayRepository.getArrayFromCardById(id, MedicalCard.field.allergies,
+                Set.of(), MedicalCard::getAllergies);
     }
 
     @Override
@@ -65,6 +66,6 @@ public class AllergyRepositoryImpl implements AllergyRepository {
     //db.medicalCard.updateOne({_id: "id"},{$pull: {allergies:{title: "title"}}})
     @Override
     public void deleteAllergy(String id, String title) {
-        arrayRepository.deleteArrayElementFromCard(id,MedicalCard.field.allergies.n, AllergyFields.title.name(), title);
+        arrayRepository.deleteArrayElement(id,MedicalCard.field.allergies.n, AllergyFields.title.name(), title);
     }
 }

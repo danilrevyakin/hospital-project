@@ -30,7 +30,7 @@ public class MedicalRecordController {
         return new ResponseEntity<>(record, HttpStatus.OK);
     }
 
-    @PostMapping("/add/{id}")
+    @PutMapping("/add/{id}")
     public ResponseEntity<List<MedicalRecord>> addMedicalRecord(@PathVariable("id") String id,
                                                                 @RequestBody MedicalRecord record) {
         List<MedicalRecord> medicalRecords = service.addMedicalRecord(id, record);

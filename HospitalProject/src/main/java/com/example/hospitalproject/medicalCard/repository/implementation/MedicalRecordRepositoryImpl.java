@@ -8,7 +8,6 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Field;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -24,7 +23,6 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     private final MongoTemplate template;
     private final ArrayRepository arrayRepository;
-
 
     private static final String records = "records";
     private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -49,18 +47,9 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         Query query = getQueryById(id)
                 .addCriteria(Criteria.where(MedicalCard.field.records.name())
                         .elemMatch(Criteria.where(RecordFields.date.name()).is(date)));
-        Field projection = query.fields();
-        projection
-                .include(MedicalCard.field.records.name() + ".$")
-                .exclude(MedicalCard.field.id.n);
-        logger.info(query.toString());
-        List<MedicalCard> objects = template.find(query, MedicalCard.class);
-        if (objects.size() < 1) {
-            return List.of();
-        } else if (objects.get(0).getRecords().size() < 1) {
-            return List.of();
-        }
-        return objects.get(0).getRecords();
+        return arrayRepository.getArrayFromCardByQuery(query,
+                MedicalCard.field.records.nameDot$,
+                List.of(), MedicalCard::getRecords);
     }
 
 //db.medicalCard.find({_id:"3"},{records: 1, _id: 0})
@@ -93,7 +82,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     public void deleteMedicalRecord(String id, LocalDateTime dateOfOldRecord) {
         String array = MedicalCard.field.records.name();
         String elementField = RecordFields.date.name();
-        arrayRepository.deleteArrayElementFromCard(id, array, elementField, dateOfOldRecord);
+        arrayRepository.deleteArrayElement(id, array, elementField, dateOfOldRecord);
     }
 
     protected static Query getQueryById(String id) {

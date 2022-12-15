@@ -16,7 +16,7 @@ public class BadHabitService {
 
     public Set<String> getAllBadHabits(String id){
         if(repository.existsById(id)){
-            return repository.getBadHabitsById(id);
+            return repository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -30,7 +30,7 @@ public class BadHabitService {
                 throw new IllegalStateException("There is already present " + badHabit + " habit");
             }
             repository.addBadHabit(id, badHabit);
-            return repository.getBadHabitsById(id);
+            return repository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -43,7 +43,7 @@ public class BadHabitService {
                 throw new IllegalStateException("There is no " + badHabit + " habit");
             }
             repository.deleteBadHabit(id, badHabit);
-            return repository.findById(id).get().getBadHabits();
+            return repository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }

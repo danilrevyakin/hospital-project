@@ -21,7 +21,7 @@ public class BadHabitController {
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 
-    @PostMapping("/add/{id}/{badHabit}")
+    @PutMapping("/add/{id}/{badHabit}")
     public ResponseEntity<Set<String>> addBadHabit(@PathVariable("id") String id,
                                                    @PathVariable("badHabit") String badHabit) {
         var strings = service.addBadHabit(id, badHabit);

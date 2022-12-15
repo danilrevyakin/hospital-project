@@ -16,7 +16,7 @@ public class AllergyController {
 
     private final AllergyService service;
 
-    @PostMapping("/add/{id}")
+    @PutMapping("/add/{id}")
     public ResponseEntity<Set<Allergy>> addAllergy(@PathVariable("id") String id,
                                                    @RequestBody Allergy allergy) {
         Set<Allergy> allergies = service.addAllergy(id, allergy);
