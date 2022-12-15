@@ -46,13 +46,8 @@ public class AppointmentController {
 
         UserInfo user = userInfoRepository.findById(id).orElseThrow();
         List<Doctor> doctorList = doctorRepository.findByUserId(user);
-        Appointment appointment = createAppointment(day, time, description, offline, doctorList);
-        appointmentRepository.save(appointment);
-        return "findDoctor";
-    }
 
-    private Appointment createAppointment(String day, String time, String description, String offline,
-                                          List<Doctor> doctorList) throws ParseException {
+        //data validation
         Doctor doctor = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String start = time.split("-")[0];
@@ -65,6 +60,23 @@ public class AppointmentController {
 
         if(!doctorList.isEmpty())
             doctor = doctorList.get(0);
+
+
+        Appointment appointment = createAppointment(date, startTime, endTime, offlineMode, description, doctor);
+        List<Appointment> appointmentList = appointmentRepository.findByDateAndTimeAndDoctor(date, startTime, doctor);
+        if(appointmentList.isEmpty()) {
+            appointmentRepository.save(appointment);
+            return "findDoctor";
+        } else {
+            model.addAttribute("id", id);
+            return "timeSlotError";
+        }
+
+    }
+
+    private Appointment createAppointment(Date date, Time startTime, Time endTime, boolean offlineMode,
+                                          String description, Doctor doctor) throws ParseException {
+
 
         Appointment appointment = new Appointment();
         appointment.setDay(date);
