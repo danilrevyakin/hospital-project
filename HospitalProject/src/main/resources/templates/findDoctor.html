@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find doctor</title>
+</head>
+<body>
+    <p>What doctor do you need?</p>
+    <form action="/find_doctor" method="post">
+        <label for="types">speciality: </label>
+        <select name="types" id="types">
+            <option value="All">All</option>
+            <option value="PEDIATRICIAN">Pediatrician</option>
+            <option value="NEUROLOGIST">Neurologist</option>
+            <option value="FAMILY_PHYSICIAN">Family physician</option>
+            <option value="PSYCHIATRIST">Psychiatrist</option>
+        </select>
+        <input type="submit" name="Find">
+    </form>
+</body>
+</html>

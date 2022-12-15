@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>doctors</title>
+</head>
+<body>
+    <h1>Doctors</h1>
+      <div th:each="d : ${doctors}">
+        <a th:href="'/hospital/' + ${d.userId.id}" th:text="${d.userId.email}" />
+      </div>
+</body>
+</html>
