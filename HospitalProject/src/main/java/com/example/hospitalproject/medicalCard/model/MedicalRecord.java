@@ -1,12 +1,11 @@
 package com.example.hospitalproject.medicalCard.model;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
+@Document
 public class MedicalRecord {
     private String info;
     private String symptoms;
@@ -14,5 +13,4 @@ public class MedicalRecord {
     private String doctor;
     private LocalDateTime date;
     private LocalDateTime edited;
-
 }

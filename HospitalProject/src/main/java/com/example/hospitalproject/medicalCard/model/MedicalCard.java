@@ -20,12 +20,20 @@ public class MedicalCard {
     private List<MedicalRecord> records;
     private LocalDate created;
 
-    public enum field {
-        id, allergies, badHabits, records, created;
-        public final String nameDot$;
+    public enum field{
+        id("_"), allergies, badHabits, records, created;
 
-        field() {
+        public final String nameDot$;
+        public final String n;
+
+        field(String before) {
             nameDot$ = name() + ".$";
+            n = before + name();
+        }
+
+        field(){
+            nameDot$ = name() + ".$";
+            n = name();
         }
     }
 }
