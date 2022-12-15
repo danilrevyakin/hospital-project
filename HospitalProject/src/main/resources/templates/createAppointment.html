@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment</title>
+</head>
+<body>
+    <h2 th:text="'Doctor: ' + ${doctor.firstName} + ' ' + ${doctor.lastName}"/>
+  <form method="post">
+      <label for="day">Day: </label>
+      <input type="date" name="day" id="day">
+
+      <label for="time">Time: </label>
+      <select name="time" id="time">
+          <option value="10:00-11:00">10:00 - 11:00</option>
+          <option value="11:00-12:00">11:00 - 12:00</option>
+          <option value="12:00-13:00">12:00 - 13:00</option>
+          <option value="13:00-14:00">13:00 - 14:00</option>
+          <option value="14:00-15:00">14:00 - 15:00</option>
+      </select>
+      <label for="description">Describe your problem: </label>
+      <textarea name="description" id="description"></textarea>
+
+      <label for="offline">Offline: </label>
+      <input type="checkbox" name="offline" id="offline">
+
+      <input type="submit" value="Send request">
+  </form>
+</body>
+</html>

@@ -8,6 +8,7 @@
     <h1>Doctors</h1>
       <div th:each="d : ${doctors}">
         <a th:href="'/hospital/' + ${d.userId.id}" th:text="${d.userId.email}" />
+          <a th:href="'/makeAppointment/' + ${d.userId.id}" > make an appointment</a>
       </div>
 </body>
 </html>

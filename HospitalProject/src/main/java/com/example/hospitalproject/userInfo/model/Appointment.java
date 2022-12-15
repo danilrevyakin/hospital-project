@@ -6,19 +6,21 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.sql.Time;
 
 @Entity
 @Table(name="appointment")
 @Data
 public class Appointment {
     @Id
+    @GeneratedValue
     private Long id;
 
     private Date day;
-    private Timestamp start;
-    private Timestamp finish;
+    private Time start;
+    private Time finish;
     private String description;
+    private Boolean offline;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne
