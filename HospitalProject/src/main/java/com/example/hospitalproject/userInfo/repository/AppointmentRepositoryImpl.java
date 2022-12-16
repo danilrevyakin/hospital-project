@@ -25,4 +25,12 @@ public class AppointmentRepositoryImpl {
         query.setParameter("doctor", doctor);
         return query.getResultList();
     }
+
+    @SuppressWarnings("unused")
+    public List<Appointment> findByDoctor(Doctor doctor) {
+        String hql = "SELECT a FROM Appointment a WHERE  a.doctor = :doctor";
+        TypedQuery<Appointment> query = entityManager.createQuery(hql, Appointment.class);
+        query.setParameter("doctor", doctor);
+        return query.getResultList();
+    }
 }

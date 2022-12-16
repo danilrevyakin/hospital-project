@@ -18,6 +18,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AppointmentController {
@@ -36,6 +37,15 @@ public class AppointmentController {
         UserInfo user = userInfoRepository.findById(id).orElseThrow();
         model.addAttribute("doctor", user);
         return "createAppointment";
+    }
+
+    @GetMapping("hospital/{docId}/appointment/{appId}/cancel")
+    public String cancelAppointment(@PathVariable(value = "docId") long docId,
+                                    @PathVariable(value = "appId") long appId, Model model){
+        Optional<Appointment> appointmentResult = appointmentRepository.findById(appId);
+        Appointment appointment = appointmentResult.orElseThrow();
+        appointmentRepository.delete(appointment);
+        return "redirect:/hospital/"+docId+"/appointments";
     }
 
     @PostMapping("/makeAppointment/{id}")
