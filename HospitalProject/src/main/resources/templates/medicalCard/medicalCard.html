@@ -63,7 +63,9 @@
     <!-- This script got from frontendfreecode.com -->
     <div class="container-fluid">
         <div id="toolbar">
-            <button id="remove-allergies" class="btn btn-danger" disabled>Delete <i class="fas fa-trash-alt"></i></button>
+            <button id="add-allergies" class="btn btn-success" disabled>New<i class="fas fa-plus"></i></button>
+            <button id="update-allergies" class="btn btn-primary" disabled>Update<i class="fas fa-pencil-square"></i></button>
+            <button id="remove-allergies" class="btn btn-danger" disabled>Delete<i class="fas fa-trash-alt"></i></button>
         </div>
 
         <table id="allergy-table">
@@ -71,20 +73,21 @@
             <col width="30%"/>
             <col width="50%"/>
 
-            <tbody>
+            <tbody th:each="allergy : ${allergies}">
             <tr>
                 <td></td>
-                <td>Honey</td>
-                <td>Dead</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>yahoo</td>
-                <td>dk-034840</td>
-                <td></td>
-                <td></td>
+                <td th:text="${allergy.title}"></td>
+                <td th:text="${allergy.reaction}"></td>
+                <td>
+                    <button id="update-allergy" class="btn btn-warning"
+                            th:titlePar="${allergy.title}"
+                            th:reactionPar="${allergy.reaction}"
+                            th:onclick="openUpdateAllergyForm(this.getAttribute('titlePar'), this.getAttributes('reactionPar'))"
+                    >Update
+                        <i class="fas fa-pencil-square"></i>
+                    </button>
+                    <button id="delete-allergy" class="btn btn-danger">Delete<i class="fas fa-trash-alt"></i></button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -92,7 +95,7 @@
 </div>
 <div class="form-popup" id="form-for-allergy">
     <form action="" class="form-container">
-        <h1>Login</h1>
+        <h2 type="text" id="allergy-logo">Default Allergy</h2>
 
         <label for="input-title-of-allergy"><b>Allergy</b></label>
         <input type="text" placeholder="Enter Allergy" id="input-title-of-allergy" required>
