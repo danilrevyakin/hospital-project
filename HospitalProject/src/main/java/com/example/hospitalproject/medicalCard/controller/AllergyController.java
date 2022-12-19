@@ -19,6 +19,7 @@ public class AllergyController {
     @PutMapping("/add/{id}")
     public ResponseEntity<Set<Allergy>> addAllergy(@PathVariable("id") String id,
                                                    @RequestBody Allergy allergy) {
+        System.out.println("Received");
         Set<Allergy> allergies = service.addAllergy(id, allergy);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }

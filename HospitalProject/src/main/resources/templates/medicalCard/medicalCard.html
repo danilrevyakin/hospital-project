@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Card</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merienda+One">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <!--allergy table-->
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.css'>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.13/css/all.css'>
+    <script src='https://code.jquery.com/jquery-3.3.1.js'></script>
+    <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js'></script>
+    <script src='https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/export/bootstrap-table-export.js'></script>
+
+
+<!--    <link rel="stylesheet" th:href="@{/medicalCard/css/header.css}"/>-->
+    <link rel="stylesheet" th:href="@{/medicalCard/css/header.css}"/>
+    <link rel="stylesheet" th:href="@{/medicalCard/css/allergy.css}"/>
+    <link rel="stylesheet" th:href="@{/medicalCard/css/pop-up.css}"/>
+    <link rel="stylesheet" th:href="@{/medicalCard/css/allergy-form.css}"/>
+</head>
+<body>
+<p style="display: none" th:text="'id: ' + ${id}"></p>
+<nav class="navbar navbar-expand-xl navbar-light bg-light">
+    <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>Medical<b>Card</b></a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Collection of nav links, forms, and other content for toggling -->
+    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+        <div class="navbar-nav ml-auto">
+            <a href="#" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge">1</span></a>
+            <div class="nav-item dropdown">
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
+                    <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
+                    <p th:text="${doctorName}"></p>
+                    <b class="caret" ></b>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a></a>
+                    <a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a></a>
+                    <a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a></a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<h1 th:text="'Patient: ' + ${patientName}"/>
+
+<div class="allergyWrapper">
+    <!-- This script got from frontendfreecode.com -->
+    <div class="container-fluid">
+        <div id="toolbar">
+            <button id="remove-allergies" class="btn btn-danger" disabled>Delete <i class="fas fa-trash-alt"></i></button>
+        </div>
+
+        <table id="allergy-table">
+            <col width="5%"/>
+            <col width="30%"/>
+            <col width="50%"/>
+
+            <tbody>
+            <tr>
+                <td></td>
+                <td>Honey</td>
+                <td>Dead</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>yahoo</td>
+                <td>dk-034840</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-popup" id="form-for-allergy">
+    <form action="" class="form-container">
+        <h1>Login</h1>
+
+        <label for="input-title-of-allergy"><b>Allergy</b></label>
+        <input type="text" placeholder="Enter Allergy" id="input-title-of-allergy" required>
+
+        <label for="input-reaction-of-allergy"><b>Reaction</b></label>
+        <input type="text" placeholder="Enter Reaction" id="input-reaction-of-allergy">
+
+        <button type="submit" class="btn" onclick="saveFormUpdate()">Save</button>
+        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+    </form>
+</div>
+
+<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput">
+<hr>
+<script th:src="@{/medicalCard/js/allergy.js} "></script>
+</body>
+</html>
