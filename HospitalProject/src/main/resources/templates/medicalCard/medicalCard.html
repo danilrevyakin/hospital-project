@@ -23,7 +23,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/export/bootstrap-table-export.js'></script>
 
 
-<!--    <link rel="stylesheet" th:href="@{/medicalCard/css/header.css}"/>-->
+    <!--    <link rel="stylesheet" th:href="@{/medicalCard/css/header.css}"/>-->
     <link rel="stylesheet" th:href="@{/medicalCard/css/header.css}"/>
     <link rel="stylesheet" th:href="@{/medicalCard/css/allergy.css}"/>
     <link rel="stylesheet" th:href="@{/medicalCard/css/pop-up.css}"/>
@@ -44,7 +44,7 @@
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
                     <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
                     <p th:text="${doctorName}"></p>
-                    <b class="caret" ></b>
+                    <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu">
                     <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a></a>
@@ -64,8 +64,10 @@
     <div class="container-fluid">
         <div id="toolbar">
             <button id="add-allergies" class="btn btn-success" disabled>New<i class="fas fa-plus"></i></button>
-            <button id="update-allergies" class="btn btn-primary" disabled>Update<i class="fas fa-pencil-square"></i></button>
-            <button id="remove-allergies" class="btn btn-danger" disabled>Delete<i class="fas fa-trash-alt"></i></button>
+            <button id="update-allergies" class="btn btn-primary" disabled>Update<i class="fas fa-pencil-square"></i>
+            </button>
+            <button id="remove-allergies" class="btn btn-danger" disabled>Delete<i class="fas fa-trash-alt"></i>
+            </button>
         </div>
 
         <table id="allergy-table">
@@ -79,10 +81,15 @@
                 <td th:text="${allergy.title}"></td>
                 <td th:text="${allergy.reaction}"></td>
                 <td>
+                    <script th:inline="javascript">
+                        var paramObj = {
+                            title: [[${allergy.title}]],
+                            reaction: [[${allergy.reaction}]],
+                        }
+                    </script>
+                    <!--                            onclick="openUpdateAllergyFormWithObj(paramObj)"-->
                     <button id="update-allergy" class="btn btn-warning"
-                            th:titlePar="${allergy.title}"
-                            th:reactionPar="${allergy.reaction}"
-                            th:onclick="openUpdateAllergyForm(this.getAttribute('titlePar'), this.getAttributes('reactionPar'))"
+                            th:onclick="openUpdateAllergyFormWithObj('[[${allergy}]]')"
                     >Update
                         <i class="fas fa-pencil-square"></i>
                     </button>

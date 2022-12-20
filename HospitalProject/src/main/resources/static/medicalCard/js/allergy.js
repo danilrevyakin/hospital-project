@@ -157,6 +157,13 @@ function openUpdateAllergyForm(title, reaction) {
     document.getElementById("form-for-allergy").style.display = "block";
 }
 
+function openUpdateAllergyFormWithObj(par) {
+    alert(par)
+    allergy = JSON.parse(par)
+    alert(allergy)
+    openUpdateAllergyForm(allergy.title, allergy.reaction)
+}
+
 function closeForm() {
     document.getElementById("form-for-allergy").style.display = "none";
 }
