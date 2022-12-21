@@ -30,7 +30,60 @@
     <link rel="stylesheet" th:href="@{/medicalCard/css/allergy-form.css}"/>
 </head>
 <body>
-<p style="display: none" th:text="'id: ' + ${id}"></p>
+<script th:inline="javascript">
+    var URLObect = {
+        id: [[${requestBody.id}]],
+        patient: [[${requestBody.patientName}]],
+        doctor: [[${requestBody.doctorName}]],
+        body: [[${requestBody}]],
+        getDataURL() {
+            return this.id + "/" + this.patient + "/" + this.doctor;
+        },
+    }
+
+    var OldTitleVarObj = {
+        get() {
+            return this.element().value;
+        },
+        element(){
+            return document.getElementById("oldTitleVar");
+        },
+        set(value) {
+            alert("set");
+            this.element().value = value;
+        }
+    }
+
+    var AllergyObj = {
+        getAllergyUpdateURL() {
+            var oldTitle = OldTitleVarObj.get();
+            return "@{http://localhost:8080/medical-card/page/allergy/update/" + URLObect.getDataURL() + "/" + oldTitle + "}";
+            // return "http://localhost:8080/medical-card/page/allergy/update/" + URLObect.getDataURL() + "/" + oldTitle;
+        },
+
+        getAllergyFormElement() {
+            return document.getElementById("form-for-allergy");
+        },
+
+        getAttributeOfForm(field) {
+            return this.getAllergyFormElement().getAttribute(field);
+        },
+
+        setAttributeOfForm(field, value) {
+            this.getAllergyFormElement().setAttribute(field, value);
+        },
+
+        printAttributeValue(attribute) {
+            var att = this.getAllergyFormElement().getAttribute(attribute);
+            console.log(att);
+        },
+        alertAttributeValue(attribute) {
+            var att = this.getAllergyFormElement().getAttribute(attribute);
+            alert(att);
+        }
+    }
+</script>
+<p style="display: none" th:text="'id: ' + ${requestBody.id}"></p>
 <nav class="navbar navbar-expand-xl navbar-light bg-light">
     <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>Medical<b>Card</b></a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -43,7 +96,7 @@
             <div class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
                     <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
-                    <p th:text="${doctorName}"></p>
+                    <p th:text="${requestBody.doctorName}"></p>
                     <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu">
@@ -57,7 +110,7 @@
         </div>
     </div>
 </nav>
-<h1 th:text="'Patient: ' + ${patientName}"/>
+<h1 th:text="'Patient: ' + ${requestBody.patientName}"/>
 
 <div class="allergyWrapper">
     <!-- This script got from frontendfreecode.com -->
@@ -81,14 +134,7 @@
                 <td th:text="${allergy.title}"></td>
                 <td th:text="${allergy.reaction}"></td>
                 <td>
-                    <script th:inline="javascript">
-                        var paramObj = {
-                            title: [[${allergy.title}]],
-                            reaction: [[${allergy.reaction}]],
-                        }
-                    </script>
-                    <!--                            onclick="openUpdateAllergyFormWithObj(paramObj)"-->
-                    <button id="update-allergy" class="btn btn-warning"
+                    <button id="update-allergy" type="submit" class="btn btn-warning"
                             th:onclick="openUpdateAllergyFormWithObj('[[${allergy}]]')"
                     >Update
                         <i class="fas fa-pencil-square"></i>
@@ -101,22 +147,26 @@
     </div>
 </div>
 <div class="form-popup" id="form-for-allergy">
-    <form action="" class="form-container">
+    <div id="oldTitleVar" style="display: none"></div>
+    <form class="form-container" th:object="${updatedAllergy}" th:method="POST" th:action="@{http://localhost:8080/medical-card/page/allergy/update/1/Tom/Billy/Onion}">
         <h2 type="text" id="allergy-logo">Default Allergy</h2>
 
         <label for="input-title-of-allergy"><b>Allergy</b></label>
-        <input type="text" placeholder="Enter Allergy" id="input-title-of-allergy" required>
+        <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy" id="input-title-of-allergy"
+               required/>
 
         <label for="input-reaction-of-allergy"><b>Reaction</b></label>
-        <input type="text" placeholder="Enter Reaction" id="input-reaction-of-allergy">
-
-        <button type="submit" class="btn" onclick="saveFormUpdate()">Save</button>
+        <input type="text" placeholder="Enter Reaction" th:field="${updatedAllergy.reaction}"
+               id="input-reaction-of-allergy">
+        <button th:type="submit"
+                class="btn">Save
+        </button>
         <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
 </div>
 
 <input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput">
-<hr>
 <script th:src="@{/medicalCard/js/allergy.js} "></script>
+<hr>
 </body>
 </html>

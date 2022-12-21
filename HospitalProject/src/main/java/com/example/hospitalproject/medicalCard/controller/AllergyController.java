@@ -19,7 +19,6 @@ public class AllergyController {
     @PutMapping("/add/{id}")
     public ResponseEntity<Set<Allergy>> addAllergy(@PathVariable("id") String id,
                                                    @RequestBody Allergy allergy) {
-        System.out.println("Received");
         Set<Allergy> allergies = service.addAllergy(id, allergy);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
@@ -31,7 +30,7 @@ public class AllergyController {
     }
 
     @PutMapping("/update/{id}/{title}")
-    public ResponseEntity<Set<Allergy>> addAllergy(@PathVariable("id") String id,
+    public ResponseEntity<Set<Allergy>> updateAllergy(@PathVariable("id") String id,
                                                    @PathVariable("title") String title,
                                                    @RequestBody Allergy allergy) {
         Set<Allergy> allergies = service.updateAllergy(id, title, allergy);

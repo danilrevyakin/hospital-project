@@ -1,7 +1,3 @@
-var AllergyObj = {
-    title: "default title of allergy",
-    reaction: "default reaction of allergy"
-};
 var $table = $("#allergy-table"),
     $remove = $("#remove-allergies"),
     $allergyForm = $("#form-for-allergy"),
@@ -134,34 +130,29 @@ function getIdSelections() {
         return row.id;
     });
 }
-//
-// function actionFormatterEdit(value, row, index) {
-//     return ['<button class="edit btn btn-danger btn-sm">Edit</button>'].join(
-//         "");
-// }
-//
-// function actionFormatterDelete(value, row, index) {
-//     return ['<button class="remove btn btn-danger btn-sm">Delete</button>'].join(
-//         "");
-// }
 
 function openForm() {
     document.getElementById("form-for-allergy").style.display = "block";
 }
 
 function openUpdateAllergyForm(title, reaction) {
-    console.log("update allergy form")
+    console.log("update allergy form");
+    alert(URLObect.getDataURL());
     document.getElementById("allergy-logo").innerHTML = "Update Allergy";
     document.getElementById("input-title-of-allergy").value = title;
+    OldTitleVarObj.set(title);
     document.getElementById("input-reaction-of-allergy").value = reaction;
     document.getElementById("form-for-allergy").style.display = "block";
+    initOldAllergyTitle();
 }
 
+
 function openUpdateAllergyFormWithObj(par) {
-    alert(par)
+    alert("openUPD");
     allergy = JSON.parse(par)
-    alert(allergy)
-    openUpdateAllergyForm(allergy.title, allergy.reaction)
+    openUpdateAllergyForm(allergy.title, allergy.reaction);
+    AllergyObj.setAttributeOfForm("th:action",AllergyObj.getAllergyUpdateURL());
+    alert(AllergyObj.getAttributeOfForm("th:action"));
 }
 
 function closeForm() {
@@ -171,13 +162,14 @@ function closeForm() {
 
 function saveFormUpdate() {
     // document.getElementById("form-for-allergy").style.display = "none";
-    let title = document.getElementById("input-title-of-allergy").value;
-    let reaction = document.getElementById("input-reaction-of-allergy").value;
-    AllergyObj.title = title;
-    AllergyObj.reaction = reaction;
-
 }
 
+function initOldAllergyTitle(){
+    let oldTitle = document.getElementById("oldTitleVar").value;
+    console.log("old" + oldTitle);
+    // AllergyObj.setAttributeOfForm("th:action", AllergyObj.getAllergyUpdateURL(oldTitle));
+    alert(AllergyObj.getAllergyFormElement().getAttribute("th:action"))
+}
 
 window.actionEvents = {
     "click .remove": function (e, value, row, index) {
@@ -193,3 +185,15 @@ window.actionEvents = {
         openForm();
     },
 };
+
+
+//
+// function actionFormatterEdit(value, row, index) {
+//     return ['<button class="edit btn btn-danger btn-sm">Edit</button>'].join(
+//         "");
+// }
+//
+// function actionFormatterDelete(value, row, index) {
+//     return ['<button class="remove btn btn-danger btn-sm">Delete</button>'].join(
+//         "");
+// }
