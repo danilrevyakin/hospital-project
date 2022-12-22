@@ -73,6 +73,15 @@ public class MainMedicalCardController {
         return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
     }
 
+    @PostMapping("allergy/delete/")
+    public ModelAndView deleteAllergy(@RequestParam(ID_URL) String id,
+                                      @RequestParam(DOCTOR_URL) String doctorName,
+                                      @RequestParam(PATIENT_URL) String patientName,
+                                      @RequestParam(TITLE_URL) String title) {
+        allergyController.deleteAllergy(id, title);
+        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
+    }
+
     private static String dataURLFormatter(String... data) {
         if (data == null || data.length == 0){
             return "";

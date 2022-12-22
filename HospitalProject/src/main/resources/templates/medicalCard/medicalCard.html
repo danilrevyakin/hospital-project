@@ -45,7 +45,7 @@
         get() {
             return this.element().value;
         },
-        element(){
+        element() {
             return document.getElementById("input-old-title-of-allergy");
         },
         set(value) {
@@ -116,10 +116,6 @@
     <div class="container-fluid">
         <div id="toolbar">
             <button id="add-allergies" class="btn btn-success" disabled>New<i class="fas fa-plus"></i></button>
-            <button id="update-allergies" class="btn btn-primary" disabled>Update<i class="fas fa-pencil-square"></i>
-            </button>
-            <button id="remove-allergies" class="btn btn-danger" disabled>Delete<i class="fas fa-trash-alt"></i>
-            </button>
         </div>
 
         <table id="allergy-table">
@@ -138,7 +134,11 @@
                     >Update
                         <i class="fas fa-pencil-square"></i>
                     </button>
-                    <button id="delete-allergy" class="btn btn-danger">Delete<i class="fas fa-trash-alt"></i></button>
+
+                    <form th:method="POST" class="fas fa-trash-alt btn btn-danger"  th:action="@{http://localhost:8080/medical-card/page/allergy/delete/(id=${id},
+    doctorName=${doctorName}, patientName=${patientName},allergyTitle=${allergy.title})}" >
+                        <button id="delete-allergy" type="submit">Delete</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
@@ -147,13 +147,14 @@
 </div>
 <div class="form-popup" id="form-for-allergy">
     <div id="oldTitleVar" style="display: none"></div>
-    <form class="form-container"  th:method="POST"
+    <form class="form-container" th:method="POST"
           th:action="@{http://localhost:8080/medical-card/page/allergy/update/(id=${id},
     doctorName=${doctorName},patientName=${patientName})}">
-<!--   style="display: none"-->
+        <!--   style="display: none"-->
         <h2 type="text" id="allergy-logo">Default Allergy</h2>
-        <input type="text" style="display: none" th:field="${wrapper.value}" placeholder="Enter Allergy Old" id="input-old-title-of-allergy"
-        required/>
+        <input type="text" style="display: none" th:field="${wrapper.value}" placeholder="Enter Allergy Old"
+               id="input-old-title-of-allergy"
+               required/>
         <label for="input-title-of-allergy"><b>Allergy</b></label>
         <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy" id="input-title-of-allergy"
                required/>
