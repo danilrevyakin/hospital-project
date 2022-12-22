@@ -3,8 +3,7 @@ package com.example.hospitalproject.medicalCard.controller;
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,7 +18,6 @@ public class MainMedicalCardController {
     private static final String DOCTOR_URL = "doctorName";
     private static final String PATIENT_URL = "patientName";
     private static final String ID_URL = "id";
-    private static final String MEDICAL_CARD_URL = "medicalCard";
     private static final String ALLERGIES_URL = "allergies";
     private static final String BAD_HABITS_URL = "badHabits";
     private static final String MEDICAL_RECORDS_URL = "medicalRecords";
@@ -29,37 +27,21 @@ public class MainMedicalCardController {
     private final MedicalCardController cardController;
     private final AllergyController allergyController;
 
-    @Data
-    private class ModelAttributeWrapper<V>{
-        private final V value;
+    private record ModelAttributeWrapper<V>(V value) {
     }
 
     @GetMapping("/get/" + DEFAULT_DATA_URL)//id is the same as SQL id of Patient
     public ModelAndView getMedicalCardPage(@PathVariable(ID_URL) String id,
                                            @PathVariable(DOCTOR_URL) String doctorName,
                                            @PathVariable(PATIENT_URL) String patientName) {
-        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
+        return getHome(id, patientName, doctorName);
     }
 
-    @GetMapping("/get/")//id is the same as SQL id of Patient
-    public ModelAndView getMedicalCardPageByRequestParameters(@RequestParam(ID_URL) String id,
-                                                              @RequestParam(DOCTOR_URL) String doctorName,
-                                                              @RequestParam(PATIENT_URL) String patientName) {
-        MedicalCard medicalCard = cardController.getMedicalCard(id).getBody();
-        assert medicalCard != null;
-        final String path = $ + "medicalCard" + $ + "medicalCard";
-        ModelAndView model = new ModelAndView(path);
-        model.addObject(ID_URL, id);
-        model.addObject(PATIENT_URL, patientName);
-        model.addObject(DOCTOR_URL, doctorName);
-        model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("default"));
-        Set<Allergy> allergies = medicalCard.getAllergies();
-        System.out.println(allergies.size());
-        model.addObject(ALLERGIES_URL, allergies);
-        model.addObject(BAD_HABITS_URL, medicalCard.getBadHabits());
-        model.addObject(MEDICAL_RECORDS_URL, medicalCard.getRecords());
-        model.addObject("updatedAllergy", new Allergy());
-        return model;
+    @PostMapping({"/get/param/", "/", ""})//id is the same as SQL id of Patient
+    public ModelAndView getMedicalCardPageByRequestParameters(@RequestParam(value = ID_URL) String id,
+                                                              @RequestParam(value = DOCTOR_URL) String doctorName,
+                                                              @RequestParam(value = PATIENT_URL) String patientName) {
+        return getHome(id, patientName, doctorName);
     }
 
     @PostMapping("allergy/update/")
@@ -68,9 +50,8 @@ public class MainMedicalCardController {
                                       @RequestParam(ID_URL) String id,
                                       @RequestParam(DOCTOR_URL) String doctorName,
                                       @RequestParam(PATIENT_URL) String patientName) {
-
-        allergyController.updateAllergy(id, wrapper.value, allergy);
-        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
+        ResponseEntity<Set<Allergy>> response = allergyController.updateAllergy(id, wrapper.value, allergy);
+        return getHome(id, patientName, doctorName, response);
     }
 
     @PostMapping("allergy/delete/")
@@ -78,19 +59,41 @@ public class MainMedicalCardController {
                                       @RequestParam(DOCTOR_URL) String doctorName,
                                       @RequestParam(PATIENT_URL) String patientName,
                                       @RequestParam(TITLE_URL) String title) {
-        allergyController.deleteAllergy(id, title);
-        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
+        ResponseEntity<Set<Allergy>> response = allergyController.deleteAllergy(id, title);
+        return getHome(id, patientName, doctorName, response);
     }
 
-    private static String dataURLFormatter(String... data) {
-        if (data == null || data.length == 0){
-            return "";
-        }
-        var builder = new StringBuilder();
-        for(var i : data){
-            builder.append(i).append('/');
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        return builder.toString();
+    @PostMapping("allergy/add/")
+    public ModelAndView addAllergy(@RequestParam(ID_URL) String id,
+                                   @RequestParam(DOCTOR_URL) String doctorName,
+                                   @RequestParam(PATIENT_URL) String patientName,
+                                   @ModelAttribute Allergy allergy) {
+        ResponseEntity<Set<Allergy>> response = allergyController.addAllergy(id, allergy);
+        return getHome(id, patientName, doctorName, response);
+    }
+
+    private ModelAndView getHome(String id, String patientName, String doctorName, ResponseEntity<?> response) {
+        ModelAndView home = getHome(id, patientName, doctorName);
+        home.setStatus(response.getStatusCode());
+        return home;
+    }
+
+    private ModelAndView getHome(String id, String patientName, String doctorName) {
+        ResponseEntity<MedicalCard> response = cardController.getMedicalCard(id);
+        MedicalCard medicalCard = response.getBody();
+        assert medicalCard != null;
+        final String path = $ + "medicalCard" + $ + "medicalCard";
+        ModelAndView model = new ModelAndView(path);
+        model.addObject(ID_URL, id);
+        model.addObject(PATIENT_URL, patientName);
+        model.addObject(DOCTOR_URL, doctorName);
+        model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("default"));
+        Set<Allergy> allergies = medicalCard.getAllergies();
+        model.addObject(ALLERGIES_URL, allergies);
+        model.addObject(BAD_HABITS_URL, medicalCard.getBadHabits());
+        model.addObject(MEDICAL_RECORDS_URL, medicalCard.getRecords());
+        model.addObject("updatedAllergy", new Allergy());
+        model.setStatus(response.getStatusCode());
+        return model;
     }
 }

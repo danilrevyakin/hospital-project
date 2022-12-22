@@ -1,19 +1,11 @@
 var $table = $("#allergy-table"),
     $remove = $("#remove-allergies"),
-    $allergyForm = $("#form-for-allergy"),
     selections = [];
 $(function () {
     $table.bootstrapTable("destroy");
     $table.bootstrapTable({
         columns: [
             [
-                {
-                    field: "state",
-                    checkbox: true,
-                    align: "center",
-                    valign: "middle"
-                },
-
                 {
                     title: "Title",
                     field: "title",
@@ -77,7 +69,7 @@ $(function () {
         paginationVAlign: "bottom",
         paginationHAlign: "right",
         paginationDetailHAlign: "left",
-        showHeader: true,
+        showHeader: false,
         showFooter: false,
         showColumns: true,
         showRefresh: false,
@@ -88,7 +80,6 @@ $(function () {
         minimumCountColumns: 5,
         idField: undefined,
         clickToSelect: false,
-        uniqueId: "id",
         singleSelect: false,
         checkboxHeader: true,
         maintainSelected: true
@@ -104,24 +95,6 @@ $(function () {
         //   detailClose: "glyphicon-minus icon-minus"
         // }
     });
-    $table.on(
-        "check.bs.table uncheck.bs.table " +
-        "check-all.bs.table uncheck-all.bs.table",
-        function () {
-            $remove.prop("disabled", !$table.bootstrapTable("getSelections").length);
-            selections = getIdSelections();
-        });
-
-    $remove.click(function () {
-        var ids = getIdSelections();
-        $table.bootstrapTable("remove", {
-            field: "id",
-            values: ids
-        });
-
-        $remove.prop("disabled", true);
-    });
-    $table.bootstrapTable('refresh')
     $('[data-toggle="dropdown"] >i').removeClass("glyphicon-export").addClass("fa-download");
 });
 
@@ -133,6 +106,10 @@ function getIdSelections() {
 
 function openForm() {
     document.getElementById("form-for-allergy").style.display = "block";
+}
+
+function openNewAllergyForm(){
+    document.getElementById("form-for-allergy-add").style.display = "block";
 }
 
 function openUpdateAllergyForm(title, reaction) {
@@ -152,7 +129,9 @@ function openUpdateAllergyFormWithObj(par) {
 function closeForm() {
     document.getElementById("form-for-allergy").style.display = "none";
 }
-
+function closeFormNewAllergy() {
+    document.getElementById("form-for-allergy-add").style.display = "none";
+}
 
 function saveFormUpdate() {
     // document.getElementById("form-for-allergy").style.display = "none";
