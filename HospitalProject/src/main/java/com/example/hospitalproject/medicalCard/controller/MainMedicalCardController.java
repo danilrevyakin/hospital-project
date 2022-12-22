@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Set;
 
 @RestController
@@ -28,20 +27,25 @@ public class MainMedicalCardController {
     private final MedicalCardController cardController;
     private final AllergyController allergyController;
 
-    private record RequestData(String id, String doctorName, String patientName, String data) {
-            public static final String URL = "requestBody";
-    }
-
     @GetMapping("/get/" + DEFAULT_DATA_URL)//id is the same as SQL id of Patient
     public ModelAndView getMedicalCardPage(@PathVariable(ID_URL) String id,
                                            @PathVariable(DOCTOR_URL) String doctorName,
                                            @PathVariable(PATIENT_URL) String patientName) {
+        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
+    }
+
+    @GetMapping("/get/")//id is the same as SQL id of Patient
+    public ModelAndView getMedicalCardPageByRequestParameters(@RequestParam(ID_URL) String id,
+                                                              @RequestParam(DOCTOR_URL) String doctorName,
+                                                              @RequestParam(PATIENT_URL) String patientName) {
         MedicalCard medicalCard = cardController.getMedicalCard(id).getBody();
         assert medicalCard != null;
         final String path = $ + "medicalCard" + $ + "medicalCard";
         ModelAndView model = new ModelAndView(path);
-        RequestData body = new RequestData(id, doctorName, patientName, null);
-        model.addObject(RequestData.URL, body);
+        model.addObject(ID_URL, id);
+        model.addObject(PATIENT_URL, patientName);
+        model.addObject(DOCTOR_URL, doctorName);
+        model.addObject(TITLE_URL, TITLE_URL);
         Set<Allergy> allergies = medicalCard.getAllergies();
         System.out.println(allergies.size());
         model.addObject(ALLERGIES_URL, allergies);
@@ -51,14 +55,18 @@ public class MainMedicalCardController {
         return model;
     }
 
-    @PostMapping("allergy/update")//id is the same as SQL id of Patient
+    @PostMapping("allergy/update/")
     public String updateAllergy(@ModelAttribute Allergy allergy,
-                                @RequestBody RequestData body) {
+                                @RequestParam(TITLE_URL) String title,
+                                @RequestParam(ID_URL) String id,
+                                @RequestParam(DOCTOR_URL) String doctorName,
+                                @RequestParam(PATIENT_URL) String patientName) {
+
         System.out.println("hello");
         System.out.println(allergy);
-        System.out.println(body);
-        allergyController.updateAllergy(body.id, body.data, allergy);
-        return "redirect:/" + "get/" + dataURLFormatter(body.id, body.patientName, body.doctorName);
+        System.out.println("title: " + title);
+        allergyController.updateAllergy(id, title, allergy);
+        return "redirect:/" + "get/" + dataURLFormatter(id, patientName, doctorName);
     }
 
     private static String dataURLFormatter(String... data) {

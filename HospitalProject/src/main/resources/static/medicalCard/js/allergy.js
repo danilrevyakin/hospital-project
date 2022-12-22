@@ -140,6 +140,8 @@ function openUpdateAllergyForm(title, reaction) {
     alert(URLObect.getDataURL());
     document.getElementById("allergy-logo").innerHTML = "Update Allergy";
     document.getElementById("input-title-of-allergy").value = title;
+    document.getElementById("input-old-title-of-allergy").value = title;
+    
     OldTitleVarObj.set(title);
     document.getElementById("input-reaction-of-allergy").value = reaction;
     document.getElementById("form-for-allergy").style.display = "block";
@@ -151,8 +153,6 @@ function openUpdateAllergyFormWithObj(par) {
     alert("openUPD");
     allergy = JSON.parse(par)
     openUpdateAllergyForm(allergy.title, allergy.reaction);
-    AllergyObj.setAttributeOfForm("th:action",AllergyObj.getAllergyUpdateURL());
-    alert(AllergyObj.getAttributeOfForm("th:action"));
 }
 
 function closeForm() {

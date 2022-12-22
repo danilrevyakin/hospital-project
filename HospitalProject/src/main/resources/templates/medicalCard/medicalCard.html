@@ -32,10 +32,10 @@
 <body>
 <script th:inline="javascript">
     var URLObect = {
-        id: [[${requestBody.id}]],
-        patient: [[${requestBody.patientName}]],
-        doctor: [[${requestBody.doctorName}]],
-        body: [[${requestBody}]],
+        id: [[${id}]],
+        patient: [[${patientName}]],
+        doctor: [[${doctorName}]],
+        title: "default URLObect",
         getDataURL() {
             return this.id + "/" + this.patient + "/" + this.doctor;
         },
@@ -49,7 +49,6 @@
             return document.getElementById("oldTitleVar");
         },
         set(value) {
-            alert("set");
             this.element().value = value;
         }
     }
@@ -83,7 +82,7 @@
         }
     }
 </script>
-<p style="display: none" th:text="'id: ' + ${requestBody.id}"></p>
+<p style="display: none" th:text="'id: ' + ${id}"></p>
 <nav class="navbar navbar-expand-xl navbar-light bg-light">
     <a href="#" class="navbar-brand"><i class="fa fa-cube"></i>Medical<b>Card</b></a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -96,7 +95,7 @@
             <div class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
                     <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
-                    <p th:text="${requestBody.doctorName}"></p>
+                    <p th:text="${doctorName}"></p>
                     <b class="caret"></b>
                 </a>
                 <div class="dropdown-menu">
@@ -110,7 +109,7 @@
         </div>
     </div>
 </nav>
-<h1 th:text="'Patient: ' + ${requestBody.patientName}"/>
+<h1 th:text="'Patient: ' + ${patientName}"/>
 
 <div class="allergyWrapper">
     <!-- This script got from frontendfreecode.com -->
@@ -148,16 +147,21 @@
 </div>
 <div class="form-popup" id="form-for-allergy">
     <div id="oldTitleVar" style="display: none"></div>
-    <form class="form-container" th:object="${updatedAllergy}" th:method="POST" th:action="@{http://localhost:8080/medical-card/page/allergy/update/1/Tom/Billy/Onion}">
+    <form class="form-container" th:object="${updatedAllergy}" th:method="POST"
+          th:action="@{http://localhost:8080/medical-card/page/allergy/update/(id=${id},
+    doctorName=${doctorName},patientName=${patientName})}">
+<!--        ,title=${title}-->
         <h2 type="text" id="allergy-logo">Default Allergy</h2>
-
         <label for="input-title-of-allergy"><b>Allergy</b></label>
+        <input type="text" style="display: none" th:value="${title}" placeholder="Enter Allergy Old" id="input-old-title-of-allergy"
+               required/>
         <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy" id="input-title-of-allergy"
                required/>
 
         <label for="input-reaction-of-allergy"><b>Reaction</b></label>
         <input type="text" placeholder="Enter Reaction" th:field="${updatedAllergy.reaction}"
                id="input-reaction-of-allergy">
+
         <button th:type="submit"
                 class="btn">Save
         </button>
