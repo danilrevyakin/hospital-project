@@ -46,7 +46,7 @@
             return this.element().value;
         },
         element(){
-            return document.getElementById("oldTitleVar");
+            return document.getElementById("input-old-title-of-allergy");
         },
         set(value) {
             this.element().value = value;
@@ -147,14 +147,14 @@
 </div>
 <div class="form-popup" id="form-for-allergy">
     <div id="oldTitleVar" style="display: none"></div>
-    <form class="form-container" th:object="${updatedAllergy}" th:method="POST"
+    <form class="form-container"  th:method="POST"
           th:action="@{http://localhost:8080/medical-card/page/allergy/update/(id=${id},
     doctorName=${doctorName},patientName=${patientName})}">
-<!--        ,title=${title}-->
+<!--   style="display: none"-->
         <h2 type="text" id="allergy-logo">Default Allergy</h2>
+        <input type="text" style="display: none" th:field="${wrapper.value}" placeholder="Enter Allergy Old" id="input-old-title-of-allergy"
+        required/>
         <label for="input-title-of-allergy"><b>Allergy</b></label>
-        <input type="text" style="display: none" th:value="${title}" placeholder="Enter Allergy Old" id="input-old-title-of-allergy"
-               required/>
         <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy" id="input-title-of-allergy"
                required/>
 

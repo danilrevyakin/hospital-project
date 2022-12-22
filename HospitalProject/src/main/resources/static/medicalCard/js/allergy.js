@@ -137,20 +137,14 @@ function openForm() {
 
 function openUpdateAllergyForm(title, reaction) {
     console.log("update allergy form");
-    alert(URLObect.getDataURL());
     document.getElementById("allergy-logo").innerHTML = "Update Allergy";
     document.getElementById("input-title-of-allergy").value = title;
     document.getElementById("input-old-title-of-allergy").value = title;
-    
-    OldTitleVarObj.set(title);
     document.getElementById("input-reaction-of-allergy").value = reaction;
     document.getElementById("form-for-allergy").style.display = "block";
-    initOldAllergyTitle();
 }
 
-
 function openUpdateAllergyFormWithObj(par) {
-    alert("openUPD");
     allergy = JSON.parse(par)
     openUpdateAllergyForm(allergy.title, allergy.reaction);
 }
@@ -162,13 +156,6 @@ function closeForm() {
 
 function saveFormUpdate() {
     // document.getElementById("form-for-allergy").style.display = "none";
-}
-
-function initOldAllergyTitle(){
-    let oldTitle = document.getElementById("oldTitleVar").value;
-    console.log("old" + oldTitle);
-    // AllergyObj.setAttributeOfForm("th:action", AllergyObj.getAllergyUpdateURL(oldTitle));
-    alert(AllergyObj.getAllergyFormElement().getAttribute("th:action"))
 }
 
 window.actionEvents = {
@@ -185,15 +172,3 @@ window.actionEvents = {
         openForm();
     },
 };
-
-
-//
-// function actionFormatterEdit(value, row, index) {
-//     return ['<button class="edit btn btn-danger btn-sm">Edit</button>'].join(
-//         "");
-// }
-//
-// function actionFormatterDelete(value, row, index) {
-//     return ['<button class="remove btn btn-danger btn-sm">Delete</button>'].join(
-//         "");
-// }

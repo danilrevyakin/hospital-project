@@ -3,6 +3,8 @@ package com.example.hospitalproject.medicalCard.controller;
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,11 +23,16 @@ public class MainMedicalCardController {
     private static final String ALLERGIES_URL = "allergies";
     private static final String BAD_HABITS_URL = "badHabits";
     private static final String MEDICAL_RECORDS_URL = "medicalRecords";
-    private static final String TITLE_URL = "title";
+    private static final String TITLE_URL = "allergyTitle";
     private static final String DEFAULT_DATA_URL = "{" + ID_URL + "}/{" + PATIENT_URL + "}/{" + DOCTOR_URL + "}";
-
+    private static final String WRAPPER_OF_DATA = "wrapper";
     private final MedicalCardController cardController;
     private final AllergyController allergyController;
+
+    @Data
+    private class ModelAttributeWrapper<V>{
+        private final V value;
+    }
 
     @GetMapping("/get/" + DEFAULT_DATA_URL)//id is the same as SQL id of Patient
     public ModelAndView getMedicalCardPage(@PathVariable(ID_URL) String id,
@@ -45,7 +52,7 @@ public class MainMedicalCardController {
         model.addObject(ID_URL, id);
         model.addObject(PATIENT_URL, patientName);
         model.addObject(DOCTOR_URL, doctorName);
-        model.addObject(TITLE_URL, TITLE_URL);
+        model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("default"));
         Set<Allergy> allergies = medicalCard.getAllergies();
         System.out.println(allergies.size());
         model.addObject(ALLERGIES_URL, allergies);
@@ -56,17 +63,14 @@ public class MainMedicalCardController {
     }
 
     @PostMapping("allergy/update/")
-    public String updateAllergy(@ModelAttribute Allergy allergy,
-                                @RequestParam(TITLE_URL) String title,
-                                @RequestParam(ID_URL) String id,
-                                @RequestParam(DOCTOR_URL) String doctorName,
-                                @RequestParam(PATIENT_URL) String patientName) {
+    public ModelAndView updateAllergy(@ModelAttribute Allergy allergy,
+                                      @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> wrapper,
+                                      @RequestParam(ID_URL) String id,
+                                      @RequestParam(DOCTOR_URL) String doctorName,
+                                      @RequestParam(PATIENT_URL) String patientName) {
 
-        System.out.println("hello");
-        System.out.println(allergy);
-        System.out.println("title: " + title);
-        allergyController.updateAllergy(id, title, allergy);
-        return "redirect:/" + "get/" + dataURLFormatter(id, patientName, doctorName);
+        allergyController.updateAllergy(id, wrapper.value, allergy);
+        return getMedicalCardPageByRequestParameters(id, doctorName, patientName);
     }
 
     private static String dataURLFormatter(String... data) {
@@ -75,7 +79,7 @@ public class MainMedicalCardController {
         }
         var builder = new StringBuilder();
         for(var i : data){
-            builder.append('{').append(i).append('}').append('/');
+            builder.append(i).append('/');
         }
         builder.deleteCharAt(builder.length() - 1);
         return builder.toString();
