@@ -28,3 +28,9 @@ function openUpdateRecordFormWithObj(par) {
 function closeFormRecordUpdate() {
     document.getElementById("form-for-update-record").style.display = "none";
 }
+function closeFormRecordAdd() {
+    document.getElementById("form-for-add-record").style.display = "none";
+}
+function openNewRecordForm(){
+    document.getElementById("form-for-add-record").style.display = "block";
+}

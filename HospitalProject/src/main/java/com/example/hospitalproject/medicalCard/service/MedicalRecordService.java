@@ -20,12 +20,12 @@ public class MedicalRecordService {
 
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
 
-    public List<MedicalRecord> addMedicalRecord(String id, MedicalRecord record) {
-        String doctor = record.getDoctor();
+    public List<MedicalRecord> addMedicalRecord(String id, String doctor, MedicalRecord record) {
         if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
         if (repository.existsById(id)) {
+            record.setDoctor(doctor);
             record.setDate(LocalDateTime.now());
             repository.addMedicalRecord(id, record);
             return repository.getMedicalRecordsById(id);

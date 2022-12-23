@@ -163,15 +163,15 @@
 <div class="recordsWrapper">
     <div class="container-fluid">
         <div id="toolbar-records">
-            <button id="add-records" class="btn btn-success" th:onclick="openNewAllergyForm()">New<i
+            <button id="add-records" class="btn btn-success" th:onclick="openNewRecordForm()">New<i
                     class="fas fa-plus"></i></button>
         </div>
 
         <table id="records-table">
-            <col width="15%"/><!--info-->
+            <col width="10%"/><!--info-->
             <col width="25%"/><!--symptoms-->
             <col width="25%"/><!--treatment-->
-            <col width="3%"/><!--doctor-->
+            <col width="2%"/><!--doctor-->
             <col width="5%"/><!--date-->
             <col width="5%"/><!--edited-->
             <!--actions-->
@@ -225,7 +225,25 @@
         <button type="button" class="btn cancel" onclick="closeFormRecordUpdate()">Close</button>
     </form>
 </div>
-
+<div class="form-popup" id="form-for-add-record">
+    <form class="form-container" th:method="POST"
+          th:action="@{http://localhost:8080/medical-card/page/record/add/(id=${id},
+    doctorName=${doctorName},patientName=${patientName})}">
+        <!--   style="display: none"-->
+        <h2 type="text" id="record-add-form-logo">Update Record</h2>
+        <label for="input-info-add"><b>Info</b></label>
+        <input type="text" th:field="${updatedRecord.info}" placeholder="Enter Info" id="input-info-add"
+               required/>
+        <label for="input-symptoms"><b>Symptoms</b></label>
+        <input type="text" th:field="${updatedRecord.symptoms}" placeholder="Enter Symptoms" id="input-symptoms-add"/>
+        <label for="input-treatment"><b>Treatment</b></label>
+        <input type="text" th:field="${updatedRecord.treatment}" placeholder="Enter Treatment" id="input-treatment-add"/>
+        <button th:type="submit"
+                class="btn">Save
+        </button>
+        <button type="button" class="btn cancel" onclick="closeFormRecordAdd()">Close</button>
+    </form>
+</div>
 <div class="form-popup" id="form-for-allergy">
     <div id="oldTitleVar" style="display: none"></div>
     <form class="form-container" th:method="POST"
@@ -255,7 +273,6 @@
     <form class="form-container" th:method="POST"
           th:action="@{http://localhost:8080/medical-card/page/allergy/add/(id=${id},
     doctorName=${doctorName},patientName=${patientName})}">
-        <!--   style="display: none"-->
         <h2 type="text" id="allergy-logo-add">New Allergy</h2>
         <label for="input-title-of-allergy"><b>Allergy</b></label>
         <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy"
