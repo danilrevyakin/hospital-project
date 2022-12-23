@@ -54,9 +54,9 @@ public class MedicalRecordService {
 
     static final int HOURS_FOR_UPDATE = 24;
 
-    public List<MedicalRecord> updateMedicalRecord(String id, MedicalRecord newRecord) {
+    public List<MedicalRecord> updateMedicalRecord(String id, String doctor, MedicalRecord newRecord) {
         LocalDateTime dateOfCreating = newRecord.getDate();
-        modifyingRecordValidation(id, dateOfCreating, newRecord.getDoctor());
+        modifyingRecordValidation(id, dateOfCreating, doctor);
         newRecord.setEdited(LocalDateTime.now());
         repository.updateMedicalRecord(id, dateOfCreating, newRecord);
         return repository.getMedicalRecordsById(id);

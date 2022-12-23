@@ -84,9 +84,10 @@ public class MainMedicalCardController {
                                      @RequestParam(ID_URL) String id,
                                      @RequestParam(DOCTOR_URL) String doctorName,
                                      @RequestParam(PATIENT_URL) String patientName) {
-        ResponseEntity<List<MedicalRecord>> response = recordController.updateMedicalRecord(id, newRecord);
+        ResponseEntity<List<MedicalRecord>> response = recordController.updateMedicalRecord(id,doctorName, newRecord);
         return getHome(id, patientName, doctorName, response);
     }
+
     @PostMapping("record/delete/")
     public ModelAndView deleteRecord(@RequestParam(ID_URL) String id,
                                      @RequestParam(DOCTOR_URL) String doctorName,
@@ -95,7 +96,6 @@ public class MainMedicalCardController {
         ResponseEntity<List<MedicalRecord>> response = recordController.deleteMedicalRecord(id, date,doctorName);
         return getHome(id, patientName, doctorName, response);
     }
-
 
     private ModelAndView getHome(String id, String patientName, String doctorName, ResponseEntity<?> response) {
         ModelAndView home = getHome(id, patientName, doctorName);
