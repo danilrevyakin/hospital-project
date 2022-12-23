@@ -1,14 +1,12 @@
-var $table = $("#allergy-table"),
-    // $remove = $("#remove-allergies"),
+var $table = $("#records-table"),
     selections = [];
 $(function () {
-    // $table.bootstrapTable("destroy");
     $table.bootstrapTable({
         columns: [
             [
                 {
-                    title: "Title",
-                    field: "title",
+                    title: "Info",
+                    field: "info",
                     sortable: true,
                     valign: "center",
                     editable: {
@@ -17,12 +15,47 @@ $(function () {
                 },
 
                 {
-                    title: "Reaction",
-                    field: "reaction",
+                    title: "Symptoms",
+                    field: "symptoms",
                     sortable: true,
                     valign: "middle",
                     editable: {
                         type: "text"
+                    }
+                },
+                {
+                    title: "Treatment",
+                    field: "treatment",
+                    sortable: true,
+                    valign: "middle",
+                    editable: {
+                        type: "text"
+                    }
+                },
+                {
+                    title: "Doctor",
+                    field: "doctor",
+                    sortable: true,
+                    valign: "middle",
+                    editable: {
+                        type: "text"
+                    }
+                },
+                {
+                    title: "Date",
+                    field: "date",
+                    sortable: true,
+                    valign: "middle",
+                    editable: {
+                        type: "text"},
+                },
+                {
+                    title: "Edited",
+                    field: "edited",
+                    sortable: true,
+                    valign: "middle",
+                    editable: {
+                        type: "date"
                     }
                 },
 
@@ -37,7 +70,7 @@ $(function () {
 
 
         classes: "table table-hover table-no-bordered",
-        toolbar: "#toolbar",
+        toolbar: "#toolbar-records",
         buttonsClass: "outline-secondary",
         sortClass: undefined,
         undefinedText: "-",
@@ -57,7 +90,7 @@ $(function () {
         // selectItemName: "btSelectItem",
         smartDisplay: true,
         search: true,
-        uniqueId: "title",
+        uniqueId: "date",
         searchOnEnterKey: false,
         strictSearch: false,
         searchText: "",
@@ -95,27 +128,12 @@ $(function () {
         //   detailClose: "glyphicon-minus icon-minus"
         // }
     });
-    $('[data-toggle="dropdown"] >i').removeClass("glyphicon-export").addClass("fa-download");
-    // $remove.click(function () {
-    //     var ids = getIdSelections();
-    //     $table.bootstrapTable("remove", {
-    //         field: "title",
-    //         values: ids
-    //     });
-    //
-    //     $remove.prop("disabled", true);
-    // });
-    $table.on(
-        "check.bs.table uncheck.bs.table " +
-        "check-all.bs.table uncheck-all.bs.table",
-        function () {
-            selections = getIdSelections();
-        });
+    // $('[data-toggle="dropdown"] >i').removeClass("glyphicon-export").addClass("fa-download");
 });
 
 function getIdSelections() {
     return $.map($table.bootstrapTable("getSelections"), function (row) {
-        return row.id;
+        return row.date;
     });
 }
 
@@ -127,42 +145,25 @@ function openNewAllergyForm(){
     document.getElementById("form-for-allergy-add").style.display = "block";
 }
 
-function openUpdateAllergyForm(title, reaction) {
-    console.log("update allergy form");
-    document.getElementById("allergy-logo").innerHTML = "Update Allergy";
-    document.getElementById("input-title-of-allergy").value = title;
-    document.getElementById("input-old-title-of-allergy").value = title;
-    document.getElementById("input-reaction-of-allergy").value = reaction;
-    document.getElementById("form-for-allergy").style.display = "block";
+function formatDate(str){
+    var date = new Date(str);
+    var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var res = date.getDate()+"/"+strArray[date.getMonth()]+"/"+(date.getYear() - 100);
+    res+= '\n' + date.getHours() + ":" + date.getMinutes();
+    return res;
 }
 
-function openUpdateAllergyFormWithObj(par) {
-    allergy = JSON.parse(par)
-    openUpdateAllergyForm(allergy.title, allergy.reaction);
+function openUpdateRecordFormWithObj(par) {
+    record = JSON.parse(par)
+    document.getElementById("input-info").value = record.info;
+    document.getElementById("input-symptoms").value = record.symptoms;
+    document.getElementById("input-treatment").value = record.treatment;
+    document.getElementById("input-doctor").value = record.doctor;
+    document.getElementById("input-date").value = record.date;
+    document.getElementById("input-edited").value = record.edited;
+    document.getElementById("form-for-update-record").style.display = "block";
 }
 
-function closeForm() {
-    document.getElementById("form-for-allergy").style.display = "none";
+function closeFormRecordUpdate() {
+    document.getElementById("form-for-update-record").style.display = "none";
 }
-function closeFormNewAllergy() {
-    document.getElementById("form-for-allergy-add").style.display = "none";
-}
-
-function saveFormUpdate() {
-    // document.getElementById("form-for-allergy").style.display = "none";
-}
-//
-// window.actionEvents = {
-//     "click .remove": function (e, value, row, index) {
-//         $table.bootstrapTable("remove", {
-//             field: "title",
-//             values: [row.title]
-//         });
-//
-//     }
-//     ,
-//     "click .edit": function (e, value, row, index) {
-//         console.log("here we go!");
-//         openForm();
-//     },
-// };

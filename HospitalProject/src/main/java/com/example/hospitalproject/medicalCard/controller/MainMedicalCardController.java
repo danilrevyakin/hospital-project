@@ -2,12 +2,14 @@ package com.example.hospitalproject.medicalCard.controller;
 
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
+import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -22,10 +24,15 @@ public class MainMedicalCardController {
     private static final String BAD_HABITS_URL = "badHabits";
     private static final String MEDICAL_RECORDS_URL = "medicalRecords";
     private static final String TITLE_URL = "allergyTitle";
+    private static final String DATE_OF_URL = "recordDate";
     private static final String DEFAULT_DATA_URL = "{" + ID_URL + "}/{" + PATIENT_URL + "}/{" + DOCTOR_URL + "}";
     private static final String WRAPPER_OF_DATA = "wrapper";
+    private static final String UPDATED_RECORD = "updatedRecord";
+    private static final String UPDATED_ALLERGY = "updatedAllergy";
+
     private final MedicalCardController cardController;
     private final AllergyController allergyController;
+    private final MedicalRecordController recordController;
 
     private record ModelAttributeWrapper<V>(V value) {
     }
@@ -67,10 +74,28 @@ public class MainMedicalCardController {
     public ModelAndView addAllergy(@RequestParam(ID_URL) String id,
                                    @RequestParam(DOCTOR_URL) String doctorName,
                                    @RequestParam(PATIENT_URL) String patientName,
-                                   @ModelAttribute Allergy allergy) {
+                                   @ModelAttribute(UPDATED_ALLERGY) Allergy allergy) {
         ResponseEntity<Set<Allergy>> response = allergyController.addAllergy(id, allergy);
         return getHome(id, patientName, doctorName, response);
     }
+
+    @PostMapping("record/update/")
+    public ModelAndView updateRecord(@ModelAttribute(UPDATED_RECORD) MedicalRecord newRecord,
+                                     @RequestParam(ID_URL) String id,
+                                     @RequestParam(DOCTOR_URL) String doctorName,
+                                     @RequestParam(PATIENT_URL) String patientName) {
+        ResponseEntity<List<MedicalRecord>> response = recordController.updateMedicalRecord(id, newRecord);
+        return getHome(id, patientName, doctorName, response);
+    }
+    @PostMapping("record/delete/")
+    public ModelAndView deleteRecord(@RequestParam(ID_URL) String id,
+                                     @RequestParam(DOCTOR_URL) String doctorName,
+                                     @RequestParam(PATIENT_URL) String patientName,
+                                     @RequestParam(DATE_OF_URL) String date) {
+        ResponseEntity<List<MedicalRecord>> response = recordController.deleteMedicalRecord(id, date,doctorName);
+        return getHome(id, patientName, doctorName, response);
+    }
+
 
     private ModelAndView getHome(String id, String patientName, String doctorName, ResponseEntity<?> response) {
         ModelAndView home = getHome(id, patientName, doctorName);
@@ -92,7 +117,8 @@ public class MainMedicalCardController {
         model.addObject(ALLERGIES_URL, allergies);
         model.addObject(BAD_HABITS_URL, medicalCard.getBadHabits());
         model.addObject(MEDICAL_RECORDS_URL, medicalCard.getRecords());
-        model.addObject("updatedAllergy", new Allergy());
+        model.addObject(UPDATED_ALLERGY, new Allergy());
+        model.addObject(UPDATED_RECORD, new MedicalRecord());
         model.setStatus(response.getStatusCode());
         return model;
     }

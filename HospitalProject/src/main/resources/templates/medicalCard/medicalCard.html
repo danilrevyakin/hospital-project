@@ -28,6 +28,7 @@
     <link rel="stylesheet" th:href="@{/medicalCard/css/allergy.css}"/>
     <link rel="stylesheet" th:href="@{/medicalCard/css/pop-up.css}"/>
     <link rel="stylesheet" th:href="@{/medicalCard/css/allergy-form.css}"/>
+    <link rel="stylesheet" th:href="@{/medicalCard/css/myStyles.css}"/>
 </head>
 <body>
 <script th:inline="javascript">
@@ -39,10 +40,10 @@
         getDataURL() {
             return this.id + "/" + this.patient + "/" + this.doctor;
         },
-        getHomeURL(){
+        getHomeURL() {
             var str = "@{http://localhost:8080/medical-card/page/get/";
             str = "http://localhost:8080/medical-card/page/get/";
-            str+=this.getDataURL();
+            str += this.getDataURL();
             return str;
         }
     }
@@ -93,7 +94,8 @@
     <form th:method="POST" id="HomeButton" style="border: none"
           th:action="@{http://localhost:8080/medical-card/page/get/param/
           (id=${id},doctorName=${doctorName}, patientName=${patientName})}">
-        <button type="submit" class="navbar-brand" style="border: none; background: none"><i class="fa fa-cube"></i>Medical<b>Card</b></button>
+        <button type="submit" class="navbar-brand" style="border: none; background: none"><i class="fa fa-cube"></i>Medical<b>Card</b>
+        </button>
     </form>
 
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -102,7 +104,8 @@
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
         <div class="navbar-nav ml-auto">
-            <a href="#" class="nav-item nav-link notifications"><i class="fa fa-bell"></i><span class="badge">1</span></a>
+            <a href="#" class="nav-item nav-link notifications"><i class="fa fa-bell"></i><span
+                    class="badge">1</span></a>
             <div class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
                     <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
@@ -122,10 +125,10 @@
 <h1 th:text="'Patient: ' + ${patientName}"/>
 
 <div class="allergyWrapper">
-    <!-- This script got from frontendfreecode.com -->
     <div class="container-fluid">
         <div id="toolbar">
-            <button id="add-allergies" class="btn btn-success" th:onclick="openNewAllergyForm()">New<i class="fas fa-plus"></i></button>
+            <button id="add-allergies" class="btn btn-success" th:onclick="openNewAllergyForm()">New<i
+                    class="fas fa-plus"></i></button>
         </div>
 
         <table id="allergy-table">
@@ -143,9 +146,11 @@
                         <i class="fas fa-pencil-square"></i>
                     </button>
 
-                    <form th:method="POST" class="btn btn-danger"  th:action="@{http://localhost:8080/medical-card/page/allergy/delete/(id=${id},
-    doctorName=${doctorName}, patientName=${patientName},allergyTitle=${allergy.title})}" >
-                        <button id="delete-allergy" style="background: none; border: none; color: #ffffff" type="submit">Delete</button>
+                    <form th:method="POST" class="btn btn-danger" th:action="@{http://localhost:8080/medical-card/page/allergy/delete/(id=${id},
+    doctorName=${doctorName}, patientName=${patientName},allergyTitle=${allergy.title})}">
+                        <button id="delete-allergy" style="background: none; border: none; color: #ffffff"
+                                type="submit">Delete
+                        </button>
                         <i class="fas fa-trash-alt"></i>
                     </form>
                 </td>
@@ -154,6 +159,73 @@
         </table>
     </div>
 </div>
+
+<div class="recordsWrapper">
+    <div class="container-fluid">
+        <div id="toolbar-records">
+            <button id="add-records" class="btn btn-success" th:onclick="openNewAllergyForm()">New<i
+                    class="fas fa-plus"></i></button>
+        </div>
+
+        <table id="records-table">
+            <col width="15%"/><!--info-->
+            <col width="25%"/><!--symptoms-->
+            <col width="25%"/><!--treatment-->
+            <col width="3%"/><!--doctor-->
+            <col width="5%"/><!--date-->
+            <col width="5%"/><!--edited-->
+            <!--actions-->
+
+            <tbody>
+            <tr th:each="record : ${medicalRecords}">
+                <td th:text="${record.info}"></td>
+                <td th:text="${record.symptoms}"></td>
+                <td th:text="${record.treatment}"></td>
+                <td th:text="${record.doctor}"></td>
+                <td th:text="${record.date}"></td>
+                <td th:text="${record.edited}"></td>
+                <td>
+                    <button id="update-record" type="submit" class="btn btn-warning"
+                            th:onclick="openUpdateRecordFormWithObj('[[${record}]]')"
+                    >Update<i class="fas fa-pencil-square"></i>
+                    </button>
+
+                    <form th:method="POST" class="btn btn-danger" th:action="@{http://localhost:8080/medical-card/page/record/delete/(id=${id},
+    doctorName=${doctorName}, patientName=${patientName},recordDate=${record.date})}">
+                        <button id="delete-record" style="background: none; border: none; color: #ffffff" type="submit">
+                            Delete
+                        </button>
+                        <i class="fas fa-trash-alt"></i>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="form-popup" id="form-for-update-record">
+    <form class="form-container" th:method="POST"
+          th:action="@{http://localhost:8080/medical-card/page/record/update/(id=${id},
+    doctorName=${doctorName},patientName=${patientName})}">
+        <!--   style="display: none"-->
+        <h2 type="text" id="record-update-form-logo">Update Record</h2>
+        <label for="input-info"><b>Info</b></label>
+        <input type="text" th:field="${updatedRecord.info}" placeholder="Enter Info" id="input-info"
+               required/>
+        <label for="input-symptoms"><b>Symptoms</b></label>
+        <input type="text" th:field="${updatedRecord.symptoms}" placeholder="Enter Symptoms" id="input-symptoms"/>
+        <label for="input-treatment"><b>Treatment</b></label>
+        <input type="text" th:field="${updatedRecord.treatment}" placeholder="Enter Treatment" id="input-treatment"/>
+        <input type="text" th:field="${updatedRecord.doctor}" class="hiddenIput" id="input-doctor"/>
+        <input type="text" th:field="${updatedRecord.date}" class="hiddenIput" id="input-date"/>
+        <input type="text" th:field="${updatedRecord.edited}" class="hiddenIput" id="input-edited"/>
+        <button th:type="submit"
+                class="btn">Save
+        </button>
+        <button type="button" class="btn cancel" onclick="closeFormRecordUpdate()">Close</button>
+    </form>
+</div>
+
 <div class="form-popup" id="form-for-allergy">
     <div id="oldTitleVar" style="display: none"></div>
     <form class="form-container" th:method="POST"
@@ -186,7 +258,8 @@
         <!--   style="display: none"-->
         <h2 type="text" id="allergy-logo-add">New Allergy</h2>
         <label for="input-title-of-allergy"><b>Allergy</b></label>
-        <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy" id="input-title-of-allergy-add"
+        <input type="text" th:field="${updatedAllergy.title}" placeholder="Enter Allergy"
+               id="input-title-of-allergy-add"
                required/>
         <label for="input-reaction-of-allergy"><b>Reaction</b></label>
         <input type="text" placeholder="Enter Reaction" th:field="${updatedAllergy.reaction}"
@@ -197,8 +270,9 @@
         <button type="button" class="btn cancel" onclick="closeFormNewAllergy()">Close</button>
     </form>
 </div>
-<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput">
+<!--<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput">-->
 <script th:src="@{/medicalCard/js/allergy.js} "></script>
+<script th:src="@{/medicalCard/js/record.js} "></script>
 <hr>
 </body>
 </html>
