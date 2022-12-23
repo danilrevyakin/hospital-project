@@ -2,7 +2,7 @@ var $table = $("#allergy-table"),
     $remove = $("#remove-allergies"),
     selections = [];
 $(function () {
-    $table.bootstrapTable("destroy");
+    // $table.bootstrapTable("destroy");
     $table.bootstrapTable({
         columns: [
             [
@@ -10,7 +10,7 @@ $(function () {
                     title: "Title",
                     field: "title",
                     sortable: true,
-                    valign: "middle",
+                    valign: "center",
                     editable: {
                         type: "text"
                     }
@@ -55,9 +55,10 @@ $(function () {
         pageList: [1, 3, 5, 10, "ALL"],
         paginationPreText: "Previous",
         paginationNextText: "Next",
-        selectItemName: "btSelectItem",
+        // selectItemName: "btSelectItem",
         smartDisplay: true,
         search: true,
+        uniqueId: "title",
         searchOnEnterKey: false,
         strictSearch: false,
         searchText: "",
@@ -69,7 +70,7 @@ $(function () {
         paginationVAlign: "bottom",
         paginationHAlign: "right",
         paginationDetailHAlign: "left",
-        showHeader: false,
+        showHeader: true,
         showFooter: false,
         showColumns: true,
         showRefresh: false,
@@ -96,6 +97,22 @@ $(function () {
         // }
     });
     $('[data-toggle="dropdown"] >i').removeClass("glyphicon-export").addClass("fa-download");
+    $remove.click(function () {
+        var ids = getIdSelections();
+        $table.bootstrapTable("remove", {
+            field: "title",
+            values: ids
+        });
+
+        $remove.prop("disabled", true);
+    });
+    $table.on(
+        "check.bs.table uncheck.bs.table " +
+        "check-all.bs.table uncheck-all.bs.table",
+        function () {
+            $remove.prop("disabled", !$table.bootstrapTable("getSelections").length);
+            selections = getIdSelections();
+        });
 });
 
 function getIdSelections() {

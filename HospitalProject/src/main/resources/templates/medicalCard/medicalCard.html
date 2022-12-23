@@ -102,12 +102,11 @@
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
         <div class="navbar-nav ml-auto">
-            <a href="#" class="nav-item nav-link notifications"><i class="fa fa-bell-o"></i><span class="badge">1</span></a>
+            <a href="#" class="nav-item nav-link notifications"><i class="fa fa-bell"></i><span class="badge">1</span></a>
             <div class="nav-item dropdown">
                 <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
                     <img th:src="@{/medicalCard/img/doctorLogo.png}" class="avatar" alt="Avatar">
-                    <p th:text="${doctorName}"></p>
-                    <b class="caret"></b>
+                    <b class="caret" th:text="${doctorName}"></b>
                 </a>
                 <div class="dropdown-menu">
                     <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a></a>
@@ -130,12 +129,11 @@
         </div>
 
         <table id="allergy-table">
-            <col width="5%"/>
-            <col width="30%"/>
-            <col width="50%"/>
+            <col width="25%"/>
+            <col width="55%"/>
 
-            <tbody th:each="allergy : ${allergies}">
-            <tr>
+            <tbody>
+            <tr th:each="allergy : ${allergies}">
                 <td th:text="${allergy.title}"></td>
                 <td th:text="${allergy.reaction}"></td>
                 <td>
@@ -145,9 +143,10 @@
                         <i class="fas fa-pencil-square"></i>
                     </button>
 
-                    <form th:method="POST" class="fas fa-trash-alt btn btn-danger"  th:action="@{http://localhost:8080/medical-card/page/allergy/delete/(id=${id},
+                    <form th:method="POST" class="btn btn-danger"  th:action="@{http://localhost:8080/medical-card/page/allergy/delete/(id=${id},
     doctorName=${doctorName}, patientName=${patientName},allergyTitle=${allergy.title})}" >
-                        <button id="delete-allergy" type="submit">Delete</button>
+                        <button id="delete-allergy" style="background: none; border: none; color: #ffffff" type="submit">Delete</button>
+                        <i class="fas fa-trash-alt"></i>
                     </form>
                 </td>
             </tr>
