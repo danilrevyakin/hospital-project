@@ -32,60 +32,6 @@
 </head>
 <body>
 <script th:inline="javascript">
-    var URLObect = {
-        id: [[${id}]],
-        patient: [[${patientName}]],
-        doctor: [[${doctorName}]],
-        title: "default URLObect",
-        getDataURL() {
-            return this.id + "/" + this.patient + "/" + this.doctor;
-        },
-        getHomeURL() {
-            var str = "@{http://localhost:8080/medical-card/page/get/";
-            str = "http://localhost:8080/medical-card/page/get/";
-            str += this.getDataURL();
-            return str;
-        }
-    }
-
-    var OldTitleVarObj = {
-        get() {
-            return this.element().value;
-        },
-        element() {
-            return document.getElementById("input-old-title-of-allergy");
-        },
-        set(value) {
-            this.element().value = value;
-        }
-    }
-
-    var AllergyObj = {
-        getAllergyUpdateURL() {
-            var oldTitle = OldTitleVarObj.get();
-            return "@{http://localhost:8080/medical-card/page/allergy/update/" + URLObect.getDataURL() + "/" + oldTitle + "}";
-        },
-
-        getAllergyFormElement() {
-            return document.getElementById("form-for-allergy");
-        },
-
-        getAttributeOfForm(field) {
-            return this.getAllergyFormElement().getAttribute(field);
-        },
-
-        setAttributeOfForm(field, value) {
-            this.getAllergyFormElement().setAttribute(field, value);
-        },
-
-        printAttributeValue(attribute) {
-            var att = this.getAllergyFormElement().getAttribute(attribute);
-            console.log(att);
-        },
-        alertAttributeValue(attribute) {
-            var att = this.getAllergyFormElement().getAttribute(attribute);
-        }
-    }
 </script>
 <p style="display: none" th:text="'id: ' + ${id}"></p>
 
@@ -112,11 +58,11 @@
                     <b class="caret" th:text="${doctorName}"></b>
                 </a>
                 <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a></a>
-                    <a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a></a>
-                    <a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a></a>
+                    <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
+                    <a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a>
+                    <a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a></a>
+                    <a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
                 </div>
             </div>
         </div>
@@ -175,6 +121,7 @@
             <col width="5%"/><!--date-->
             <col width="5%"/><!--edited-->
             <!--actions-->
+            <!--                        th:text="${record.date}"-->
 
             <tbody>
             <tr th:each="record : ${medicalRecords}">
@@ -182,7 +129,9 @@
                 <td th:text="${record.symptoms}"></td>
                 <td th:text="${record.treatment}"></td>
                 <td th:text="${record.doctor}"></td>
-                <td th:text="${record.date}"></td>
+                <td
+                        th:text="${#temporals.format(record.date, 'dd-MM-yyyy')}"
+                ></td>
                 <td th:text="${record.edited}"></td>
                 <td>
                     <button id="update-record" type="submit" class="btn btn-warning"

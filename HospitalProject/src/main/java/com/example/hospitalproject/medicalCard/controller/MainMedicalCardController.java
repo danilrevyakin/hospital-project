@@ -7,8 +7,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.thymeleaf.spring6.ISpringTemplateEngine;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -121,6 +125,7 @@ public class MainMedicalCardController {
         model.addObject(ID_URL, id);
         model.addObject(PATIENT_URL, patientName);
         model.addObject(DOCTOR_URL, doctorName);
+        model.addObject("test", LocalDateTime.now());
         model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("default"));
         Set<Allergy> allergies = medicalCard.getAllergies();
         model.addObject(ALLERGIES_URL, allergies);
@@ -130,5 +135,12 @@ public class MainMedicalCardController {
         model.addObject(UPDATED_RECORD, new MedicalRecord());
         model.setStatus(response.getStatusCode());
         return model;
+    }
+
+    private ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+        SpringTemplateEngine engine = new SpringTemplateEngine();
+        engine.addDialect(new Java8TimeDialect());
+        engine.setTemplateResolver(templateResolver);
+        return engine;
     }
 }
