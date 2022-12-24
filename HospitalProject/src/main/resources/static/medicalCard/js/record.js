@@ -6,14 +6,6 @@ function openNewAllergyForm(){
     document.getElementById("form-for-allergy-add").style.display = "block";
 }
 
-function formatDate(str){
-    var date = new Date(str);
-    var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var res = date.getDate()+"/"+strArray[date.getMonth()]+"/"+(date.getYear() - 100);
-    res+= '\n' + date.getHours() + ":" + date.getMinutes();
-    return res;
-}
-
 function openUpdateRecordFormWithObj(par) {
     record = JSON.parse(par)
     document.getElementById("input-info").value = record.info;

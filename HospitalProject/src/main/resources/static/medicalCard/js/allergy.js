@@ -41,8 +41,8 @@ $(function () {
         sortClass: undefined,
         undefinedText: "-",
         striped: true,
-        sortName: "number",
-        sortOrder: "desc",
+        sortName: "title",
+        sortOrder: "asc",
         sortStable: false,
         sortable: true,
         pagination: true,
@@ -77,7 +77,7 @@ $(function () {
         showPaginationSwitch: true,
         showFullscreen: false,
         minimumCountColumns: 5,
-        idField: undefined,
+        idField: "title",
         clickToSelect: false,
         singleSelect: false,
         checkboxHeader: true,
@@ -140,7 +140,7 @@ $(function () {
                     sortable: true,
                     valign: "middle",
                     editable: {
-                        type: "text"},
+                        type: "date"},
                 },
                 {
                     title: "Edited",
@@ -168,7 +168,7 @@ $(function () {
         sortClass: undefined,
         undefinedText: "-",
         striped: true,
-        sortName: "number",
+        sortName: "date",
         sortOrder: "desc",
         sortStable: false,
         sortable: true,
@@ -204,7 +204,7 @@ $(function () {
         showPaginationSwitch: true,
         showFullscreen: false,
         minimumCountColumns: 5,
-        idField: undefined,
+        idField: "date",
         clickToSelect: false,
         singleSelect: false,
         checkboxHeader: true,
@@ -225,7 +225,7 @@ $(function () {
 
 function getIdSelections() {
     return $.map($table.bootstrapTable("getSelections"), function (row) {
-        return row.id;
+        return row.date;
     });
 }
 

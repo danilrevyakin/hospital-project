@@ -112,16 +112,20 @@
             <button id="add-records" class="btn btn-success" th:onclick="openNewRecordForm()">New<i
                     class="fas fa-plus"></i></button>
         </div>
-
+        <script>
+            function datesSorter(a, b) {
+                if (new Date(a) < new Date(b)) return 1;
+                if (new Date(a) > new Date(b)) return -1;
+                return 0;
+            }
+        </script>
         <table id="records-table">
-            <col width="10%"/><!--info-->
-            <col width="25%"/><!--symptoms-->
-            <col width="25%"/><!--treatment-->
-            <col width="2%"/><!--doctor-->
-            <col width="5%"/><!--date-->
-            <col width="5%"/><!--edited-->
-            <!--actions-->
-            <!--                        th:text="${record.date}"-->
+            <col style="width: 10%"/><!--info-->
+            <col style="width:20%"/><!--symptoms-->
+            <col style="width:25%;"/><!--treatment-->
+            <col style="width:10%"/><!--doctor-->
+            <col style="width: 13ch"/><!--date-->
+            <col style="width: 13ch"/><!--edited-->
 
             <tbody>
             <tr th:each="record : ${medicalRecords}">
@@ -130,9 +134,10 @@
                 <td th:text="${record.treatment}"></td>
                 <td th:text="${record.doctor}"></td>
                 <td
-                        th:text="${#temporals.format(record.date, 'dd-MM-yyyy')}"
+                        th:text="${#temporals.format(record.date, 'dd-MMM-yyyy HH:mm')}"
                 ></td>
-                <td th:text="${record.edited}"></td>
+                <td
+                        th:text="${#temporals.format(record.edited, 'dd-MMM-yyyy HH:mm')}"></td>
                 <td>
                     <button id="update-record" type="submit" class="btn btn-warning"
                             th:onclick="openUpdateRecordFormWithObj('[[${record}]]')"
@@ -179,7 +184,7 @@
           th:action="@{http://localhost:8080/medical-card/page/record/add/(id=${id},
     doctorName=${doctorName},patientName=${patientName})}">
         <!--   style="display: none"-->
-        <h2 type="text" id="record-add-form-logo">Update Record</h2>
+        <h2 type="text" id="record-add-form-logo">New Record</h2>
         <label for="input-info-add"><b>Info</b></label>
         <input type="text" th:field="${updatedRecord.info}" placeholder="Enter Info" id="input-info-add"
                required/>
