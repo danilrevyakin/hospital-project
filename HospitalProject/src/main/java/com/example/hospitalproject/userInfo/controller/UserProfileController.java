@@ -1,6 +1,9 @@
 package com.example.hospitalproject.userInfo.controller;
 
+import com.example.hospitalproject.userInfo.model.Appointment;
+import com.example.hospitalproject.userInfo.model.Doctor;
 import com.example.hospitalproject.userInfo.model.UserInfo;
+import com.example.hospitalproject.userInfo.repository.AppointmentRepository;
 import com.example.hospitalproject.userInfo.repository.DoctorRepository;
 import com.example.hospitalproject.userInfo.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +25,8 @@ public class UserProfileController {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private DoctorRepository doctorRepository;
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     @GetMapping("/hospital")
     public String showUsers(Model model){
@@ -75,6 +81,18 @@ public class UserProfileController {
         return "redirect:/hospital";
     }
 
+    @GetMapping("/hospital/{id}/appointments")
+    public String showDoctorAppointments(@PathVariable(value = "id") long id, Model model){
+        UserInfo user = userInfoRepository.findById(id).orElseThrow();
+        List<Doctor> doctor = doctorRepository.findByUserId(user);
+
+        List<Appointment> appointmentList = new ArrayList<>();
+        if(!doctor.isEmpty())
+            appointmentList = appointmentRepository.findByDoctor(doctor.get(0));
+
+        model.addAttribute("appointmentList", appointmentList);
+        return "appointments";
+    }
 
     private String getRole(UserInfo id){
         return doctorRepository.findByUserId(id).isEmpty() ? "patient" : "doctor";

@@ -5,13 +5,14 @@
     <title>User</title>
 </head>
 <body>
-
     <p th:text="'First name: ' + ${user.firstName}" />
     <p th:text="'Last name: ' + ${user.lastName}" />
     <p th:text="'Email: ' + ${user.email}" />
     <p th:text="'Birthday: ' + ${user.birthday}" />
     <p th:text="'Mobile phone: ' + ${user.phone}" />
     <p th:text="'Role: ' + ${role}" />
+    <a th:href="'/hospital/' + ${id} + '/appointments'">My appointments</a>
+    <br/>
     <a th:href="'/hospital/' + ${id} + '/edit'">Edit</a>
     <form th:action="'/hospital/' + ${id} + '/remove'" method="post">
         <input type="submit" value="Delete">
