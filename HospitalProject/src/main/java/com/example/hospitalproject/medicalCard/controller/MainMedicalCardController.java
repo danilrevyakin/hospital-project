@@ -21,6 +21,7 @@ public class MainMedicalCardController {
     private static final String ID_URL = "id";
     private static final String ALLERGIES_URL = "allergies";
     private static final String BAD_HABITS_URL = "badHabits";
+    private static final String BAD_HABIT_URL = "badHabit";
     private static final String MEDICAL_RECORDS_URL = "medicalRecords";
     private static final String TITLE_URL = "allergyTitle";
     private static final String DATE_OF_URL = "recordDate";
@@ -32,6 +33,7 @@ public class MainMedicalCardController {
     private final MedicalCardController cardController;
     private final AllergyController allergyController;
     private final MedicalRecordController recordController;
+    private final BadHabitController badHabitController;
 
     private record ModelAttributeWrapper<V>(V value) {
     }
@@ -48,6 +50,24 @@ public class MainMedicalCardController {
                                                               @RequestParam(value = DOCTOR_URL) String doctorName,
                                                               @RequestParam(value = PATIENT_URL) String patientName) {
         return getHome(id, patientName, doctorName);
+    }
+
+    @PostMapping("bad-habit/add/")
+    public ModelAndView addBadHabit(@RequestParam(ID_URL) String id,
+                                     @RequestParam(DOCTOR_URL) String doctorName,
+                                     @RequestParam(PATIENT_URL) String patientName,
+                                     @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> badHabit) {
+        ResponseEntity<Set<String>> response = badHabitController.addBadHabit(id, badHabit.value);
+        return getHome(id, patientName, doctorName, response);
+    }
+
+    @PostMapping("bad-habit/delete/")
+    public ModelAndView deleteBadHabit(@RequestParam(ID_URL) String id,
+                                    @RequestParam(DOCTOR_URL) String doctorName,
+                                    @RequestParam(PATIENT_URL) String patientName,
+                                    @RequestParam(BAD_HABIT_URL) String badHabit) {
+        ResponseEntity<Set<String>> response = badHabitController.deleteBadHabit(id, badHabit);
+        return getHome(id, patientName, doctorName, response);
     }
 
     @PostMapping("allergy/update/")

@@ -68,6 +68,35 @@
 </nav>
 <h1 th:text="'Patient: ' + ${patientName}"/>
 
+<div class="badHabitWrapper">
+    <div class="container-fluid">
+        <div id="toolbar-bad-habit">
+            <button id="add-bad-habit" class="btn btn-success" onclick="openFormOfNewBadHabit()">New<i
+                    class="fas fa-plus"></i></button>
+        </div>
+
+        <table id="bad-habit-table">
+            <col width="80%"/>
+
+            <tbody>
+            <tr th:each="habit : ${badHabits}">
+                <td th:text="${habit}"></td>
+                <td>
+                    <form th:method="POST" class="btn btn-danger" th:action="@{http://localhost:8080/medical-card/page/bad-habit/delete/(id=${id},
+    doctorName=${doctorName}, patientName=${patientName},badHabit=${habit})}">
+                        <button id="delete-bad-habit" style="background: none; border: none; color: #ffffff"
+                                type="submit">Delete
+                        </button>
+                        <i class="fas fa-trash-alt"></i>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 <div class="allergyWrapper">
     <div class="container-fluid">
         <div id="toolbar">
@@ -213,6 +242,21 @@
         <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
 </div>
+<div class="form-popup" id="form-for-add-bad-habit">
+    <form class="form-container" th:method="POST"
+          th:action="@{http://localhost:8080/medical-card/page/bad-habit/add/(id=${id},
+    doctorName=${doctorName},patientName=${patientName})}">
+        <!--   style="display: none"-->
+        <h2 type="text" id="bad-habit-add-form-logo">New Bad Habit</h2>
+        <label for="input-info-add-bad-habit"><b>Title</b></label>
+        <input type="text" th:field="${wrapper.value}" placeholder="Enter bad habit" id="input-info-add-bad-habit"
+               required/>
+        <button th:type="submit"
+                class="btn">Save
+        </button>
+        <button type="button" class="btn cancel" onclick="closeFormOFNewBadHabit()">Close</button>
+    </form>
+</div>
 
 <div class="form-popup" id="form-for-allergy-add">
     <form class="form-container" th:method="POST"
@@ -235,6 +279,7 @@
 <!--<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput">-->
 <script th:src="@{/medicalCard/js/allergy.js} "></script>
 <script th:src="@{/medicalCard/js/record.js} "></script>
+<script th:src="@{/medicalCard/js/badHabit.js} "></script>
 <hr>
 </body>
 </html>
