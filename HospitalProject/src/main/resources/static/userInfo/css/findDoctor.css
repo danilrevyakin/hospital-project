@@ -1,0 +1,27 @@
+body{
+    background: url("../img/finddoctor.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.input-group{
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 15%;
+}
+
+.find-title{
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.btn{
+    margin-top: 20px;
+}
+
+.select{
+    width: 500px;
+}
