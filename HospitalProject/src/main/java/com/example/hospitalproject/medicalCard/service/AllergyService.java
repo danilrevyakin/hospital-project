@@ -18,6 +18,7 @@ public class AllergyService {
 
     private final MedicalCardRepository repository;
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
+    private static final int MINIMUM_TITLE_LENGTH = 1;
 
     public Set<Allergy> getAllergies(String id) {
         if (repository.existsById(id)) {
@@ -42,20 +43,24 @@ public class AllergyService {
 
     private void formatAllergy(Allergy allergy){
         String title = allergy.getTitle();
-        if (title != null){
-            allergy.setTitle(f.apply(title));
-        }else{
-            throw new IllegalAllergyException("Title of allergy can not be null");
-        }
+        title = checkTitle(title);
+        allergy.setTitle(title);
         String reaction = allergy.getReaction();
         if(reaction != null){
             allergy.setReaction(f.apply(reaction));
         }
     }
-    private void checkTitle(String title){
+
+    private String checkTitle(String title){
         if(title == null){
             throw new IllegalAllergyException("Title of allergy can not be null");
         }
+        title = f.apply(title);
+        if(title.length() < MINIMUM_TITLE_LENGTH){
+            String message = "Length of allergy title can not be less than " + MINIMUM_TITLE_LENGTH;
+            throw new IllegalAllergyException(message);
+        }
+        return title;
     }
 
     public Set<Allergy> updateAllergy(String id, String title, Allergy allergy) {

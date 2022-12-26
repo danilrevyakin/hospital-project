@@ -1,6 +1,7 @@
 package com.example.hospitalproject.medicalCard.service;
 
 import com.example.hospitalproject.medicalCard.exception.IllegalDoctorException;
+import com.example.hospitalproject.medicalCard.exception.IllegalMedicalRecordException;
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
 import com.example.hospitalproject.medicalCard.exception.MedicalRecordNotFoundException;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
@@ -21,6 +22,7 @@ public class MedicalRecordService {
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
 
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
+    private static final int RECORD_INFO_MINIMUM_LENGTH = 2;
 
     public List<MedicalRecord> addMedicalRecord(String id, String doctor, MedicalRecord record) {
         if (doctor == null) {
@@ -40,17 +42,23 @@ public class MedicalRecordService {
         throw new MedicalCardNotFoundException();
     }
 
-    private void formatRecordData(MedicalRecord record){
+    private void formatRecordData(MedicalRecord record) {
         String info = record.getInfo();
-        if(info != null){
-            record.setInfo(f.apply(info));
+        if (info == null) {
+            throw new IllegalMedicalRecordException("Info of record can not be null");
         }
+        info = f.apply(info);
+        if (info.length() < RECORD_INFO_MINIMUM_LENGTH) {
+            String message = "Length of record info can not be less than " + RECORD_INFO_MINIMUM_LENGTH;
+            throw new IllegalMedicalRecordException(message);
+        }
+        record.setInfo(info);
         String symptoms = record.getSymptoms();
-        if(symptoms != null){
+        if (symptoms != null) {
             record.setSymptoms(f.apply(symptoms));
         }
         String treatment = record.getTreatment();
-        if(treatment != null){
+        if (treatment != null) {
             record.setTreatment(f.apply(treatment));
         }
     }
