@@ -5,6 +5,7 @@ import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundExce
 import com.example.hospitalproject.medicalCard.exception.MedicalRecordNotFoundException;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
+import com.mongodb.Function;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,20 +18,41 @@ import java.util.List;
 public class MedicalRecordService {
 
     private final MedicalCardRepository repository;
+    private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
 
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
 
     public List<MedicalRecord> addMedicalRecord(String id, String doctor, MedicalRecord record) {
-        if (doctor == null || doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
+        if (doctor == null) {
+            throw new IllegalDoctorException("You have not specified doctor parameter!");
+        }
+        doctor = f.apply(doctor);
+        if (doctor.length() < DOCTOR_NAME_MINIMUM_LENGTH) {
             throw new IllegalDoctorException("Value of Doctor = " + doctor + " is illegal");
         }
         if (repository.existsById(id)) {
+            formatRecordData(record);
             record.setDoctor(doctor);
             record.setDate(LocalDateTime.now());
             repository.addMedicalRecord(id, record);
             return repository.getMedicalRecordsById(id);
         }
         throw new MedicalCardNotFoundException();
+    }
+
+    private void formatRecordData(MedicalRecord record){
+        String info = record.getInfo();
+        if(info != null){
+            record.setInfo(f.apply(info));
+        }
+        String symptoms = record.getSymptoms();
+        if(symptoms != null){
+            record.setSymptoms(f.apply(symptoms));
+        }
+        String treatment = record.getTreatment();
+        if(treatment != null){
+            record.setTreatment(f.apply(treatment));
+        }
     }
 
     public MedicalRecord getMedicalRecord(String id, LocalDateTime date) {
@@ -57,6 +79,7 @@ public class MedicalRecordService {
     public List<MedicalRecord> updateMedicalRecord(String id, String doctor, MedicalRecord newRecord) {
         LocalDateTime dateOfCreating = newRecord.getDate();
         modifyingRecordValidation(id, dateOfCreating, doctor);
+        formatRecordData(newRecord);
         newRecord.setEdited(LocalDateTime.now());
         repository.updateMedicalRecord(id, dateOfCreating, newRecord);
         return repository.getMedicalRecordsById(id);
@@ -86,5 +109,4 @@ public class MedicalRecordService {
             throw new IllegalDoctorException(message);
         }
     }
-
 }
