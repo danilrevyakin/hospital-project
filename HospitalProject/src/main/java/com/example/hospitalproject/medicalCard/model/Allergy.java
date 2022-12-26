@@ -18,12 +18,18 @@ public class Allergy {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Allergy allergy = (Allergy) o;
-        return Objects.equals(title, allergy.title);
+        if(allergy.title == null){
+            return null == title;
+        }
+        if(title == null){
+            return false;
+        }
+        return allergy.title.equalsIgnoreCase(title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title);
+        return Objects.hash(title.toLowerCase());
     }
 
     @Override

@@ -25,15 +25,15 @@ public class ArrayRepositoryImpl implements ArrayRepository {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Override
-    public <E extends Collection<?>> E getArrayFromCardById(String id,MedicalCard.field field,
-                                                            E empty,Function<MedicalCard, E> getter) {
+    public <E extends Collection<?>> E getArrayFromCardById(String id, MedicalCard.field field,
+                                                            E empty, Function<MedicalCard, E> getter) {
         Query query = getQueryById(id);
         return getArrayFromCardByQuery(query, field, empty, getter);
     }
 
     @Override
-    public <E extends Collection<?>> E getArrayFromCardByQuery(Query query,MedicalCard.field field,
-                                                               E empty,Function<MedicalCard, E> getter) {
+    public <E extends Collection<?>> E getArrayFromCardByQuery(Query query, MedicalCard.field field,
+                                                               E empty, Function<MedicalCard, E> getter) {
         return getArrayFromCardByQuery(query, field.name(), empty, getter);
     }
 
@@ -56,23 +56,34 @@ public class ArrayRepositoryImpl implements ArrayRepository {
     }
 
     @Override
-    public <T> void deleteArrayElement(String id, String array, String elementField, T fieldValue) {
+    public <T> void deleteArrayElement(String id, String array, String where, T is) {
         Query query = getQueryById(id);
         Update update = new Update().pull(array,
-                Query.query(Criteria.where(elementField).is(fieldValue)));
+                Query.query(Criteria.where(where).is(is)));
         logger.info(update.toString());
         UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
         logger.info(updateResult.toString());
     }
 
     @Override
-    public <T, V> void updateArrayElement(String id, String elementFieldPath, T elementField,
+    public <T, V> void updateArrayElement(String id, String where, T is,
                                           String index, V newValue) {
-        Query query = getQueryById(id).
-                addCriteria(Criteria.where(elementFieldPath).is(elementField));
+        Query query = getQueryById(id)
+                .addCriteria(Criteria.where(where).is(is));
         logger.info(query.toString());
         Update update = new Update().set(index, newValue);
         logger.info(update.toString());
-        template.updateFirst(query, update, MedicalCard.class);
+        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
+        logger.info(updateResult.toString());
+    }
+
+    @Override
+    public <V> void pushArrayElement(String id, String where, V newValue) {
+        Query query = getQueryById(id);
+        logger.info(query.toString());
+        Update update = new Update().push(where, newValue);
+        logger.info(update.toString());
+        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
+        logger.info(updateResult.toString());
     }
 }

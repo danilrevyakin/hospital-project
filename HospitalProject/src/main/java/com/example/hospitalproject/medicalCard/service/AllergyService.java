@@ -17,7 +17,7 @@ import java.util.Set;
 public class AllergyService {
 
     private final MedicalCardRepository repository;
-    private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
+    private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ").toLowerCase();
     private static final int MINIMUM_TITLE_LENGTH = 1;
 
     public Set<Allergy> getAllergies(String id) {

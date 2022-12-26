@@ -22,9 +22,11 @@ public interface ArrayRepository {
                                                         E empty,
                                                         Function<MedicalCard, E> getter);
 
+    <V> void pushArrayElement(String id, String where, V newValue);
+
     <T> void deleteArrayElement(String id, String array,
                                 String elementField, T fieldValue);
 
-    <T, V> void updateArrayElement(String id, String elementFieldPath, T elementField,
+    <T, V> void updateArrayElement(String id, String where, T is,
                                           String index, V newValue);
 }

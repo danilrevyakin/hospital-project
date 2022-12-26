@@ -31,12 +31,8 @@ public class BadHabitRepositoryImpl implements BadHabitRepository {
 
     @Override
     public void addBadHabit(String id, String badHabit) {
-        Query query = getQueryById(id);
-        logger.info(query.toString());
-        Update update = new Update().addToSet(MedicalCard.field.badHabits.name(), badHabit);
-        logger.info(update.toString());
-        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
-        logger.info(updateResult.toString());
+        String array = MedicalCard.field.badHabits.name();
+        arrayRepository.pushArrayElement(id, array, badHabit);
     }
 
     @Override
@@ -47,5 +43,11 @@ public class BadHabitRepositoryImpl implements BadHabitRepository {
         logger.info(update.toString());
         UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
         logger.info(updateResult.toString());
+    }
+
+    @Override
+    public void updateBadHabit(String id, String oldHabit, String newHabit) {
+        arrayRepository.updateArrayElement(id, MedicalCard.field.badHabits.name(),
+                oldHabit, MedicalCard.field.badHabits.nameDot$, newHabit);
     }
 }

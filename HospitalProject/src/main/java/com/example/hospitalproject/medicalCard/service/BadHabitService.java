@@ -15,17 +15,18 @@ import java.util.Set;
 @AllArgsConstructor
 public class BadHabitService {
     private final MedicalCardRepository repository;
-    private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
+    private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ").toLowerCase();
     private static final int MINIMUM_BAD_HABIT_LENGTH = 1;
 
-    public Set<String> getAllBadHabits(String id){
-        if(repository.existsById(id)){
+    public Set<String> getAllBadHabits(String id) {
+        if (repository.existsById(id)) {
             return repository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
 
     public Set<String> addBadHabit(String id, String badHabit) {
+        badHabit = formatBadHabit(badHabit);
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
@@ -33,7 +34,6 @@ public class BadHabitService {
             if (badHabits != null && badHabits.contains(badHabit)) {
                 throw new IllegalBadHabitException("There is already present " + badHabit + " habit");
             }
-            badHabit = formatBadHabit(badHabit);
             repository.addBadHabit(id, badHabit);
             return repository.getBadHabits(id);
         }
@@ -41,25 +41,34 @@ public class BadHabitService {
     }
 
     public Set<String> deleteBadHabit(String id, String badHabit) {
-        badHabit = formatBadHabit(badHabit);
+        final String badHabit1 = formatBadHabit(badHabit);
+        return modifyBadHabit(id, badHabit1, () -> repository.deleteBadHabit(id, badHabit1));
+    }
+
+    public Set<String> updateBadHabit(String id, String oldBadHabit, String newBadHabit) {
+        final String newBadHabit1 = formatBadHabit(newBadHabit);
+        return modifyBadHabit(id, oldBadHabit, () -> repository.updateBadHabit(id, oldBadHabit, newBadHabit1));
+    }
+
+    private Set<String> modifyBadHabit(String id, String badHabit, Runnable runner) {
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
             if (!card.getBadHabits().contains(badHabit)) {
                 throw new IllegalBadHabitException("There is no " + badHabit + " habit");
             }
-            repository.deleteBadHabit(id, badHabit);
+            runner.run();
             return repository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
 
-    private String formatBadHabit(String badHabit){
-        if (badHabit == null){
+    private String formatBadHabit(String badHabit) {
+        if (badHabit == null) {
             throw new IllegalBadHabitException("Bad habit can not be null");
         }
         badHabit = f.apply(badHabit);
-        if(badHabit.length() < MINIMUM_BAD_HABIT_LENGTH){
+        if (badHabit.length() < MINIMUM_BAD_HABIT_LENGTH) {
             throw new IllegalBadHabitException("Bad habit can not be null");
         }
         return badHabit;

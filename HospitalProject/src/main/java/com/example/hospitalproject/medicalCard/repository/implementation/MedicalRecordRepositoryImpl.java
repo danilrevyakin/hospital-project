@@ -4,28 +4,22 @@ import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.ArrayRepository;
 import com.example.hospitalproject.medicalCard.repository.MedicalRecordRepository;
-import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 @Repository
 @AllArgsConstructor
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
-    private final MongoTemplate template;
     private final ArrayRepository arrayRepository;
 
     private static final String records = "records";
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public enum RecordFields {
         info,
@@ -40,7 +34,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         }
     }
 
-    //    db.medicalCard.findOne({ "_id" : "3", "records" : { "$elemMatch" : { "info" : "again"}}},
+    //    db.medicalCard.findOne({ "_id" : "3", "records" : { "$elemMatch" : { "info" : "some info"}}},
     //    { "records.$" : 1, "_id" : 0})
     @Override
     public List<MedicalRecord> getMedicalRecordsByIdAndDate(String id, LocalDateTime date) {
@@ -52,8 +46,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 List.of(), MedicalCard::getRecords);
     }
 
-//db.medicalCard.find({_id:"3"},{records: 1, _id: 0})
-
+    //db.medicalCard.find({_id:"3"},{records: 1, _id: 0})
     @Override
     public List<MedicalRecord> getMedicalRecordsById(String id) {
         return arrayRepository.getArrayFromCardById(id, MedicalCard.field.records, List.of(), MedicalCard::getRecords);
@@ -61,16 +54,10 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     @Override
     public void addMedicalRecord(String id, MedicalRecord record) {
-        Query query = getQueryById(id);
-        Update update = new Update().push(MedicalCard.field.records.name(), record);
-        logger.info(query + "\n" + update);
-        UpdateResult updateResult = template.updateFirst(query, update, MedicalCard.class);
-        logger.info(updateResult.toString());
+        String array = MedicalCard.field.records.name();
+        arrayRepository.pushArrayElement(id, array, record);
     }
 
-    //    db.medicalCard.findAndModify({query: { "_id" : "3", "records" : { "$elemMatch" : { "info" : "now...."}}},
-//        update: {$set: {"records.$": wednesday}}})
-    //i use different command
     @Override
     public void updateMedicalRecord(String id, LocalDateTime date, MedicalRecord newRecord) {
         arrayRepository.updateArrayElement(id,

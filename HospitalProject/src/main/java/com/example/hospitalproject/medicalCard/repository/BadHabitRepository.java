@@ -9,4 +9,6 @@ public interface BadHabitRepository {
     void addBadHabit(String id, String badHabit);
 
     void deleteBadHabit(String id, String badHabit);
+
+    void updateBadHabit(String id, String oldHabit, String newHabit);
 }
