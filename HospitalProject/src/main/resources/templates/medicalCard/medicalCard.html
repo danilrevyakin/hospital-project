@@ -89,6 +89,11 @@
                         </button>
                         <i class="fas fa-trash-alt"></i>
                     </form>
+                    <button id="update-bad-habit-button" type="submit" class="btn btn-warning"
+                            th:onclick="openUpdateBadHabitForm('[[${habit}]]')"
+                    >Update
+                        <i class="fas fa-pencil-square"></i>
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -219,7 +224,6 @@
     </form>
 </div>
 <div class="form-popup" id="form-for-allergy">
-    <div id="oldTitleVar" style="display: none"></div>
     <form class="form-container" th:method="POST"
           th:action="@{http://localhost:8080/medical-card/page/allergy/update/(id=${id},
     doctorName=${doctorName},patientName=${patientName})}">
@@ -248,13 +252,31 @@
     doctorName=${doctorName},patientName=${patientName})}">
         <!--   style="display: none"-->
         <h2 type="text" id="bad-habit-add-form-logo">New Bad Habit</h2>
-        <label for="input-info-add-bad-habit"><b>Title</b></label>
+        <label for="input-info-add-bad-habit"><b>Bad Habit</b></label>
         <input type="text" th:field="${wrapper.value}" placeholder="Enter bad habit" id="input-info-add-bad-habit"
                required/>
         <button th:type="submit"
                 class="btn">Save
         </button>
         <button type="button" class="btn cancel" onclick="closeFormOFNewBadHabit()">Close</button>
+    </form>
+</div>
+<div class="form-popup" id="form-for-update-bad-habit">
+    <form class="form-container" th:method="POST"
+          th:action="@{http://localhost:8080/medical-card/page/bad-habit/update/(id=${id},
+    doctorName=${doctorName},patientName=${patientName})}">
+        <!--   style="display: none"-->
+        <h2 type="text" id="update-bad-habit-logo">Update Bad Habit</h2>
+        <input type="text" style="display: none" th:field="${pair.first}" placeholder="Enter Old Bad Habit"
+               id="input-old-update-bad-habit"
+               required/>
+        <label for="input-update-bad-habit"><b>Bad Habit</b></label>
+        <input type="text" th:field="${pair.second}" placeholder="Enter Bad Habit" id="input-update-bad-habit"
+               required/>
+        <button th:type="submit"
+                class="btn">Save
+        </button>
+        <button type="button" class="btn cancel" onclick="closeFormOfUpdateBadHabit()">Close</button>
     </form>
 </div>
 

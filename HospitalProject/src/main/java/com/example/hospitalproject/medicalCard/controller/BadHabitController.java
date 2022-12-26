@@ -29,7 +29,7 @@ public class BadHabitController {
     }
 
     @PutMapping("/update/{id}/{badHabit}/{newBadHabit}")
-    public ResponseEntity<Set<String>> addBadHabit(@PathVariable("id") String id,
+    public ResponseEntity<Set<String>> updateBadHabit(@PathVariable("id") String id,
                                                    @PathVariable("badHabit") String badHabit,
                                                    @PathVariable("newBadHabit") String newBadHabit) {
         var strings = service.updateBadHabit(id, badHabit, newBadHabit);

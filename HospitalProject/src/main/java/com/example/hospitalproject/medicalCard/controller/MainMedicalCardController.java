@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.io.File;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ public class MainMedicalCardController {
     private static final String DATE_OF_URL = "recordDate";
     private static final String DEFAULT_DATA_URL = "{" + ID_URL + "}/{" + PATIENT_URL + "}/{" + DOCTOR_URL + "}";
     private static final String WRAPPER_OF_DATA = "wrapper";
+    private static final String PAIR = "pair";
     private static final String UPDATED_RECORD = "updatedRecord";
     private static final String UPDATED_ALLERGY = "updatedAllergy";
 
@@ -36,6 +38,9 @@ public class MainMedicalCardController {
     private final BadHabitController badHabitController;
 
     private record ModelAttributeWrapper<V>(V value) {
+    }
+
+    private record Pair<V, T>(V first, T second) {
     }
 
     @GetMapping("/get/" + DEFAULT_DATA_URL)//id is the same as SQL id of Patient
@@ -54,18 +59,31 @@ public class MainMedicalCardController {
 
     @PostMapping("bad-habit/add/")
     public ModelAndView addBadHabit(@RequestParam(ID_URL) String id,
-                                     @RequestParam(DOCTOR_URL) String doctorName,
-                                     @RequestParam(PATIENT_URL) String patientName,
-                                     @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> badHabit) {
+                                    @RequestParam(DOCTOR_URL) String doctorName,
+                                    @RequestParam(PATIENT_URL) String patientName,
+                                    @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> badHabit) {
         ResponseEntity<Set<String>> response = badHabitController.addBadHabit(id, badHabit.value);
+        return getHome(id, patientName, doctorName, response);
+    }
+
+    @PostMapping("bad-habit/update/")
+    public ModelAndView updateBadHabit(@RequestParam(ID_URL) String id,
+                                       @RequestParam(DOCTOR_URL) String doctorName,
+                                       @RequestParam(PATIENT_URL) String patientName,
+                                       @ModelAttribute(PAIR) Pair<String, String> update) {
+        String oldBadHabit, newBadHabit;
+        oldBadHabit = update.first;
+        newBadHabit = update.second;
+        ResponseEntity<Set<String>> response = badHabitController
+                .updateBadHabit(id, oldBadHabit, newBadHabit);
         return getHome(id, patientName, doctorName, response);
     }
 
     @PostMapping("bad-habit/delete/")
     public ModelAndView deleteBadHabit(@RequestParam(ID_URL) String id,
-                                    @RequestParam(DOCTOR_URL) String doctorName,
-                                    @RequestParam(PATIENT_URL) String patientName,
-                                    @RequestParam(BAD_HABIT_URL) String badHabit) {
+                                       @RequestParam(DOCTOR_URL) String doctorName,
+                                       @RequestParam(PATIENT_URL) String patientName,
+                                       @RequestParam(BAD_HABIT_URL) String badHabit) {
         ResponseEntity<Set<String>> response = badHabitController.deleteBadHabit(id, badHabit);
         return getHome(id, patientName, doctorName, response);
     }
@@ -140,7 +158,8 @@ public class MainMedicalCardController {
         model.addObject(ID_URL, id);
         model.addObject(PATIENT_URL, patientName);
         model.addObject(DOCTOR_URL, doctorName);
-        model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("default"));
+        model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("wrapper value"));
+        model.addObject(PAIR, new Pair<>("old", "new"));
         Set<Allergy> allergies = medicalCard.getAllergies();
         model.addObject(ALLERGIES_URL, allergies);
         model.addObject(BAD_HABITS_URL, medicalCard.getBadHabits());
