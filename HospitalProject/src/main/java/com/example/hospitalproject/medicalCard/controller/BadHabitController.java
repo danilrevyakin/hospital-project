@@ -17,14 +17,14 @@ public class BadHabitController {
 
     @GetMapping("/all/{id}")
     public ResponseEntity<Set<String>> getBadHabit(@PathVariable("id") String id){
-        var strings = service.getAllBadHabits(id);
+        var strings = service.getAll(id);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 
     @PutMapping("/add/{id}/{badHabit}")
     public ResponseEntity<Set<String>> addBadHabit(@PathVariable("id") String id,
                                                    @PathVariable("badHabit") String badHabit) {
-        var strings = service.addBadHabit(id, badHabit);
+        var strings = service.add(id, badHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 
@@ -32,14 +32,14 @@ public class BadHabitController {
     public ResponseEntity<Set<String>> updateBadHabit(@PathVariable("id") String id,
                                                    @PathVariable("badHabit") String badHabit,
                                                    @PathVariable("newBadHabit") String newBadHabit) {
-        var strings = service.updateBadHabit(id, badHabit, newBadHabit);
+        var strings = service.update(id, badHabit, newBadHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
     
     @DeleteMapping("/delete/{id}/{badHabit}")
     public ResponseEntity<Set<String>> deleteBadHabit(@PathVariable("id") String id,
                                                       @PathVariable("badHabit") String badHabit) {
-        var strings = service.deleteBadHabit(id, badHabit);
+        var strings = service.delete(id, badHabit);
         return new ResponseEntity<>(strings, HttpStatus.OK);
     }
 }

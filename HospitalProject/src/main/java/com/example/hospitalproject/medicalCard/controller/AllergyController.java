@@ -19,13 +19,13 @@ public class AllergyController {
     @PutMapping("/add/{id}")
     public ResponseEntity<Set<Allergy>> addAllergy(@PathVariable("id") String id,
                                                    @RequestBody Allergy allergy) {
-        Set<Allergy> allergies = service.addAllergy(id, allergy);
+        Set<Allergy> allergies = service.add(id, allergy);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 
     @GetMapping("/all/{id}")
     public ResponseEntity<Set<Allergy>> getAllergies(@PathVariable("id") String id) {
-        Set<Allergy> allergies = service.getAllergies(id);
+        Set<Allergy> allergies = service.getAll(id);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 
@@ -33,14 +33,14 @@ public class AllergyController {
     public ResponseEntity<Set<Allergy>> updateAllergy(@PathVariable("id") String id,
                                                    @PathVariable("title") String title,
                                                    @RequestBody Allergy allergy) {
-        Set<Allergy> allergies = service.updateAllergy(id, title, allergy);
+        Set<Allergy> allergies = service.update(id, title, allergy);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}/{title}")
     public ResponseEntity<Set<Allergy>> deleteAllergy(@PathVariable("id") String id,
                                                       @PathVariable("title") String title) {
-        Set<Allergy> allergies = service.deleteAllergy(id, title);
+        Set<Allergy> allergies = service.delete(id, title);
         return new ResponseEntity<>(allergies, HttpStatus.OK);
     }
 }

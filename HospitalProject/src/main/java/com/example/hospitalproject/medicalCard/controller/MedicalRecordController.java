@@ -34,7 +34,8 @@ public class MedicalRecordController {
     public ResponseEntity<List<MedicalRecord>> addMedicalRecord(@PathVariable("id") String id,
                                                                 @PathVariable("doctor") String doctor,
                                                                 @RequestBody MedicalRecord record) {
-        List<MedicalRecord> medicalRecords = service.addMedicalRecord(id,doctor, record);
+        record.setDoctor(doctor);
+        List<MedicalRecord> medicalRecords = service.addMedicalRecord(id, record);
         return new ResponseEntity<>(medicalRecords, HttpStatus.CREATED);
     }
 
