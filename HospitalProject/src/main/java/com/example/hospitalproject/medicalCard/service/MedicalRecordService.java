@@ -6,6 +6,7 @@ import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundExce
 import com.example.hospitalproject.medicalCard.exception.MedicalRecordNotFoundException;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
+import com.example.hospitalproject.medicalCard.repository.MedicalRecordRepository;
 import com.mongodb.Function;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 public class MedicalRecordService {
 
     private final MedicalCardRepository repository;
+    private final MedicalRecordRepository recordRepository;
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
 
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
@@ -36,8 +38,8 @@ public class MedicalRecordService {
             formatRecordData(record);
             record.setDoctor(doctor);
             record.setDate(LocalDateTime.now());
-            repository.addMedicalRecord(id, record);
-            return repository.getMedicalRecordsById(id);
+            recordRepository.addMedicalRecord(id, record);
+            return recordRepository.getMedicalRecordsById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -65,7 +67,7 @@ public class MedicalRecordService {
 
     public MedicalRecord getMedicalRecord(String id, LocalDateTime date) {
         if (repository.existsById(id)) {
-            List<MedicalRecord> records = repository.getMedicalRecordsByIdAndDate(id, date);
+            List<MedicalRecord> records = recordRepository.getMedicalRecordsByIdAndDate(id, date);
             if (records.size() == 0) {
                 String message = "There is no record at " + date + " in " + id + " card";
                 throw new MedicalRecordNotFoundException(message);
@@ -77,7 +79,7 @@ public class MedicalRecordService {
 
     public List<MedicalRecord> getAllMedicalRecordsById(String id) {
         if (repository.existsById(id)) {
-            return repository.getMedicalRecordsById(id);
+            return recordRepository.getMedicalRecordsById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -89,14 +91,14 @@ public class MedicalRecordService {
         modifyingRecordValidation(id, dateOfCreating, doctor);
         formatRecordData(newRecord);
         newRecord.setEdited(LocalDateTime.now());
-        repository.updateMedicalRecord(id, dateOfCreating, newRecord);
-        return repository.getMedicalRecordsById(id);
+        recordRepository.updateMedicalRecord(id, dateOfCreating, newRecord);
+        return recordRepository.getMedicalRecordsById(id);
     }
 
     public List<MedicalRecord> deleteMedicalRecord(String id, LocalDateTime dateOfCreating, String doctor) {
         modifyingRecordValidation(id, dateOfCreating, doctor);
-        repository.deleteMedicalRecord(id, dateOfCreating);
-        return repository.getMedicalRecordsById(id);
+        recordRepository.deleteMedicalRecord(id, dateOfCreating);
+        return recordRepository.getMedicalRecordsById(id);
     }
 
     private void modifyingRecordValidation(String id, LocalDateTime dateOfCreating, String doctor) {

@@ -5,8 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface MedicalCardRepository extends MongoRepository<MedicalCard, String>,
-        MedicalRecordRepository, AllergyRepository, BadHabitRepository {
+public interface MedicalCardRepository extends MongoRepository<MedicalCard, String> {
 
     @Override
     Optional<MedicalCard> findById(String s);
@@ -16,5 +15,4 @@ public interface MedicalCardRepository extends MongoRepository<MedicalCard, Stri
 
     @Override
     boolean existsById(String s);
-
 }

@@ -4,6 +4,7 @@ import com.example.hospitalproject.medicalCard.exception.IllegalAllergyException
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
+import com.example.hospitalproject.medicalCard.repository.AllergyRepository;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import com.mongodb.Function;
 import lombok.AllArgsConstructor;
@@ -17,12 +18,13 @@ import java.util.Set;
 public class AllergyService {
 
     private final MedicalCardRepository repository;
+    private final AllergyRepository allergyRepository;
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ").toLowerCase();
     private static final int MINIMUM_TITLE_LENGTH = 1;
 
     public Set<Allergy> getAllergies(String id) {
         if (repository.existsById(id)) {
-            return repository.getAllAllergiesById(id);
+            return allergyRepository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -35,8 +37,8 @@ public class AllergyService {
                 throw new IllegalStateException("There is already present " + allergy);
             }
             formatAllergy(allergy);
-            repository.addAllergy(id, allergy);
-            return repository.getAllAllergiesById(id);
+            allergyRepository.addAllergy(id, allergy);
+            return allergyRepository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -66,11 +68,11 @@ public class AllergyService {
     public Set<Allergy> updateAllergy(String id, String title, Allergy allergy) {
         formatAllergy(allergy);
         return modifyAllergyOperation(id, title,
-                () -> repository.updateAllergy(id, title, allergy));
+                () -> allergyRepository.updateAllergy(id, title, allergy));
     }
 
     public Set<Allergy> deleteAllergy(String id, String title) {
-        return modifyAllergyOperation(id, title, () -> repository.deleteAllergy(id, title));
+        return modifyAllergyOperation(id, title, () -> allergyRepository.deleteAllergy(id, title));
     }
 
     private Set<Allergy> modifyAllergyOperation(String id, String title, Runnable runner) {
@@ -81,7 +83,7 @@ public class AllergyService {
                 throw new IllegalAllergyException("There is no " + title + " allergy in " + id + " card");
             }
             runner.run();
-            return repository.getAllAllergiesById(id);
+            return allergyRepository.getAllAllergiesById(id);
         }
         throw new MedicalCardNotFoundException();
     }

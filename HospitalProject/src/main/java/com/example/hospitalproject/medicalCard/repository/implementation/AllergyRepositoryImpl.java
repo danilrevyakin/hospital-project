@@ -15,7 +15,6 @@ public class AllergyRepositoryImpl implements AllergyRepository {
 
     private final ArrayRepository arrayRepository;
 
-
     private static final String allergies = "allergies";
 
     public enum AllergyFields {

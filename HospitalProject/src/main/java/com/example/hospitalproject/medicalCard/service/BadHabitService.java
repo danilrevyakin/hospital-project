@@ -3,6 +3,7 @@ package com.example.hospitalproject.medicalCard.service;
 import com.example.hospitalproject.medicalCard.exception.IllegalBadHabitException;
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
+import com.example.hospitalproject.medicalCard.repository.BadHabitRepository;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import com.mongodb.Function;
 import lombok.AllArgsConstructor;
@@ -15,12 +16,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class BadHabitService {
     private final MedicalCardRepository repository;
+    private final BadHabitRepository badHabitRepository;
+
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ").toLowerCase();
     private static final int MINIMUM_BAD_HABIT_LENGTH = 1;
 
     public Set<String> getAllBadHabits(String id) {
         if (repository.existsById(id)) {
-            return repository.getBadHabits(id);
+            return badHabitRepository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
@@ -34,20 +37,20 @@ public class BadHabitService {
             if (badHabits != null && badHabits.contains(badHabit)) {
                 throw new IllegalBadHabitException("There is already present " + badHabit + " habit");
             }
-            repository.addBadHabit(id, badHabit);
-            return repository.getBadHabits(id);
+            badHabitRepository.addBadHabit(id, badHabit);
+            return badHabitRepository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
 
     public Set<String> deleteBadHabit(String id, String badHabit) {
         final String badHabit1 = formatBadHabit(badHabit);
-        return modifyBadHabit(id, badHabit1, () -> repository.deleteBadHabit(id, badHabit1));
+        return modifyBadHabit(id, badHabit1, () -> badHabitRepository.deleteBadHabit(id, badHabit1));
     }
 
     public Set<String> updateBadHabit(String id, String oldBadHabit, String newBadHabit) {
         final String newBadHabit1 = formatBadHabit(newBadHabit);
-        return modifyBadHabit(id, oldBadHabit, () -> repository.updateBadHabit(id, oldBadHabit, newBadHabit1));
+        return modifyBadHabit(id, oldBadHabit, () -> badHabitRepository.updateBadHabit(id, oldBadHabit, newBadHabit1));
     }
 
     private Set<String> modifyBadHabit(String id, String badHabit, Runnable runner) {
@@ -58,7 +61,7 @@ public class BadHabitService {
                 throw new IllegalBadHabitException("There is no " + badHabit + " habit");
             }
             runner.run();
-            return repository.getBadHabits(id);
+            return badHabitRepository.getBadHabits(id);
         }
         throw new MedicalCardNotFoundException();
     }
