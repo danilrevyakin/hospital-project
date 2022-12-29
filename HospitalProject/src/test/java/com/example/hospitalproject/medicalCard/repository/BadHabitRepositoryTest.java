@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static com.example.hospitalproject.medicalCard.repository.AllergyRepositoryTest.getField;
 
 @SpringBootTest
 class BadHabitRepositoryTest {
@@ -39,35 +40,38 @@ class BadHabitRepositoryTest {
         repository.save(card);
         //when
         habitRepository.addBadHabit(id, habit);
-        //then
-        habitRepository.getBadHabits(id);
-        //then
-        assertThat(repository.existsMedicalCardByIdAndBadHabitsContaining(id, expected)).isTrue();
-    }
-
-    @Test
-    void getBadHabits() {
-        //given
-        final Set<String> expected = Set.of("habit", "smoke", "sugar");
-        final MedicalCard card = new MedicalCard(
-                id,
-                null,
-                expected,
-                null,
-                null
-        );
-        repository.save(card);
-        //when
         Set<String> actual = habitRepository.getBadHabits(id);
         //then
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    void getBadHabitsTest() {
+        //given
+        final MedicalCard card = new MedicalCard(
+                id,
+                null,
+                Set.of("habit", "smoke", "sugar"),
+                null,
+                null
+        );
+        repository.save(card);
+        //when
+        final Set<String> expected = getBadHabits();
+        Set<String> actual = habitRepository.getBadHabits(id);
+        //then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    private Set<String> getBadHabits(){
+        return getField(repository.findById(id), MedicalCard::getBadHabits);
+    }
+
+    @Test
     void deleteBadHabit() {
         //given
         final String habit = "habit";
-        final Set<String> habits = Set.of(habit, "smoke", "sugar");
+        final Set<String> habits = Set.of(habit, "smoke");
         final MedicalCard card = new MedicalCard(
                 id,
                 null,
@@ -76,11 +80,12 @@ class BadHabitRepositoryTest {
                 null
         );
         repository.save(card);
-        final Set<String> expected = Set.of("smoke", "sugar");
+        final Set<String> expected = Set.of("smoke");
         //when
         habitRepository.deleteBadHabit(id, habit);
+        Set<String> actual = habitRepository.getBadHabits(id);
         //then
-        assertThat(repository.existsMedicalCardByIdAndBadHabitsContaining(id, expected)).isTrue();
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -88,7 +93,7 @@ class BadHabitRepositoryTest {
         //given
         final String oldValue = "old";
         final String newValue = "new";
-        final Set<String> habits = Set.of(oldValue, "smoke", "sugar");
+        final Set<String> habits = Set.of(oldValue);
         final MedicalCard card = new MedicalCard(
                 id,
                 null,
@@ -97,11 +102,12 @@ class BadHabitRepositoryTest {
                 null
         );
         repository.save(card);
-        final Set<String> expected = Set.of(newValue, "smoke", "sugar");
+        final Set<String> expected = Set.of(newValue);
         //when
         habitRepository.updateBadHabit(id, oldValue, newValue);
-        habitRepository.getBadHabits(id);
+        Set<String> actual = getBadHabits();
         //then
-        assertThat(repository.existsMedicalCardByIdAndBadHabitsContaining(id, expected)).isTrue();
+        assertThat(actual).isEqualTo(expected);
     }
+
 }
