@@ -4,8 +4,9 @@ import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
+import java.util.Set;
 
-public interface MedicalCardRepository extends MongoRepository<MedicalCard, String> {
+public interface MedicalCardRepository extends MongoRepository<MedicalCard, String>{
 
     @Override
     Optional<MedicalCard> findById(String s);
@@ -15,4 +16,6 @@ public interface MedicalCardRepository extends MongoRepository<MedicalCard, Stri
 
     @Override
     boolean existsById(String s);
+
+    boolean existsMedicalCardByIdAndBadHabitsContaining(String id, Set<String> habits);
 }
