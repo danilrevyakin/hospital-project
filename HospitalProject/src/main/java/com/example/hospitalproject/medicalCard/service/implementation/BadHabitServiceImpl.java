@@ -9,6 +9,7 @@ import com.example.hospitalproject.medicalCard.service.BadHabitService;
 import com.mongodb.Function;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,12 +32,12 @@ public class BadHabitServiceImpl implements BadHabitService {
 
     @Override
     public Set<String> add(String id, String badHabit) {
-        badHabit = formatBadHabit(badHabit);
+        badHabit = formatAndCheckBadHabit(badHabit);
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             MedicalCard card = cardOptional.get();
             Set<String> badHabits = card.getBadHabits();
-            if (badHabits != null && badHabits.contains(badHabit)) {
+            if (badHabits.contains(badHabit)) {
                 throw new IllegalBadHabitException("There is already present " + badHabit + " habit");
             }
             badHabitRepository.addBadHabit(id, badHabit);
@@ -47,13 +48,13 @@ public class BadHabitServiceImpl implements BadHabitService {
 
     @Override
     public Set<String> delete(String id, String badHabit) {
-        final String badHabit1 = formatBadHabit(badHabit);
+        final String badHabit1 = formatAndCheckBadHabit(badHabit);
         return modifyBadHabit(id, badHabit1, () -> badHabitRepository.deleteBadHabit(id, badHabit1));
     }
 
     @Override
     public Set<String> update(String id, String oldBadHabit, String newBadHabit) {
-        final String newBadHabit1 = formatBadHabit(newBadHabit);
+        final String newBadHabit1 = formatAndCheckBadHabit(newBadHabit);
         return modifyBadHabit(id, oldBadHabit, () -> badHabitRepository.updateBadHabit(id, oldBadHabit, newBadHabit1));
     }
 
@@ -70,7 +71,7 @@ public class BadHabitServiceImpl implements BadHabitService {
         throw new MedicalCardNotFoundException();
     }
 
-    private String formatBadHabit(String badHabit) {
+    private String formatAndCheckBadHabit(String badHabit) {
         if (badHabit == null) {
             throw new IllegalBadHabitException("Bad habit can not be null");
         }

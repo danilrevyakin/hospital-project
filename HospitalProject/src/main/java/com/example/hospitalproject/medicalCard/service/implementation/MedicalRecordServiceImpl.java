@@ -23,7 +23,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     private final MedicalCardRepository repository;
     private final MedicalRecordRepository recordRepository;
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
-    static final int HOURS_FOR_UPDATE = 24;
+    private static final int HOURS_FOR_UPDATE = 24;
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
     private static final int RECORD_INFO_MINIMUM_LENGTH = 2;
 
