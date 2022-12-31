@@ -1,7 +1,9 @@
-package com.example.hospitalproject.medicalCard.repository;
+package com.example.hospitalproject.medicalCard.unit.repository;
 
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
+import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
+import com.example.hospitalproject.medicalCard.repository.MedicalRecordRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static com.example.hospitalproject.medicalCard.repository.AllergyRepositoryTest.getField;
+import static com.example.hospitalproject.medicalCard.unit.repository.AllergyRepositoryTest.getField;
 
 @SpringBootTest
 class MedicalRecordRepositoryTest {

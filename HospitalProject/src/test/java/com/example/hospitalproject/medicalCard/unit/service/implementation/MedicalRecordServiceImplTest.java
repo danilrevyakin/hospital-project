@@ -1,8 +1,9 @@
-package com.example.hospitalproject.medicalCard.service.implementation;
+package com.example.hospitalproject.medicalCard.unit.service.implementation;
 
 import com.example.hospitalproject.medicalCard.model.MedicalRecord;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import com.example.hospitalproject.medicalCard.repository.MedicalRecordRepository;
+import com.example.hospitalproject.medicalCard.service.implementation.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -29,7 +31,7 @@ class MedicalRecordServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        service = new MedicalRecordServiceImpl(repository, recordRepository);
+        service = new MedicalRecordServiceImpl(repository, recordRepository, Clock.systemUTC());
     }
 
     @Test

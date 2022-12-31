@@ -1,8 +1,9 @@
-package com.example.hospitalproject.medicalCard.service.implementation;
+package com.example.hospitalproject.medicalCard.unit.service.implementation;
 
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
 import com.example.hospitalproject.medicalCard.repository.BadHabitRepository;
 import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
+import com.example.hospitalproject.medicalCard.service.implementation.BadHabitServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

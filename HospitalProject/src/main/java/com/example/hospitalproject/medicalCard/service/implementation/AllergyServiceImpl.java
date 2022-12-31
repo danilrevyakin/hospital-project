@@ -36,10 +36,10 @@ public class AllergyServiceImpl implements AllergyService {
         Optional<MedicalCard> cardOptional = repository.findById(id);
         if (cardOptional.isPresent()) {
             Set<Allergy> allergies = cardOptional.get().getAllergies();
+            formatAllergy(allergy);
             if (allergies != null && allergies.contains(allergy)) {
                 throw new IllegalStateException("There is already present " + allergy);
             }
-            formatAllergy(allergy);
             allergyRepository.addAllergy(id, allergy);
             return allergyRepository.getAllAllergiesById(id);
         }

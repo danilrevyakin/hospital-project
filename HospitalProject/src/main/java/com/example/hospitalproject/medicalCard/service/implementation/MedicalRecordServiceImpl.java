@@ -12,6 +12,7 @@ import com.mongodb.Function;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -22,6 +23,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     private final MedicalCardRepository repository;
     private final MedicalRecordRepository recordRepository;
+    private final Clock clock;
     private static final Function<String, String> f = (s) -> s.trim().replaceAll(" +", " ");
     private static final int HOURS_FOR_UPDATE = 24;
     private static final int DOCTOR_NAME_MINIMUM_LENGTH = 2;
@@ -40,7 +42,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         if (repository.existsById(id)) {
             formatRecordData(record);
             record.setDoctor(doctor);
-            record.setDate(LocalDateTime.now());
+            record.setDate(LocalDateTime.now(clock));
+            record.setEdited(null);
             recordRepository.addMedicalRecord(id, record);
             return recordRepository.getMedicalRecordsById(id);
         }
@@ -73,7 +76,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         LocalDateTime dateOfCreating = newRecord.getDate();
         modifyingRecordValidation(id, dateOfCreating, doctor);
         formatRecordData(newRecord);
-        newRecord.setEdited(LocalDateTime.now());
+        newRecord.setEdited(LocalDateTime.now(clock));
         recordRepository.updateMedicalRecord(id, dateOfCreating, newRecord);
         return recordRepository.getMedicalRecordsById(id);
     }
@@ -89,7 +92,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         if (dateOfCreating == null) {
             throw new IllegalArgumentException("Date of updating record is not specified");
         }
-        if (ChronoUnit.HOURS.between(dateOfCreating, LocalDateTime.now()) >= HOURS_FOR_UPDATE) {
+        if (ChronoUnit.HOURS.between(dateOfCreating, LocalDateTime.now(clock)) >= HOURS_FOR_UPDATE) {
             String message = "You can't modify medical records after " + HOURS_FOR_UPDATE + " hours";
             throw new UnsupportedOperationException(message);
         }

@@ -1,8 +1,10 @@
-package com.example.hospitalproject.medicalCard.repository;
+package com.example.hospitalproject.medicalCard.unit.repository;
 
 import com.example.hospitalproject.medicalCard.exception.MedicalCardNotFoundException;
 import com.example.hospitalproject.medicalCard.model.Allergy;
 import com.example.hospitalproject.medicalCard.model.MedicalCard;
+import com.example.hospitalproject.medicalCard.repository.AllergyRepository;
+import com.example.hospitalproject.medicalCard.repository.MedicalCardRepository;
 import com.mongodb.Function;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

@@ -7,6 +7,7 @@ import com.example.hospitalproject.medicalCard.service.MedicalCardService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class MedicalCardServiceImpl implements MedicalCardService {
 
     private final MedicalCardRepository repository;
+    private final Clock clock;
 
     @Override
     public List<MedicalCard> getAllCards() {
@@ -33,7 +35,7 @@ public class MedicalCardServiceImpl implements MedicalCardService {
             String message = "Medical card with this id is already present";
             throw new IllegalStateException(message);
         });
-        MedicalCard card = new MedicalCard(id, Set.of(), Set.of(), List.of(), LocalDate.now());
+        MedicalCard card = new MedicalCard(id, Set.of(), Set.of(), List.of(), LocalDate.now(clock));
         repository.save(card);
         return card;
     }
