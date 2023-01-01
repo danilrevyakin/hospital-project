@@ -58,6 +58,7 @@ public class ArrayRepositoryImpl implements ArrayRepository {
     @Override
     public <T> void deleteArrayElement(String id, String array, String where, T is) {
         Query query = getQueryById(id);
+        logger.info(query.toString());
         Update update = new Update().pull(array,
                 Query.query(Criteria.where(where).is(is)));
         logger.info(update.toString());
