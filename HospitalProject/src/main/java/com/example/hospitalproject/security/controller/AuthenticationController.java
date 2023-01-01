@@ -7,10 +7,7 @@ import com.example.hospitalproject.security.exception.NotFoundException;
 import com.example.hospitalproject.security.exception.UserExistsException;
 import com.example.hospitalproject.security.node.User;
 import com.example.hospitalproject.security.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,11 +19,11 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @GetMapping
     public AuthenticationResponseDto authenticate(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
         User user;
         try{
-            user = userService.getUserByEmail(authenticationRequestDto.getCredentials());
+            user = userService.getUserByCredentials(authenticationRequestDto);
         } catch (NotFoundException exception){
             //do smth
             System.out.println(exception.getLocalizedMessage());

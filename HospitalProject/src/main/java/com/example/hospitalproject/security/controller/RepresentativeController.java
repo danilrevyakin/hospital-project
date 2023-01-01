@@ -18,11 +18,6 @@ public class RepresentativeController {
         this.representativeService = representativeService;
     }
 
-    @GetMapping("/all")
-    public List<Representative> getRepresentative(){
-        return representativeService.getAll();
-    }
-
     @GetMapping("/create")
     public String createRepresentative(){
         representativeService.createRepresentative(Role.PATIENT);

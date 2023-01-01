@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface UserRepository extends Neo4jRepository<User, Long> {
     Optional<User> getUserByEmail(String email);
     Optional<User> getUserByPhoneNumber(String phoneNumber);
-    Optional<List<User>> getUsersByRole(Role role);
+    Optional<List<User>> getAllByRole(Role role);
 }
