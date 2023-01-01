@@ -2,8 +2,8 @@ package com.example.hospitalproject.security.service;
 
 
 import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
+import com.example.hospitalproject.security.dto.AuthenticationResponseDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
-import com.example.hospitalproject.security.dto.UserResponseDto;
 import com.example.hospitalproject.security.exception.InvalidPasswordException;
 import com.example.hospitalproject.security.exception.UsersByRoleNotFoundException;
 import com.example.hospitalproject.security.exception.NotFoundException;
@@ -27,7 +27,7 @@ public class UserService {
     private final static String NOT_FOUND = "Invalid credentials. User wasn't found";
     private final static String INVALID_PASSWORD = "Invalid password";
     private final static String ALREADY_EXISTS = "Email or phone number already exists";
-    private final Mapper<User, RegistrationDto, UserResponseDto> userMapper;
+    private final Mapper<User, RegistrationDto, AuthenticationResponseDto> userMapper;
     private final UserRepository userRepository;
     private final RepresentativeRepository representativeRepository;
 
@@ -35,7 +35,7 @@ public class UserService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UserService(Mapper<User, RegistrationDto, UserResponseDto> userMapper, UserRepository userRepository, RepresentativeRepository representativeRepository) {
+    public UserService(Mapper<User, RegistrationDto, AuthenticationResponseDto> userMapper, UserRepository userRepository, RepresentativeRepository representativeRepository) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
         this.representativeRepository = representativeRepository;
@@ -83,5 +83,9 @@ public class UserService {
 
     public List<User> getAllByRole(Role role){
         return userRepository.getAllByRole(role).orElseThrow(UsersByRoleNotFoundException::new);
+    }
+
+    public void saveAll(List<User> users){
+        userRepository.saveAll(users);
     }
 }
