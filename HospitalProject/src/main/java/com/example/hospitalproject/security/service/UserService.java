@@ -54,7 +54,7 @@ public class UserService {
     }
 
     public User checkPassword(User user, String password){
-        if(passwordEncoder.matches(user.getPassword(), password)){
+        if(passwordEncoder.matches(password, user.getPassword())){
             LOG.info("Authenticated successfully!");
             return user;
         }else{
@@ -63,7 +63,7 @@ public class UserService {
         }
     }
 
-    public void registerUser(RegistrationDto dto){
+    public User registerUser(RegistrationDto dto){
         Optional<User> userToCheckEmail = userRepository.getUserByEmail(dto.getEmail());
         Optional<User> userToCheckPhoneNumber = userRepository.getUserByPhoneNumber(dto.getPhoneNumber());
 
@@ -74,7 +74,7 @@ public class UserService {
             user.setRepresentative(representative);
             LOG.info("Created user with email: {}", user.getEmail());
             LOG.debug("Created user : {}", user);
-            userRepository.save(user);
+            return userRepository.save(user);
         }else{
             LOG.error(ALREADY_EXISTS);
             throw new UserExistsException(ALREADY_EXISTS);

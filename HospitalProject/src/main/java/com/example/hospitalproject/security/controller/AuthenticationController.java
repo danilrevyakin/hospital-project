@@ -25,8 +25,6 @@ public class AuthenticationController {
         try{
             user = userService.getUserByCredentials(authenticationRequestDto);
         } catch (NotFoundException exception){
-            //do smth
-            System.out.println(exception.getLocalizedMessage());
             return null;
         }
         return generateResponse(user);
@@ -42,10 +40,9 @@ public class AuthenticationController {
     @PostMapping("/registration")
     public RegistrationDto registerUser(@RequestBody RegistrationDto registrationDto) {
         try {
-            userService.registerUser(registrationDto);
+            User user = userService.registerUser(registrationDto);
+            registrationDto.setId(user.getId());
         }catch (UserExistsException exception){
-            //do smth
-            System.out.println(exception.getLocalizedMessage());
             return null;
         }
         return registrationDto;

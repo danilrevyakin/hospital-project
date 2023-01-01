@@ -12,6 +12,9 @@ import javax.validation.constraints.Size;
 @Setter
 public class RegistrationDto {
     @NotNull
+    private Long id;
+
+    @NotNull
     private String firstName;
 
     @NotNull
