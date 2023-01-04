@@ -1,7 +1,7 @@
 var $table = $("#allergy-table");
 var $table2 = $("#records-table");
 var $tableHabit = $("#bad-habit-table");
-    selections = [];
+selections = [];
 $(function () {
     $tableHabit.bootstrapTable({
         columns: [
@@ -223,7 +223,8 @@ $(function () {
                     sortable: true,
                     valign: "middle",
                     editable: {
-                        type: "date"},
+                        type: "date"
+                    },
                 },
                 {
                     title: "Edited",
@@ -304,6 +305,11 @@ $(function () {
         //   detailClose: "glyphicon-minus icon-minus"
         // }
     });
+    function setPatientVariantOfPage() {
+        var role = document.getElementById("role").innerHTML;
+        console.log("it is " + role.valueOf());
+    }
+    setPatientVariantOfPage();
 });
 
 function getIdSelections() {
@@ -316,7 +322,7 @@ function openForm() {
     document.getElementById("form-for-allergy").style.display = "block";
 }
 
-function openNewAllergyForm(){
+function openNewAllergyForm() {
     document.getElementById("form-for-allergy-add").style.display = "block";
 }
 
@@ -337,6 +343,7 @@ function openUpdateAllergyFormWithObj(par) {
 function closeForm() {
     document.getElementById("form-for-allergy").style.display = "none";
 }
+
 function closeFormNewAllergy() {
     document.getElementById("form-for-allergy-add").style.display = "none";
 }

@@ -1,6 +1,7 @@
 package com.example.hospitalproject.security.service;
 
 
+import com.example.hospitalproject.security.config.Matcher;
 import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
 import com.example.hospitalproject.security.dto.AuthenticationResponseDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -50,10 +52,10 @@ public class UserService {
                throw new NotFoundException(NOT_FOUND);
            }
         }
-        return checkPassword(user.get(), dto.getPassword());
+        return validatePassword(user.get(), dto.getPassword());
     }
 
-    public User checkPassword(User user, String password){
+    public User validatePassword(User user, String password){
         if(passwordEncoder.matches(password, user.getPassword())){
             LOG.info("Authenticated successfully!");
             return user;
@@ -64,28 +66,54 @@ public class UserService {
     }
 
     public User registerUser(RegistrationDto dto){
-        Optional<User> userToCheckEmail = userRepository.getUserByEmail(dto.getEmail());
-        Optional<User> userToCheckPhoneNumber = userRepository.getUserByPhoneNumber(dto.getPhoneNumber());
+        User userToCheckEmail = getUserByEmail(dto.getEmail());
+        User userToCheckPhoneNumber = getUserByPhoneNumber(dto.getPhoneNumber());
 
-        if(userToCheckEmail.isEmpty() && userToCheckPhoneNumber.isEmpty()){
-            User user = userMapper.mapDtoToEntity(dto);
-            Role role = dto.isDoctor() ? Role.DOCTOR : Role.PATIENT;
-            Representative representative = representativeRepository.getByRole(role);
-            user.setRepresentative(representative);
-            LOG.info("Created user with email: {}", user.getEmail());
-            LOG.debug("Created user : {}", user);
-            return userRepository.save(user);
+        if(Objects.isNull(userToCheckEmail) && Objects.isNull(userToCheckPhoneNumber)){
+            if(true){
+                User user = userMapper.mapDtoToEntity(dto);
+                Role role = dto.isDoctor() ? Role.DOCTOR : Role.PATIENT;
+                Representative representative = representativeRepository.getByRole(role);
+                user.setRepresentative(representative);
+                LOG.info("Created user with email: {}", user.getEmail());
+                LOG.debug("Created user : {}", user);
+                return userRepository.save(user);
+            }
         }else{
             LOG.error(ALREADY_EXISTS);
             throw new UserExistsException(ALREADY_EXISTS);
         }
+        return null;
     }
 
+//    public boolean validateDto(RegistrationDto dto){
+//
+//    }
+
     public List<User> getAllByRole(Role role){
-        return userRepository.getAllByRole(role).orElseThrow(UsersByRoleNotFoundException::new);
+        return userRepository.getUsersByRole(role).orElseThrow(UsersByRoleNotFoundException::new);
     }
 
     public void saveAll(List<User> users){
         userRepository.saveAll(users);
+    }
+
+    public void deleteAllUsers(){
+        userRepository.deleteAll();
+    }
+
+    public User getUserById(Long id){
+        Optional<User> user = userRepository.getUserById(id);
+        return user.orElse(null);
+    }
+
+    public User getUserByEmail(String email){
+        Optional<User> user = userRepository.getUserByEmail(email);
+        return user.orElse(null);
+    }
+
+    public User getUserByPhoneNumber(String phoneNumber){
+        Optional<User> user = userRepository.getUserByPhoneNumber(phoneNumber);
+        return user.orElse(null);
     }
 }

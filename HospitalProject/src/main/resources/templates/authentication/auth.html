@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Bootstrap Tutorial Sample Page</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" th:href="@{/security/style.css}"/>
+      
+	</head>
+    
+    <body>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+        <script th:src="@{/security/js/main.js}"></script>
+	</body>
+
+    <div class="main-page" id="authentication">
+        <div class="card rounded-50 mt-5" style="width: 30rem;">
+            <img th:src="@{/security/img/main.webp}" class="card-img-top" alt="...">
+            <div class="card-body mt-3">
+              <h3 class="card-title text-center">Welcome!</h3>
+
+              <form th:method="POST" th:action="@{http://localhost:8070/auth}">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address or phone number</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter...">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter...">
+                </div>
+
+                <div class="mx-auto text-center">
+                    <button type="submit" class="btn btn-primary rounded-pill w-75" id="logInButton">Log In</button>
+                </div>
+
+                <div class="mt-4 mx-auto text-center">
+                    <label for="SignUpButton" class="text-secondary">If you don't have an account yet</label>
+                    <button type="submit" class="btn btn-info rounded-pill w-50" id="SignUpButton" th:action="@{http://localhost:8070/auth/registration}">Sign Up</button>
+                </div>
+              </form>
+
+            </div>
+        </div>
+    </div>
+</html>

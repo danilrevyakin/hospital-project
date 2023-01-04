@@ -1,0 +1,13 @@
+body{
+    background-color: lightskyblue;
+}
+.main-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-page{
+    display: none;
+    background-color: #91DC96;
+}

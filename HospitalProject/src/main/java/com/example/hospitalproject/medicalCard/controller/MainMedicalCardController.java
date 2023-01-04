@@ -19,14 +19,18 @@ public class MainMedicalCardController {
     private static final String $ = File.separator;
     private static final String DOCTOR_URL = "doctorName";
     private static final String PATIENT_URL = "patientName";
-    private static final String ID_URL = "id";
+    private static final String PATIENT_ID_URL = "id";
+    private static final String DOCTOR_ID_URL = "doctorId";
+    private static final String ROLE_URL = "role";
+    private static final String PATIENT_ROLE_URL = "patient";
+    private static final String DOCTOR_ROLE_URL = "doctor";
+
     private static final String ALLERGIES_URL = "allergies";
     private static final String BAD_HABITS_URL = "badHabits";
     private static final String BAD_HABIT_URL = "badHabit";
     private static final String MEDICAL_RECORDS_URL = "medicalRecords";
     private static final String TITLE_URL = "allergyTitle";
     private static final String DATE_OF_URL = "recordDate";
-    private static final String DEFAULT_DATA_URL = "{" + ID_URL + "}/{" + PATIENT_URL + "}/{" + DOCTOR_URL + "}";
     private static final String WRAPPER_OF_DATA = "wrapper";
     private static final String PAIR = "pair";
     private static final String UPDATED_RECORD = "updatedRecord";
@@ -43,119 +47,137 @@ public class MainMedicalCardController {
     private record Pair<V, T>(V first, T second) {
     }
 
-    @GetMapping("/get/" + DEFAULT_DATA_URL)//id is the same as SQL id of Patient
-    public ModelAndView getMedicalCardPage(@PathVariable(ID_URL) String id,
-                                           @PathVariable(DOCTOR_URL) String doctorName,
-                                           @PathVariable(PATIENT_URL) String patientName) {
-        return getHome(id, patientName, doctorName);
+    @GetMapping("/get/doctor/" + "{" + PATIENT_ID_URL + "}/{" + PATIENT_URL + "}/{" + DOCTOR_ID_URL + "}/{" + DOCTOR_URL + "}")
+    public ModelAndView getMedicalCardPageAsDoctor(@PathVariable(PATIENT_ID_URL) String id,
+                                                   @PathVariable(PATIENT_URL) String patientName,
+                                                   @PathVariable(value = DOCTOR_ID_URL) String doctorId,
+                                                   @PathVariable(DOCTOR_URL) String doctorName) {
+        return getHome(id, patientName, doctorId, doctorName);
+    }
+
+    @GetMapping("/get/patient/" + "{" + PATIENT_ID_URL + "}/{" + PATIENT_URL + "}")//id is the same as SQL id of Patient
+    public ModelAndView getMedicalCardPageAsPatient(@PathVariable(PATIENT_ID_URL) String id,
+                                                    @PathVariable(PATIENT_URL) String patientName) {
+        return getHome(id, patientName, null, null);
     }
 
     @PostMapping({"/get/param/", "/", ""})//id is the same as SQL id of Patient
-    public ModelAndView getMedicalCardPageByRequestParameters(@RequestParam(value = ID_URL) String id,
-                                                              @RequestParam(value = DOCTOR_URL) String doctorName,
-                                                              @RequestParam(value = PATIENT_URL) String patientName) {
-        return getHome(id, patientName, doctorName);
+    public ModelAndView getMedicalCardPageByRequestParameters(@RequestParam(value = PATIENT_ID_URL) String id,
+                                                              @RequestParam(value = PATIENT_URL) String patientName,
+                                                              @RequestParam(value = DOCTOR_ID_URL, required = false) String doctorId,
+                                                              @RequestParam(value = DOCTOR_URL, required = false) String doctorName) {
+        return getHome(id, patientName, doctorId, doctorName);
     }
 
     @PostMapping("bad-habit/add/")
-    public ModelAndView addBadHabit(@RequestParam(ID_URL) String id,
-                                    @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView addBadHabit(@RequestParam(PATIENT_ID_URL) String id,
                                     @RequestParam(PATIENT_URL) String patientName,
+                                    @RequestParam(value = DOCTOR_ID_URL, required = false) String doctorId,
+                                    @RequestParam(value = DOCTOR_URL, required = false) String doctorName,
                                     @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> badHabit) {
+        System.out.printf("it is '%s'", doctorId);
         ResponseEntity<Set<String>> response = badHabitController.addBadHabit(id, badHabit.value);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("bad-habit/update/")
-    public ModelAndView updateBadHabit(@RequestParam(ID_URL) String id,
-                                       @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView updateBadHabit(@RequestParam(PATIENT_ID_URL) String id,
                                        @RequestParam(PATIENT_URL) String patientName,
+                                       @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                       @RequestParam(DOCTOR_URL) String doctorName,
                                        @ModelAttribute(PAIR) Pair<String, String> update) {
         String oldBadHabit, newBadHabit;
         oldBadHabit = update.first;
         newBadHabit = update.second;
         ResponseEntity<Set<String>> response = badHabitController
                 .updateBadHabit(id, oldBadHabit, newBadHabit);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("bad-habit/delete/")
-    public ModelAndView deleteBadHabit(@RequestParam(ID_URL) String id,
-                                       @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView deleteBadHabit(@RequestParam(PATIENT_ID_URL) String id,
                                        @RequestParam(PATIENT_URL) String patientName,
+                                       @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                       @RequestParam(DOCTOR_URL) String doctorName,
                                        @RequestParam(BAD_HABIT_URL) String badHabit) {
         ResponseEntity<Set<String>> response = badHabitController.deleteBadHabit(id, badHabit);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("allergy/update/")
     public ModelAndView updateAllergy(@ModelAttribute Allergy allergy,
                                       @ModelAttribute(WRAPPER_OF_DATA) ModelAttributeWrapper<String> wrapper,
-                                      @RequestParam(ID_URL) String id,
-                                      @RequestParam(DOCTOR_URL) String doctorName,
-                                      @RequestParam(PATIENT_URL) String patientName) {
+                                      @RequestParam(PATIENT_ID_URL) String id,
+                                      @RequestParam(PATIENT_URL) String patientName,
+                                      @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                      @RequestParam(DOCTOR_URL) String doctorName) {
         ResponseEntity<Set<Allergy>> response = allergyController.updateAllergy(id, wrapper.value, allergy);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("allergy/delete/")
-    public ModelAndView deleteAllergy(@RequestParam(ID_URL) String id,
-                                      @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView deleteAllergy(@RequestParam(PATIENT_ID_URL) String id,
                                       @RequestParam(PATIENT_URL) String patientName,
+                                      @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                      @RequestParam(DOCTOR_URL) String doctorName,
                                       @RequestParam(TITLE_URL) String title) {
         ResponseEntity<Set<Allergy>> response = allergyController.deleteAllergy(id, title);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("allergy/add/")
-    public ModelAndView addAllergy(@RequestParam(ID_URL) String id,
-                                   @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView addAllergy(@RequestParam(PATIENT_ID_URL) String id,
                                    @RequestParam(PATIENT_URL) String patientName,
+                                   @RequestParam(value = DOCTOR_ID_URL, required = false) String doctorId,
+                                   @RequestParam(DOCTOR_URL) String doctorName,
                                    @ModelAttribute(UPDATED_ALLERGY) Allergy allergy) {
         ResponseEntity<Set<Allergy>> response = allergyController.addAllergy(id, allergy);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("record/update/")
     public ModelAndView updateRecord(@ModelAttribute(UPDATED_RECORD) MedicalRecord newRecord,
-                                     @RequestParam(ID_URL) String id,
-                                     @RequestParam(DOCTOR_URL) String doctorName,
-                                     @RequestParam(PATIENT_URL) String patientName) {
+                                     @RequestParam(PATIENT_ID_URL) String id,
+                                     @RequestParam(PATIENT_URL) String patientName,
+                                     @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                     @RequestParam(DOCTOR_URL) String doctorName) {
         ResponseEntity<List<MedicalRecord>> response = recordController.updateMedicalRecord(id, doctorName, newRecord);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("record/add/")
     public ModelAndView addRecord(@ModelAttribute(UPDATED_RECORD) MedicalRecord newRecord,
-                                  @RequestParam(ID_URL) String id,
-                                  @RequestParam(DOCTOR_URL) String doctorName,
-                                  @RequestParam(PATIENT_URL) String patientName) {
+                                  @RequestParam(PATIENT_ID_URL) String id,
+                                  @RequestParam(PATIENT_URL) String patientName,
+                                  @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                  @RequestParam(DOCTOR_URL) String doctorName) {
         ResponseEntity<List<MedicalRecord>> response = recordController.addMedicalRecord(id, doctorName, newRecord);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
     @PostMapping("record/delete/")
-    public ModelAndView deleteRecord(@RequestParam(ID_URL) String id,
-                                     @RequestParam(DOCTOR_URL) String doctorName,
+    public ModelAndView deleteRecord(@RequestParam(PATIENT_ID_URL) String id,
                                      @RequestParam(PATIENT_URL) String patientName,
+                                     @RequestParam(value = DOCTOR_ID_URL) String doctorId,
+                                     @RequestParam(DOCTOR_URL) String doctorName,
                                      @RequestParam(DATE_OF_URL) String date) {
         ResponseEntity<List<MedicalRecord>> response = recordController.deleteMedicalRecord(id, date, doctorName);
-        return getHome(id, patientName, doctorName, response);
+        return getHome(id, patientName, doctorId, doctorName, response);
     }
 
-    private ModelAndView getHome(String id, String patientName, String doctorName, ResponseEntity<?> response) {
-        ModelAndView home = getHome(id, patientName, doctorName);
+    private ModelAndView getHome(String id, String patientName, String doctorId, String doctorName, ResponseEntity<?> response) {
+        ModelAndView home = getHome(id, patientName, doctorId, doctorName);
         home.setStatus(response.getStatusCode());
         return home;
     }
 
-    private ModelAndView getHome(String id, String patientName, String doctorName) {
+    private ModelAndView getHome(String id, String patientName, String doctorId, String doctorName) {
         ResponseEntity<MedicalCard> response = cardController.getMedicalCard(id);
         MedicalCard medicalCard = response.getBody();
         assert medicalCard != null;
         final String path = $ + "medicalCard" + $ + "medicalCard";
         ModelAndView model = new ModelAndView(path);
-        model.addObject(ID_URL, id);
+        model.addObject(PATIENT_ID_URL, id);
         model.addObject(PATIENT_URL, patientName);
         model.addObject(DOCTOR_URL, doctorName);
         model.addObject(WRAPPER_OF_DATA, new ModelAttributeWrapper<>("wrapper value"));
@@ -167,6 +189,10 @@ public class MainMedicalCardController {
         model.addObject(UPDATED_ALLERGY, new Allergy());
         model.addObject(UPDATED_RECORD, new MedicalRecord());
         model.setStatus(response.getStatusCode());
-        return model;
+        model.addObject(DOCTOR_ID_URL, doctorId);
+        if (doctorId == null || doctorId.length() < 1) {
+            return model.addObject(ROLE_URL, PATIENT_ROLE_URL);
+        }
+        return model.addObject(ROLE_URL, DOCTOR_ROLE_URL);
     }
 }
