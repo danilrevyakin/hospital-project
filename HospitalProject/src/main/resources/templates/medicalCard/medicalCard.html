@@ -82,6 +82,11 @@
             <tr th:each="habit : ${badHabits}">
                 <td th:text="${habit}"></td>
                 <td>
+                    <button id="update-bad-habit-button" type="submit" class="btn btn-warning"
+                            th:onclick="openUpdateBadHabitForm('[[${habit}]]')"
+                    >Update
+                        <i class="fas fa-pencil-square"></i>
+                    </button>
                     <form th:method="POST" class="btn btn-danger" th:action="@{http://localhost:8080/medical-card/page/bad-habit/delete/(id=${id},
     doctorName=${doctorName}, patientName=${patientName},badHabit=${habit})}">
                         <button id="delete-bad-habit" style="background: none; border: none; color: #ffffff"
@@ -89,11 +94,6 @@
                         </button>
                         <i class="fas fa-trash-alt"></i>
                     </form>
-                    <button id="update-bad-habit-button" type="submit" class="btn btn-warning"
-                            th:onclick="openUpdateBadHabitForm('[[${habit}]]')"
-                    >Update
-                        <i class="fas fa-pencil-square"></i>
-                    </button>
                 </td>
             </tr>
             </tbody>
