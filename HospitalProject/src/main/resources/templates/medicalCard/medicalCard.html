@@ -67,6 +67,20 @@
         </div>
     </div>
 </nav>
+<form th:hidden="${role == 'patient'}? true : false" th:method="GET"
+      class="btn btn-light back-form" th:action="@{http://localhost:8080/hospital/{doctorId}(doctorId = ${doctorId})}">
+    <button id="back-button-doctor" style="background: none; border: none; color: #000000"
+            type="submit">Back
+    </button>
+    <i class="fa-regular fa-angle-left"></i>
+</form>
+<form th:method="GET" th:hidden="${role == 'patient'}? false : true" class="btn btn-light back-form"
+      th:action="@{http://localhost:8080/hospital/{id}(id = ${id})}">
+    <button id="back-button-patient" style="background: none; border: none; color: #000000"
+            type="submit">Back
+    </button>
+    <i class="fa-regular fa-angle-left"></i>
+</form>
 <h1 th:text="'Patient: ' + ${patientName}"/>
 
 <div class="badHabitWrapper">
