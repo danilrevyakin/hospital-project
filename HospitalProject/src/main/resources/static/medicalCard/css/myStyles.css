@@ -9,3 +9,7 @@ table{
 td{
   overflow: auto;
 }
+
+h1{
+  margin-left: 1%;
+}
