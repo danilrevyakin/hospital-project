@@ -1,6 +1,8 @@
 package com.example.hospitalproject.security.mapper;
 
 
+import com.example.hospitalproject.security.controller.AuthenticationController;
+import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
 import com.example.hospitalproject.security.dto.AuthenticationResponseDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
 import com.example.hospitalproject.security.node.Role;
@@ -9,8 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component("Mapper")
-public class UserMapper implements Mapper<User, RegistrationDto, AuthenticationResponseDto>{
-
+public abstract class UserMapper implements Mapper<User, RegistrationDto, AuthenticationResponseDto>{
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -22,7 +23,6 @@ public class UserMapper implements Mapper<User, RegistrationDto, AuthenticationR
         return dto;
     }
 
-    @Override
     public User mapDtoToEntity(RegistrationDto registrationDto) {
         User user = new User();
         user.setEmail(registrationDto.getEmail());
