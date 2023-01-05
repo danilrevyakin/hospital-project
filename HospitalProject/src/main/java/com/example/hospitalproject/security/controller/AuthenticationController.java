@@ -7,27 +7,39 @@ import com.example.hospitalproject.security.exception.NotFoundException;
 import com.example.hospitalproject.security.exception.UserExistsException;
 import com.example.hospitalproject.security.node.User;
 import com.example.hospitalproject.security.service.UserService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/auth")
-public class AuthenticationController {
+import java.io.File;
+import java.sql.Date;
 
+@Controller
+public class AuthenticationController {
+    private static final String $ = File.separator;
     private final UserService userService;
 
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping
-    public AuthenticationResponseDto authenticate(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
+    @PostMapping("/auth")
+    public String authenticate(@RequestParam String credentials, @RequestParam String password, HttpSession session) {
         User user;
         try{
-            user = userService.getUserByCredentials(authenticationRequestDto);
+            user = userService.getUserByCredentials(new AuthenticationRequestDto(credentials, password));
+            session.setAttribute("id", user.getId());
+            return "redirect:/find_doctor";
         } catch (NotFoundException exception){
-            return null;
+            //TODO return "error" html or smth
+            return "auth";
         }
-        return generateResponse(user);
+    }
+
+    @GetMapping("/auth")
+    public String authenticate(){
+        return "auth";
     }
 
     private AuthenticationResponseDto generateResponse(User user) {
@@ -46,5 +58,24 @@ public class AuthenticationController {
             return null;
         }
         return registrationDto;
+    }
+
+    @GetMapping("/registration")
+    public String registerUser(Model model){
+        return "reg";
+    }
+
+    @GetMapping("/redirect")
+    public String redirect(Model model){
+        return "redirect:/registration";
+    }
+
+    @PostMapping("/test")
+    public String redirectToDoctors(HttpSession session){
+        RegistrationDto registrationDto = new RegistrationDto("Pavlo", "Pavlov", "email@gmail.com", "+380999999999", Date.valueOf("2002-11-11"),false, "password");
+        User user = userService.registerUser(registrationDto);
+        registrationDto.setId(user.getId());
+        session.setAttribute("registrationDto", registrationDto);
+        return "redirect:/doctors";
     }
 }

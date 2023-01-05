@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Error</title>
+    <link rel="stylesheet" href="/userInfo/css/error.css">
 </head>
 <body>
-  <h1>Time Slot already taken</h1>
-  <h3>Choose another time, please</h3>
-  <a th:href="'/makeAppointment/'+${id}">Back to appointment form</a>
+    <div class="site">
+        <div class="sketch">
+            <div class="bee-sketch red"></div>
+            <div class="bee-sketch blue"></div>
+        </div>
+
+        <h1>Time Slot already taken
+            <small>Choose another time, please</small></h1>
+    </div>
+<!--  <a th:href="'/makeAppointment/'+${id}">Back to appointment form</a>-->
 </body>
 </html>

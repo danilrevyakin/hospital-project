@@ -3,6 +3,7 @@ package com.example.hospitalproject.userInfo.controller;
 import com.example.hospitalproject.userInfo.model.Doctor;
 import com.example.hospitalproject.userInfo.model.DoctorType;
 import com.example.hospitalproject.userInfo.repository.DoctorRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +20,14 @@ public class MainController {
     private DoctorRepository doctorRepository;
 
     @GetMapping("/find_doctor")
-    public String findDoctor(Model model){
+    public String findDoctor(){
         return "findDoctor";
     }
 
     @PostMapping("/find_doctor")
-    public String findDoctorBySpeciality(@RequestParam String types,  Model model){
+    public String findDoctorBySpeciality(@RequestParam String types, Model model, HttpSession session){
         List<Doctor> doctorList;
+        System.out.println(session.getAttribute("id"));
         if(types.equals("All"))
             doctorList = doctorRepository.findAll();
        else
