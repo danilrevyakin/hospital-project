@@ -29,7 +29,6 @@ public class UserService {
     private final static String NOT_FOUND = "Invalid credentials. User wasn't found";
     private final static String INVALID_PASSWORD = "Invalid password";
     private final static String ALREADY_EXISTS = "Email or phone number already exists";
-    private final Mapper<User, RegistrationDto, AuthenticationResponseDto> userMapper;
     private final UserRepository userRepository;
     private final RepresentativeRepository representativeRepository;
 
@@ -37,8 +36,7 @@ public class UserService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UserService(Mapper<User, RegistrationDto, AuthenticationResponseDto> userMapper, UserRepository userRepository, RepresentativeRepository representativeRepository) {
-        this.userMapper = userMapper;
+    public UserService(UserRepository userRepository, RepresentativeRepository representativeRepository) {
         this.userRepository = userRepository;
         this.representativeRepository = representativeRepository;
     }
@@ -71,7 +69,7 @@ public class UserService {
 
         if(Objects.isNull(userToCheckEmail) && Objects.isNull(userToCheckPhoneNumber)){
             if(true){
-                User user = userMapper.mapDtoToEntity(dto);
+                User user = mapDtoToEntity(dto);
                 Role role = dto.isDoctor() ? Role.DOCTOR : Role.PATIENT;
                 Representative representative = representativeRepository.getByRole(role);
                 user.setRepresentative(representative);
@@ -84,6 +82,15 @@ public class UserService {
             throw new UserExistsException(ALREADY_EXISTS);
         }
         return null;
+    }
+
+    private User mapDtoToEntity(RegistrationDto registrationDto) {
+        User user = new User();
+        user.setEmail(registrationDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        user.setRole(registrationDto.isDoctor() ? Role.DOCTOR : Role.PATIENT);
+        user.setPhoneNumber(registrationDto.getPhoneNumber());
+        return user;
     }
 
 //    public boolean validateDto(RegistrationDto dto){

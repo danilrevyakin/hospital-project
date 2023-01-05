@@ -24,26 +24,28 @@
             <div class="card-body mt-3">
               <h3 class="card-title text-center">Welcome!</h3>
 
-              <form th:method="POST" th:action="@{http://localhost:8070/auth}">
+              <form action="/auth" method="post">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Email address or phone number</label>
-                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter...">
+                  <p> Email address or phone number</p>
+                  <input type="text" class="form-control" name="credentials" aria-describedby="emailHelp" placeholder="Enter..." required>
                 </div>
 
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter...">
+                  <p> Password</p>
+                  <input type="password" class="form-control" name="password" placeholder="Enter..." required>
                 </div>
 
                 <div class="mx-auto text-center">
                     <button type="submit" class="btn btn-primary rounded-pill w-75" id="logInButton">Log In</button>
                 </div>
-
-                <div class="mt-4 mx-auto text-center">
-                    <label for="SignUpButton" class="text-secondary">If you don't have an account yet</label>
-                    <button type="submit" class="btn btn-info rounded-pill w-50" id="SignUpButton" th:action="@{http://localhost:8070/auth/registration}">Sign Up</button>
-                </div>
               </form>
+                <div class="mt-4 mx-auto text-center">
+                    <form method="get" action="/redirect" >
+                        <label for="SignUpButton" class="text-secondary">If you don't have an account yet</label>
+                        <button type="submit" class="btn btn-info rounded-pill w-50" id="SignUpButton">Sign Up</button>
+                    </form>
+
+                </div>
 
             </div>
         </div>

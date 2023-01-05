@@ -30,7 +30,7 @@
 
                                     <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                                    <form th:method="POST" th:action="@{http://localhost:8070/auth/registration}" class="mx-1 mx-md-4">
+                                    <form method="post" action="/registration" class="mx-1 mx-md-4">
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-user fa-lg me-3 fa-fw"></i>
@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                                    <img th:src="@{/security/img/register-img2.png}"
+                                    <img src="@{/security/img/register-img2.png}"
                                          class="img-fluid" alt="Sample image">
 
                                 </div>

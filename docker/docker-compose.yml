@@ -5,13 +5,12 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: hospital
       PGDATA: /data/postgres
     volumes:
       - db:/data/postgres
     ports:
       - "5332:5432"
-    networks:
-      - db
     restart: unless-stopped
   dbm:
     container_name: mongodb

@@ -1,7 +1,5 @@
 package com.example.hospitalproject.security.config;
 
-import com.example.hospitalproject.security.dto.RegistrationDto;
-import com.example.hospitalproject.security.dto.ValidationDto;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -14,8 +12,6 @@ public class Matcher {
     private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private static final String PASSWORD_REGEX_LENGTH = "\\b.{8,64}\\b";
-    private static final String PASSWORD_REGEX_CAPITAL_LETTER = "[A-Z]+";
-    private static final String PASSWORD_REGEX_SPECIAL_CHARACTER = "[^A-Za-z0-9]+";
     private static final String PHONE_NUMBER_REGEX = "\\d{4,12}";
 
     private static boolean checkName(String name){
@@ -28,14 +24,6 @@ public class Matcher {
 
     private static boolean checkPasswordLength(String password){
         return Pattern.matches(PASSWORD_REGEX_LENGTH, password);
-    }
-
-    private static boolean checkPasswordCapitalLetter(String password){
-        return Pattern.matches(PASSWORD_REGEX_CAPITAL_LETTER, password);
-    }
-
-    private static boolean checkPasswordSpecialCharacter(String password){
-        return !Pattern.matches(PASSWORD_REGEX_SPECIAL_CHARACTER, password);
     }
 
     private static boolean checkPhoneNumber(String phoneNumber){
