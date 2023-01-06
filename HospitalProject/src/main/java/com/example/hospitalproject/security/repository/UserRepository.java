@@ -21,4 +21,6 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     Optional<User> getUserById(Long id);
 
     void deleteUserById(Long id);
+
+    void deleteUserByEmail(String email);
 }

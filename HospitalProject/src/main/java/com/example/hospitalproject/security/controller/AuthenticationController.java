@@ -62,8 +62,8 @@ public class AuthenticationController {
 
     @GetMapping("/all_users")
     public String getAllUsers(){
-        List<User> list = userService.getAllByRole(Role.DOCTOR);
-        System.out.println(list);
+        List<User> list = userService.getAllByRole(Role.PATIENT);
+        list.addAll(userService.getAllByRole(Role.DOCTOR));
         return "auth";
     }
 
