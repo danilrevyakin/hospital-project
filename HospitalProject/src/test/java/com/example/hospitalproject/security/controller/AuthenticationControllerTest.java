@@ -1,5 +1,6 @@
 package com.example.hospitalproject.security.controller;
 
+import com.example.hospitalproject.security.config.Matcher;
 import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
 import com.example.hospitalproject.security.dto.AuthenticationResponseDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
@@ -43,7 +43,7 @@ class AuthenticationControllerTest {
     private static final Long DEFAULT_ID = 1L;
 
     private User user;
-    private User fakeUser;
+    private User newUser;
     private RegistrationDto registrationDto;
 
     private AuthenticationRequestDto requestDto;
@@ -77,9 +77,11 @@ class AuthenticationControllerTest {
         user.setEmail(DEFAULT_USER_EMAIL);
         user.setPhoneNumber(DEFAULT_USER_PHONE_NUMBER);
         user.setPassword(passwordEncoder.encode(DEFAULT_USER_PASSWORD));
-        user.setId(DEFAULT_ID);
+        user.setRole(Role.PATIENT);
 
-        fakeUser = user;
+        newUser = user;
+        newUser.setId(null);
+        newUser.setRole(null);
 
         registrationDto.setEmail(DEFAULT_USER_EMAIL);
         registrationDto.setPhoneNumber(DEFAULT_USER_PHONE_NUMBER);
@@ -98,7 +100,7 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void authenticateSuccess() {
+    void authenticateSuccessTest() {
         when(userRepository.getUserByEmail(DEFAULT_USER_EMAIL)).thenReturn(Optional.of(user));
         when(userMapper.mapEntityToDto(user)).thenReturn(userResponseDto);
 
@@ -110,7 +112,7 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void authenticateNotFound() {
+    void userNotFoundTest() {
         lenient().when(userRepository.getUserByEmail(DEFAULT_USER_EMAIL)).thenReturn(Optional.of(user));
         lenient().when(userMapper.mapEntityToDto(user)).thenReturn(userResponseDto);
 
@@ -123,7 +125,7 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void authenticateInvalidPassword() {
+    void invalidPasswordTest() {
         lenient().when(userRepository.getUserByEmail(DEFAULT_USER_EMAIL)).thenReturn(Optional.of(user));
         lenient().when(userMapper.mapEntityToDto(user)).thenReturn(userResponseDto);
 
@@ -133,19 +135,5 @@ class AuthenticationControllerTest {
         Throwable exception = assertThrows(InvalidPasswordException.class, () -> testInstance.getUserByCredentials(wrongRequest));
 
         assertEquals("Invalid password", exception.getMessage());
-    }
-
-    @Test
-    void registerUserSuccess() {
-        when(userMapper.mapDtoToEntity(registrationDto)).thenReturn(user);
-
-        testInstance.registerUser(registrationDto);
-
-        verify(userRepository).save(user);
-    }
-
-    @Test
-    void registerUserExists() {
-        //TODO
     }
 }

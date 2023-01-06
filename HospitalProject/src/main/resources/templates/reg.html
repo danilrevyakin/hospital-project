@@ -30,51 +30,78 @@
 
                                     <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                                    <form method="post" action="/registration" class="mx-1 mx-md-4">
+                                    <form method="post" th:object="${dto}" action="/register_user" class="mx-1 mx-md-4">
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-user fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="form3Example1c" class="form-control" placeholder="First Name"/>
+                                                <input type="text" id="form3Example1c" class="form-control" placeholder="First Name" th:field="*{firstName}"/>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-user fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="form4Example1c" class="form-control" placeholder="Last Name"/>
+                                                <input type="text" id="form4Example1c" class="form-control" placeholder="Last Name" th:field="*{lastName}"/>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-calendar fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="date" id="form5Example1c" class="form-control" placeholder="Date of Birth"/>
+                                                <input type="date" id="form5Example1c" class="form-control" placeholder="Date of Birth" th:field="*{birth}"/>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-phone fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="text" id="form3Example4c" class="form-control" placeholder="Phone Number"/>
+                                                <input type="text" id="form3Example4c" class="form-control" placeholder="Phone Number" th:field="*{phoneNumber}"/>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-envelope fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="email" id="form3Example3c" class="form-control" placeholder="Email"/>
+                                                <input type="email" id="form3Example3c" class="form-control" placeholder="Email" th:field="*{email}"/>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fa fa-key fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="password" id="form3Example4cd" class="form-control" placeholder="Password"/>
+                                                <input type="password" id="form3Example4cd" class="form-control" placeholder="Password" th:field="*{password}"/>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <div class="row">
+                                            <div class="col">
+<!--                                                <label class="toggler-wrapper style-22">-->
+<!--                                                    <input type="checkbox" id="flexCheckIndeterminate" >-->
+<!--                                                    <div class="toggler-slider">-->
+<!--                                                        <div class="toggler-knob"></div>-->
+<!--                                                    </div>-->
+<!--                                                </label>-->
+<!--                                                <div class="badge">I'm a doctor</div>-->
+                                                <div class="form-check form-switch">
+                                                    <input th:field="*{doctor}" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault">I'm a doctor</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <select th:field="*{specialization}" class="form-select" id="specializations" style="display:none">
+                                                    <option th:value="none" selected>Select specialization</option>
+                                                    <option th:value="Pediatrician">Pediatrician</option>
+                                                    <option th:value="Neurologist">Neurologist</option>
+                                                    <option th:value="Family_physician">Family physician</option>
+                                                    <option th:value="Psychiatrist">Psychiatrist</option>
+                                                    <option th:value="Gynecologist">Gynecologist</option>
+                                                    <option th:value="Cardiologist">Cardiologist</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4 mt-3">
                                             <button type="submit" class="btn btn-info btn-lg">Register</button>
                                         </div>
 
@@ -83,9 +110,8 @@
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                                    <img src="@{/security/img/register-img2.png}"
+                                    <img th:src="@{/security/img/register-img2.png}"
                                          class="img-fluid" alt="Sample image">
-
                                 </div>
                             </div>
                         </div>
@@ -95,6 +121,12 @@
         </div>
     </section>
 </div>
+
+<script type="text/javascript">
+    $('#flexSwitchCheckDefault').change(function() {
+        $('#specializations').toggle();
+    });
+</script>
 
 
 

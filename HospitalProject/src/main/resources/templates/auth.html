@@ -26,13 +26,11 @@
 
               <form action="/auth" method="post">
                 <div class="form-group">
-                  <p> Email address or phone number</p>
-                  <input type="text" class="form-control" name="credentials" aria-describedby="emailHelp" placeholder="Enter..." required>
+                  <input type="text" class="form-control" name="credentials" aria-describedby="emailHelp" placeholder="Email or phone number" required>
                 </div>
 
                 <div class="form-group">
-                  <p> Password</p>
-                  <input type="password" class="form-control" name="password" placeholder="Enter..." required>
+                  <input type="password" class="form-control" name="password" placeholder="Password" required>
                 </div>
 
                 <div class="mx-auto text-center">
@@ -40,11 +38,10 @@
                 </div>
               </form>
                 <div class="mt-4 mx-auto text-center">
-                    <form method="get" action="/redirect" >
+                    <form method="get" action="/register_user" >
                         <label for="SignUpButton" class="text-secondary">If you don't have an account yet</label>
                         <button type="submit" class="btn btn-info rounded-pill w-50" id="SignUpButton">Sign Up</button>
                     </form>
-
                 </div>
 
             </div>

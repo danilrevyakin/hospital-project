@@ -15,7 +15,7 @@ public class RepresentativeController {
         this.representativeService = representativeService;
     }
 
-    @GetMapping("/create")
+    @GetMapping("/create_nodes")
     public String createRepresentative(){
         representativeService.createRepresentative(Role.PATIENT);
         representativeService.createRepresentative(Role.DOCTOR);

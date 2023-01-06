@@ -1,16 +1,12 @@
 package com.example.hospitalproject.security.service;
 
 
-import com.example.hospitalproject.security.config.Matcher;
 import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
-import com.example.hospitalproject.security.dto.AuthenticationResponseDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
 import com.example.hospitalproject.security.exception.InvalidPasswordException;
-import com.example.hospitalproject.security.exception.UsersByRoleNotFoundException;
 import com.example.hospitalproject.security.exception.NotFoundException;
 import com.example.hospitalproject.security.exception.UserExistsException;
-import com.example.hospitalproject.security.mapper.Mapper;
-import com.example.hospitalproject.security.node.Representative;
+import com.example.hospitalproject.security.exception.UsersByRoleNotFoundException;
 import com.example.hospitalproject.security.node.Role;
 import com.example.hospitalproject.security.node.User;
 import com.example.hospitalproject.security.repository.RepresentativeRepository;
@@ -64,24 +60,22 @@ public class UserService {
     }
 
     public User registerUser(RegistrationDto dto){
-        User userToCheckEmail = getUserByEmail(dto.getEmail());
-        User userToCheckPhoneNumber = getUserByPhoneNumber(dto.getPhoneNumber());
-
-        if(Objects.isNull(userToCheckEmail) && Objects.isNull(userToCheckPhoneNumber)){
-            if(true){
-                User user = mapDtoToEntity(dto);
-                Role role = dto.isDoctor() ? Role.DOCTOR : Role.PATIENT;
-                Representative representative = representativeRepository.getByRole(role);
-                user.setRepresentative(representative);
-                LOG.info("Created user with email: {}", user.getEmail());
-                LOG.debug("Created user : {}", user);
-                return userRepository.save(user);
-            }
+        if(checkIfUserNotExist(dto)){
+            User user = mapDtoToEntity(dto);
+            user.setRepresentative(representativeRepository.getByRole(user.getRole()));
+            LOG.info("Created user with email: {}", user.getEmail());
+            LOG.debug("Created user : {}", user);
+            return userRepository.save(user);
         }else{
             LOG.error(ALREADY_EXISTS);
             throw new UserExistsException(ALREADY_EXISTS);
         }
-        return null;
+    }
+
+    private boolean checkIfUserNotExist(RegistrationDto dto){
+        User userToCheckEmail = getUserByEmail(dto.getEmail());
+        User userToCheckPhoneNumber = getUserByPhoneNumber(dto.getPhoneNumber());
+        return Objects.isNull(userToCheckEmail) && Objects.isNull(userToCheckPhoneNumber);
     }
 
     private User mapDtoToEntity(RegistrationDto registrationDto) {
@@ -93,20 +87,16 @@ public class UserService {
         return user;
     }
 
-//    public boolean validateDto(RegistrationDto dto){
-//
-//    }
-
     public List<User> getAllByRole(Role role){
         return userRepository.getUsersByRole(role).orElseThrow(UsersByRoleNotFoundException::new);
     }
 
-    public void saveAll(List<User> users){
-        userRepository.saveAll(users);
-    }
-
     public void deleteAllUsers(){
         userRepository.deleteAll();
+    }
+
+    public void deleteUserById(Long id){
+        userRepository.deleteUserById(id);
     }
 
     public User getUserById(Long id){
