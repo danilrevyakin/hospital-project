@@ -25,6 +25,12 @@ public class MedicalCardServiceImpl implements MedicalCardService {
     }
 
     @Override
+    public List<MedicalCard> deleteAllCards() {
+        repository.deleteAll();
+        return repository.findAll();
+    }
+
+    @Override
     public MedicalCard getMedicalCardById(String id) {
         return repository.findById(id).orElseThrow(MedicalCardNotFoundException::new);
     }

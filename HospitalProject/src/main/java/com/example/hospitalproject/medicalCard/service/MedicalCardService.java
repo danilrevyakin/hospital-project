@@ -9,4 +9,5 @@ public interface MedicalCardService {
     MedicalCard getMedicalCardById(String id);
     MedicalCard createEmptyMedicalCard(String id);
     List<MedicalCard> deleteCard(String id);
+    List<MedicalCard> deleteAllCards();
 }

@@ -39,4 +39,10 @@ public class MedicalCardController {
         var card = service.deleteCard(id);
         return new ResponseEntity<>(card, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/all/")
+    public ResponseEntity<List<MedicalCard>> deleteAll() {
+        var cards = service.deleteAllCards();
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
 }
