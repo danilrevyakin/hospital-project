@@ -1,5 +1,6 @@
 package com.example.hospitalproject.userInfo.controller;
 
+import com.example.hospitalproject.medicalCard.service.MedicalCardService;
 import com.example.hospitalproject.userInfo.model.Appointment;
 import com.example.hospitalproject.userInfo.model.Doctor;
 import com.example.hospitalproject.userInfo.model.UserInfo;
@@ -28,6 +29,8 @@ public class UserProfileController {
     private DoctorRepository doctorRepository;
     @Autowired
     private AppointmentRepository appointmentRepository;
+    @Autowired
+    private MedicalCardService medicalCardService;
 
     @GetMapping("/hospital")
     public String showUsers(Model model){
@@ -79,6 +82,7 @@ public class UserProfileController {
     @PostMapping("/hospital/{id}/remove")
     public String deleteUserProfile(@PathVariable(value = "id") long id, Model model){
         UserInfo userInfo = userInfoRepository.findById(id).orElseThrow();
+        medicalCardService.deleteCard(id+"");
         userInfoRepository.delete(userInfo);
         return "redirect:/hospital";
     }
@@ -93,6 +97,7 @@ public class UserProfileController {
             appointmentList = appointmentRepository.findByDoctor(doctor.get(0));
 
         model.addAttribute("appointmentList", appointmentList);
+
         return "appointments";
     }
 
