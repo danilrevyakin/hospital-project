@@ -13,6 +13,16 @@ body{
     background-color: #91DC96;
 }
 
+.error{
+    font-size: 12px;
+    color: red;
+}
+
+.warning{
+    font-size: 12px;
+    color: brown;
+}
+
 .toggler-wrapper.style-22 input[type="checkbox"]:checked+.toggler-slider .toggler-knob {
     left: calc(100% - 19px - 3px);
     -webkit-transform: scale(1);

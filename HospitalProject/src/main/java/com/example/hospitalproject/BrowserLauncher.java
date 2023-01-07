@@ -17,11 +17,10 @@ public class BrowserLauncher {
         Desktop desktop = Desktop.getDesktop();
 
         try{
-            desktop.browse(new URI("http://localhost:8055/auth"));
+            desktop.browse(new URI("http://localhost:8080/auth"));
         }catch(Exception e){}
 
     }
-
 }
 
 

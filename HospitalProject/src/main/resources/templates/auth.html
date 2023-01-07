@@ -24,13 +24,14 @@
             <div class="card-body mt-3">
               <h3 class="card-title text-center">Welcome!</h3>
 
-              <form action="/auth" method="post">
+                <p th:if="${exception != null}" th:class="${exception != null}? warning" th:text="${exception}" style="text-align: center"></p>
+              <form th:object="${authDto}" action="/auth" method="post">
                 <div class="form-group">
-                  <input type="text" class="form-control" name="credentials" aria-describedby="emailHelp" placeholder="Email or phone number" required>
+                    <input type="text" class="form-control" name="credentials" th:field="*{credentials}" aria-describedby="emailHelp" placeholder="Email or phone number" required>
                 </div>
 
                 <div class="form-group">
-                  <input type="password" class="form-control" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control" name="password" th:field="*{password}" placeholder="Password" required>
                 </div>
 
                 <div class="mx-auto text-center">
@@ -38,7 +39,7 @@
                 </div>
               </form>
                 <div class="mt-4 mx-auto text-center">
-                    <form method="get" action="/register_user" >
+                    <form method="get" th:action="@{/register_user}" >
                         <label for="SignUpButton" class="text-secondary">If you don't have an account yet</label>
                         <button type="submit" class="btn btn-info rounded-pill w-50" id="SignUpButton">Sign Up</button>
                     </form>

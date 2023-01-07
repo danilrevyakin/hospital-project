@@ -1,14 +1,15 @@
 package com.example.hospitalproject.security.dto;
 
+import com.example.hospitalproject.security.validation.constraint.EmailConstraint;
+import com.example.hospitalproject.security.validation.constraint.NameConstraint;
+import com.example.hospitalproject.security.validation.constraint.PasswordConstraint;
+import com.example.hospitalproject.security.validation.constraint.PhoneNumberConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
 
 
 @Getter
@@ -16,30 +17,27 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationDto {
-    @NotNull
     private Long id;
 
-    @NotNull
+    @NameConstraint
     private String firstName;
 
-    @NotNull
+    @NameConstraint
     private String lastName;
 
-    @NotNull
-    @Email
+    @EmailConstraint
     private String email;
 
-    @NotNull
+    @PhoneNumberConstraint
     private String phoneNumber;
 
-    @NotNull
+    @NotBlank(message = "Must not be blank")
     private String birth;
 
     private boolean doctor;
 
     private String specialization;
 
-    @NotNull(message = "Password can not be null")
-    @Size(min = 8, message = "Password length should consist of at least of 8 characters")
+    @PasswordConstraint
     private String password;
 }

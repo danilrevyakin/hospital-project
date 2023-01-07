@@ -1,4 +1,4 @@
-package com.example.hospitalproject.security.config;
+package com.example.hospitalproject.security.validation;
 
 import org.springframework.stereotype.Component;
 

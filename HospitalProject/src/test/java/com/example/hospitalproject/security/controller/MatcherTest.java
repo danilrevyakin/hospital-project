@@ -1,9 +1,9 @@
 package com.example.hospitalproject.security.controller;
 
-import com.example.hospitalproject.security.config.Matcher;
+import com.example.hospitalproject.security.validation.Matcher;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class MatcherTest {
 
     public static final List<String> correctNames = List.of(
