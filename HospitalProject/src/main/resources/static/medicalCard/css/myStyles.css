@@ -20,3 +20,14 @@ h1{
   margin-bottom: 1.5%;
   margin-left: 1%;
 }
+
+.my-h2-style{
+  display: flex;
+  margin-left: 32vw;
+  font-size: 1.7rem;
+  justify-content: center;
+}
+
+.my-toolbar-style{
+  display: flex;
+}

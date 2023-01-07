@@ -72,24 +72,23 @@
     <button id="back-button-doctor" style="background: none; border: none; color: #000000"
             type="submit">Back
     </button>
-    <i class="fa-regular fa-angle-left"></i>
 </form>
 <form th:method="GET" th:hidden="${role == 'patient'}? false : true" class="btn btn-light back-form"
       th:action="@{http://localhost:8080/hospital/{id}(id = ${id})}">
     <button id="back-button-patient" style="background: none; border: none; color: #000000"
             type="submit">Back
     </button>
-    <i class="fa-regular fa-angle-left"></i>
 </form>
 <h1 th:text="'Patient: ' + ${patientName}"/>
 
+
 <div class="badHabitWrapper">
     <div class="container-fluid">
-        <div id="toolbar-bad-habit">
+        <div id="toolbar-bad-habit" class="my-toolbar-style">
             <button id="add-bad-habit" class="btn btn-success" onclick="openFormOfNewBadHabit()">New<i
                     class="fas fa-plus"></i></button>
+            <h2 class="navbar-brand my-h2-style">Bad Habits</h2>
         </div>
-
         <table id="bad-habit-table">
             <col width="80%"/>
 
@@ -117,11 +116,13 @@
 </div>
 
 
+
 <div class="allergyWrapper">
     <div class="container-fluid">
-        <div id="toolbar">
+        <div id="toolbar" class="my-toolbar-style">
             <button id="add-allergies" class="btn btn-success" th:onclick="openNewAllergyForm()">New<i
                     class="fas fa-plus"></i></button>
+            <h2 class="navbar-brand my-h2-style">Allergies</h2>
         </div>
 
         <table id="allergy-table">
@@ -153,11 +154,13 @@
     </div>
 </div>
 
+
 <div class="recordsWrapper">
     <div class="container-fluid">
-        <div id="toolbar-records">
+        <div id="toolbar-records" class="my-toolbar-style">
             <button id="add-records" class="btn btn-success " th:disabled="${role == 'patient'}? true : false" th:onclick="openNewRecordForm()">New<i
                     class="fas fa-plus"></i></button>
+            <h2 class="navbar-brand my-h2-style">Medical Records</h2>
         </div>
         <table id="records-table">
             <col style="width: 10%"/><!--info-->
