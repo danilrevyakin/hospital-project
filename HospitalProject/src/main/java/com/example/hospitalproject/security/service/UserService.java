@@ -68,7 +68,7 @@ public class UserService {
             return userRepository.save(user);
         }else{
             LOG.error(ALREADY_EXISTS);
-            throw new UserExistsException(ALREADY_EXISTS);
+            throw new UserExistsException();
         }
     }
 
