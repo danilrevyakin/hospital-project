@@ -9,7 +9,6 @@ import java.sql.Date;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
-    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

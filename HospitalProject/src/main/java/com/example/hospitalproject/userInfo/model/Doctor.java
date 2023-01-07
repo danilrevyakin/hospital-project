@@ -22,4 +22,11 @@ public class Doctor {
     @Enumerated(EnumType.STRING)
     @Column(name="type")
     private DoctorType type;
+
+    public Doctor(){}
+    public Doctor(Long id, UserInfo userInfo, DoctorType doctorType) {
+        this.id = id;
+        this.userId = userInfo;
+        this.type = doctorType;
+    }
 }

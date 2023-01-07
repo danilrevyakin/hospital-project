@@ -22,4 +22,12 @@ public class Patient {
     @OneToOne
     @JoinColumn(name = "appointment", referencedColumnName = "id")
     private Appointment appointment;
+
+    public Patient() {
+    }
+
+    public Patient(Long id, UserInfo userId) {
+        this.id = id;
+        this.userId = userId;
+    }
 }
