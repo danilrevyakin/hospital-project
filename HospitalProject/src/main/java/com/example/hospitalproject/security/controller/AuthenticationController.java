@@ -62,7 +62,7 @@ public class AuthenticationController {
         try {
             User user = userService.registerUser(dto);
             dto.setId(user.getId());
-            session.setAttribute("dto", dto);
+            session.setAttribute("id", dto.getId());
 
             UserInfo userInfo = createUserInfo(dto);
             userInfoRepository.save(userInfo);
@@ -117,8 +117,9 @@ public class AuthenticationController {
 
     private void setRoleForUser(RegistrationDto registrationDto, UserInfo userInfo){
         if(registrationDto.isDoctor())
-            doctorRepository.save(new Doctor(registrationDto.getId(), userInfo, DoctorType.PSYCHIATRIST));
-        else
-            patientRepository.save(new Patient(registrationDto.getId(), userInfo));
+            doctorRepository.save(new Doctor(registrationDto.getId(), userInfo,
+                    DoctorType.valueOf(registrationDto.getSpecialization())));
+//        else
+//            patientRepository.save(new Patient(registrationDto.getId(), userInfo));
     }
 }

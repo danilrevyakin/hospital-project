@@ -6,6 +6,7 @@ import com.example.hospitalproject.userInfo.model.UserInfo;
 import com.example.hospitalproject.userInfo.repository.AppointmentRepository;
 import com.example.hospitalproject.userInfo.repository.DoctorRepository;
 import com.example.hospitalproject.userInfo.repository.UserInfoRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,7 @@ public class UserProfileController {
     }
 
     @GetMapping("/hospital/{id}")
-    public String showUserPage(@PathVariable(value = "id") long id, Model model){
+    public String showUserPage(@PathVariable(value = "id") long id, Model model, HttpSession session){
         UserInfo user = null;
         Optional<UserInfo> userInfo = userInfoRepository.findById(id);
         if(userInfo.isPresent())
@@ -44,6 +45,7 @@ public class UserProfileController {
 
         model.addAttribute("user", user);
         model.addAttribute("role", getRole(user));
+        model.addAttribute("userId", session.getAttribute("id"));
 
         return "userProfile";
     }

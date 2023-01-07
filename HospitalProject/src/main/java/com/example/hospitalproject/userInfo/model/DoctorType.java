@@ -1,10 +1,10 @@
 package com.example.hospitalproject.userInfo.model;
 
 public enum DoctorType {
-    PEDIATRICIAN,
-    NEUROLOGIST,
-    FAMILY_PHYSICIAN,
-    PSYCHIATRIST,
-    GYNECOLOGIST,
-    CARDIOLOGIST
+    Pediatrician,
+    Neurologist,
+    Family_physician,
+    Psychiatrist,
+    Gynecologist,
+    Cardiologist
 }

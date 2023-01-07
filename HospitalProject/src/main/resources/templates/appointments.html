@@ -7,7 +7,6 @@
 <body>
     <h1>My appointments</h1>
     <div th:each="a : ${appointmentList}">
-        <p th:text="'Doctor: ' + ${a.getDoctor().getUserId().email}" />
         <p th:text="'Date: ' + ${a.getDay()}" />
         <p th:text="'Time: ' + ${a.getStart()} + ' - ' + ${a.getFinish()}" />
         <p th:text="'Description: ' + ${a.getDescription()}" />

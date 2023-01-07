@@ -10,15 +10,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div th:insert="navbar :: navbar1"></div>
     <div class="input-group">
         <p class="find-title">What doctor do you need?</p>
         <form action="/find_doctor" method="post">
             <select name="types" id="types" class="form-control rounded select" style="width: 500px; margin: 0 auto;">
                 <option value="All">All</option>
-                <option value="PEDIATRICIAN">Pediatrician</option>
-                <option value="NEUROLOGIST">Neurologist</option>
-                <option value="FAMILY_PHYSICIAN">Family physician</option>
-                <option value="PSYCHIATRIST">Psychiatrist</option>
+                <option value="Pediatrician">Pediatrician</option>
+                <option value="Neurologist">Neurologist</option>
+                <option value="Family_physician">Family physician</option>
+                <option value="Psychiatrist">Psychiatrist</option>
+                <option value="Gynecologist">Gynecologist</option>
+                <option value="Cardiologist">Cardiologist</option>
             </select>
             <button type="submit" name="Find"  class="btn btn-outline-success">Find</button>
         </form>

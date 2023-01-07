@@ -2,9 +2,11 @@ package com.example.hospitalproject.userInfo.controller;
 
 import com.example.hospitalproject.userInfo.model.Appointment;
 import com.example.hospitalproject.userInfo.model.Doctor;
+import com.example.hospitalproject.userInfo.model.Patient;
 import com.example.hospitalproject.userInfo.model.UserInfo;
 import com.example.hospitalproject.userInfo.repository.AppointmentRepository;
 import com.example.hospitalproject.userInfo.repository.DoctorRepository;
+import com.example.hospitalproject.userInfo.repository.PatientRepository;
 import com.example.hospitalproject.userInfo.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +27,10 @@ public class AppointmentController {
 
     @Autowired
     private UserInfoRepository userInfoRepository;
-
     @Autowired
     private DoctorRepository doctorRepository;
-
+    @Autowired
+    private PatientRepository patientRepository;
     @Autowired
     private AppointmentRepository appointmentRepository;
 
@@ -47,6 +49,8 @@ public class AppointmentController {
         appointmentRepository.delete(appointment);
         return "redirect:/hospital/"+docId+"/appointments";
     }
+
+
 
     @PostMapping("/makeAppointment/{id}")
     public String sendRequestAppointment(@PathVariable(value = "id") long id, @RequestParam String day,
@@ -76,12 +80,21 @@ public class AppointmentController {
         List<Appointment> appointmentList = appointmentRepository.findByDateAndTimeAndDoctor(date, startTime, doctor);
         if(appointmentList.isEmpty()) {
             appointmentRepository.save(appointment);
+            patientRepository.save(createPatient(user, appointment));
             return "findDoctor";
         } else {
             model.addAttribute("id", id);
             return "timeSlotError";
         }
 
+    }
+
+    private Patient createPatient(UserInfo user, Appointment appointment) {
+        Patient patient = new Patient();
+        patient.setId(user.getId());
+        patient.setUserId(user);
+        patient.setAppointment(appointment);
+        return patient;
     }
 
     private Appointment createAppointment(Date date, Time startTime, Time endTime, boolean offlineMode,

@@ -11,6 +11,7 @@
 
 </head>
 <body>
+<div th:insert="navbar :: navbar1"></div>
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row container d-flex justify-content-center mt-5" style="margin: 0 auto;" >
@@ -47,21 +48,43 @@
                                 <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Medical card</h6>
                                 <div class="row">
                                     <div class="col-sm-6">
-<!--                                        <form th:method="POST" id="mcard"-->
-<!--                                              th:action="@{http://localhost:8080/medical-card/page/get/param/-->
-<!--                                               (id=${id},doctorName=${doctorName},doctorId=${DOCTOR ID} patientName=${patientName})}">-->
-<!--                                        </form>-->
+                                       <div th:if="${role == 'doctor'}">
+                                           <form th:method="POST"
+                                                 th:action="@{http://localhost:8080/medical-card/page/get/param/
+                                                (id=${user.getId()}, doctorName=${user.firstName} + ' ' + ${user.lastName},doctorId=${user.getId()}, patientName=${user.firstName} + ' ' + ${user.lastName})}">
+                                               <input type="submit" value="Medical card">
+                                           </form>
+                                       </div>
+                                        <div th:if="${role == 'patient'}">
+                                            <form th:method="POST"
+                                                  th:action="@{http://localhost:8080/medical-card/page/get/param/
+                                                (id=${user.getId()}, doctorName='',doctorId='', patientName=${user.firstName} + ' ' + ${user.lastName})}">
+                                                <input type="submit" value="Medical card">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                                <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Edit</h6>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <a th:href="'/hospital/' + ${id} + '/edit'">Edit</a>
+                                <div th:if="${user.getId() == userId}">
+                                    <div th:if="${role == 'doctor'}">
+                                        <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Appointments</h6>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a th:href="'/hospital/' + ${id} + '/appointments'">My appointments</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <form th:action="'/hospital/' + ${id} + '/remove'" method="post">
-                                            <input type="submit" value="Delete">
-                                        </form>
+                                </div>
+                                <div th:if="${user.getId() == userId}">
+                                    <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Edit</h6>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a th:href="'/hospital/' + ${id} + '/edit'">Edit</a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form th:action="'/hospital/' + ${id} + '/remove'" method="post">
+                                                <input type="submit" value="Delete">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

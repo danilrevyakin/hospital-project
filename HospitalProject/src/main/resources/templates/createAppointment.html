@@ -10,6 +10,7 @@
 
 </head>
 <body>
+<div th:insert="navbar :: navbar1"></div>
 <div class="container" style="width:70%; margin: 50px auto;">
     <h2 th:text="'Doctor: ' + ${doctor.firstName} + ' ' + ${doctor.lastName}"/>
     <form method="post" style="margin-top: 20px;">
