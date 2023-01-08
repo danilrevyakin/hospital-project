@@ -62,10 +62,11 @@ public class UserService {
     public User registerUser(RegistrationDto dto){
         if(checkIfUserNotExist(dto)){
             User user = mapDtoToEntity(dto);
-            user.setRepresentative(representativeRepository.getByRole(user.getRole()));
             LOG.info("Created user with email: {}", user.getEmail());
             LOG.debug("Created user : {}", user);
-            return userRepository.save(user);
+            user = userRepository.save(user);
+            userRepository.connect(user);
+            return user;
         }else{
             LOG.error(ALREADY_EXISTS);
             throw new UserExistsException();
