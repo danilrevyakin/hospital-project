@@ -1,22 +1,39 @@
 package com.example.hospitalproject.security.controller;
 
+import com.example.hospitalproject.medicalCard.model.MedicalCard;
+import com.example.hospitalproject.medicalCard.service.MedicalCardService;
 import com.example.hospitalproject.security.dto.AuthenticationRequestDto;
 import com.example.hospitalproject.security.dto.RegistrationDto;
 import com.example.hospitalproject.security.exception.UserExistsException;
 import com.example.hospitalproject.security.node.Role;
 import com.example.hospitalproject.security.node.User;
 import com.example.hospitalproject.security.service.UserService;
+import com.example.hospitalproject.userInfo.model.Doctor;
+import com.example.hospitalproject.userInfo.model.DoctorType;
+import com.example.hospitalproject.userInfo.model.UserInfo;
+import com.example.hospitalproject.userInfo.repository.DoctorRepository;
+import com.example.hospitalproject.userInfo.repository.PatientRepository;
+import com.example.hospitalproject.userInfo.repository.UserInfoRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Controller
 public class AuthenticationController {
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private DoctorRepository doctorRepository;
+    @Autowired
+    private MedicalCardService medicalCardService;
 
     private final UserService userService;
 
@@ -64,7 +81,13 @@ public class AuthenticationController {
         try {
             User user = userService.registerUser(dto);
             dto.setId(user.getId());
-            session.setAttribute("dto", dto);
+            session.setAttribute("id", dto.getId());
+
+            UserInfo userInfo = createUserInfo(dto);
+            userInfoRepository.save(userInfo);
+            setRoleForUser(dto, userInfo);
+            medicalCardService.createEmptyMedicalCard(dto.getId()+"");
+
             return "redirect:/find_doctor";
         } catch (UserExistsException exception){
             model.addAttribute("credentialsExist", exception.getMessage());
@@ -92,5 +115,23 @@ public class AuthenticationController {
     @DeleteMapping("/delete/{id}")
     public void deleteUserById(@PathVariable Long id){
         userService.deleteUserById(id);
+    }
+
+    private UserInfo createUserInfo(RegistrationDto registrationDto) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(registrationDto.getEmail());
+        userInfo.setFirstName(registrationDto.getFirstName());
+        userInfo.setLastName(registrationDto.getLastName());
+        userInfo.setPhone(registrationDto.getPhoneNumber());
+        userInfo.setBirthday(Date.valueOf(registrationDto.getBirth()));
+        userInfo.setId(registrationDto.getId());
+
+        return userInfo;
+    }
+
+    private void setRoleForUser(RegistrationDto registrationDto, UserInfo userInfo){
+        if(registrationDto.isDoctor())
+            doctorRepository.save(new Doctor(registrationDto.getId(), userInfo,
+                    DoctorType.valueOf(registrationDto.getSpecialization())));
     }
 }

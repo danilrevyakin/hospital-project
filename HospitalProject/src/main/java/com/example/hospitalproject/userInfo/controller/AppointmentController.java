@@ -8,6 +8,7 @@ import com.example.hospitalproject.userInfo.repository.AppointmentRepository;
 import com.example.hospitalproject.userInfo.repository.DoctorRepository;
 import com.example.hospitalproject.userInfo.repository.PatientRepository;
 import com.example.hospitalproject.userInfo.repository.UserInfoRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,11 +56,11 @@ public class AppointmentController {
     @PostMapping("/makeAppointment/{id}")
     public String sendRequestAppointment(@PathVariable(value = "id") long id, @RequestParam String day,
                                          @RequestParam String time, @RequestParam String description,
-                                         @RequestParam(required = false) String offline, Model model) throws ParseException {
+                                         @RequestParam(required = false) String offline, Model model, HttpSession session) throws ParseException {
         //check if present
-
-        UserInfo user = userInfoRepository.findById(id).orElseThrow();
-        List<Doctor> doctorList = doctorRepository.findByUserId(user);
+        UserInfo user = userInfoRepository.findById((Long)session.getAttribute("id")).orElseThrow();
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow();
+        List<Doctor> doctorList = doctorRepository.findByUserId(userInfo);
 
         //data validation
         Doctor doctor = null;
@@ -76,11 +77,11 @@ public class AppointmentController {
             doctor = doctorList.get(0);
 
 
-        Appointment appointment = createAppointment(date, startTime, endTime, offlineMode, description, doctor);
+        Appointment appointment = createAppointment(date, startTime, endTime, offlineMode, description, doctor, user);
         List<Appointment> appointmentList = appointmentRepository.findByDateAndTimeAndDoctor(date, startTime, doctor);
         if(appointmentList.isEmpty()) {
             appointmentRepository.save(appointment);
-            patientRepository.save(createPatient(user, appointment));
+            patientRepository.save(createPatient(userInfo, appointment));
             return "findDoctor";
         } else {
             model.addAttribute("id", id);
@@ -98,7 +99,7 @@ public class AppointmentController {
     }
 
     private Appointment createAppointment(Date date, Time startTime, Time endTime, boolean offlineMode,
-                                          String description, Doctor doctor) throws ParseException {
+                                          String description, Doctor doctor, UserInfo userInfo) throws ParseException {
 
 
         Appointment appointment = new Appointment();
@@ -108,6 +109,7 @@ public class AppointmentController {
         appointment.setDescription(description);
         appointment.setOffline(offlineMode);
         appointment.setDoctor(doctor);
+        appointment.setUserInfo(userInfo);
 
         return appointment;
     }

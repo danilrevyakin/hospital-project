@@ -21,6 +21,10 @@ public class Appointment {
     private Time finish;
     private String description;
     private Boolean offline;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserInfo userInfo;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne
