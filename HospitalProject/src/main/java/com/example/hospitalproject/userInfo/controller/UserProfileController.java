@@ -46,9 +46,13 @@ public class UserProfileController {
         if(userInfo.isPresent())
             user = userInfo.get();
 
+        Long currentUserId = (Long) session.getAttribute("id");
+        UserInfo doctor = userInfoRepository.findById(currentUserId).orElseThrow();
+
         model.addAttribute("user", user);
         model.addAttribute("role", getRole(user));
-        model.addAttribute("userId", session.getAttribute("id"));
+        model.addAttribute("userId", currentUserId);
+        model.addAttribute("doctor", doctor);
 
         return "userProfile";
     }

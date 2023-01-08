@@ -51,7 +51,7 @@
                                        <div th:if="${user.getId() != userId}">
                                            <form th:method="POST"
                                                  th:action="@{http://localhost:8080/medical-card/page/get/param/
-                                                (id=${user.getId()}, doctorName=${user.firstName} + ' ' + ${user.lastName},doctorId=${user.getId()}, patientName=${user.firstName} + ' ' + ${user.lastName})}">
+                                                (id=${user.getId()}, doctorName=${doctor.firstName} + ' ' + ${doctor.lastName},doctorId=${doctor.getId()}, patientName=${user.firstName} + ' ' + ${user.lastName})}">
                                                <input type="submit" value="Medical card">
                                            </form>
                                        </div>
