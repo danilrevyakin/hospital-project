@@ -66,7 +66,6 @@ public class UserProfileController {
 
         model.addAttribute("user", user);
         model.addAttribute("role", getRole(user));
-
         return "editProfile";
     }
 

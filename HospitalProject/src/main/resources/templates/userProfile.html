@@ -11,7 +11,7 @@
 
 </head>
 <body>
-<div th:insert="navbar :: navbar1"></div>
+<div th:insert="navbar :: navbar1"> </div>
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row container d-flex justify-content-center mt-5" style="margin: 0 auto;" >
@@ -24,7 +24,7 @@
                                     <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
                                 </div>
                                 <h6 class="f-w-600" th:text="${user.firstName} + ' ' + ${user.lastName}" />
-                                <p th:text="${role}" />
+                                <p th:text="${role}"/>
                                 <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                             </div>
                         </div>
