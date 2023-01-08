@@ -5,6 +5,7 @@ import com.example.hospitalproject.security.node.Role;
 import com.example.hospitalproject.security.node.User;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +24,7 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     void deleteUserById(Long id);
 
     void deleteUserByEmail(String email);
+
+    @Query("match(u:User{email: :#{#user.email}}),(r:Representative{role: :#{#user.role}}) create(u)-[l:represents]->(r)")
+    void connect(@Param("user") User user);
 }
